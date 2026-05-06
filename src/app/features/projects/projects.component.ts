@@ -112,7 +112,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
       link: 'https://github.com/paul9834',
     },
     {
-      title: 'Dinastía - Pet Management App',
+      title: 'Dinastía Mascotas (VacunasPet) - Pet Management App',
       role: 'Senior Developer',
       chronology: 'Dec 2025 - Present',
       startDate: new Date('2025-12-01'),
