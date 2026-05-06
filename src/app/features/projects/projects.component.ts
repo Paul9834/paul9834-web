@@ -5,7 +5,7 @@ import {
   OnDestroy,
   Inject,
   PLATFORM_ID,
-  NgZone
+  NgZone,
 } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -18,12 +18,12 @@ interface Project {
   title: string;
   role: string;
   chronology: string;
+  startDate: Date;
   description: string;
   techStack: string[];
   image: string;
   achievements: string[];
   link?: string;
-
 }
 
 @Component({
@@ -35,16 +35,15 @@ interface Project {
     MatDividerModule,
     MatChipsModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
   ],
   templateUrl: './projects.component.html',
-  styleUrl: './project.component.scss'
+  styleUrl: './project.component.scss',
 })
 export class ProjectsComponent implements AfterViewInit, OnDestroy {
   private readonly isBrowser: boolean;
   private observer?: IntersectionObserver;
   private ticking = false;
-
   private isParallaxReset = false;
 
   projects: Project[] = [
@@ -52,79 +51,92 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
       title: 'GoPoli Institutional App',
       role: 'Android Developer',
       chronology: 'May 2019 - Sep 2020',
-      description: 'Institutional application for Politécnico Grancolombiano featuring campus services and SSO integration.',
+      startDate: new Date('2019-05-01'),
+      description:
+        'Institutional application for Politécnico Grancolombiano featuring campus services and SSO integration.',
       techStack: ['Java', 'Kotlin', 'OAuth2/OIDC', 'FCM', 'Material Design'],
       image: 'https://i.imgur.com/qUwtGbw.png',
       achievements: [
         'Led development and release, designing a clean, Material Design-compliant UI/UX.',
         'Integrated third-party APIs including SSO OAuth2/OIDC, academic systems, and FCM notifications.',
-        'Carried out systematic testing, debugging, and performance optimisation for multi-version compatibility.'
+        'Carried out systematic testing, debugging, and performance optimisation for multi-version compatibility.',
       ],
-      link: 'https://github.com/paul9834'
+      link: 'https://github.com/paul9834',
     },
     {
       title: 'Qinaya Remote Desktop',
       role: 'Android Developer',
       chronology: 'Oct 2020 - Jan 2022',
-      description: 'Android applications for remote desktop access with a strong focus on secure communication and network protocols.',
+      startDate: new Date('2020-10-01'),
+      description:
+        'Android applications for remote desktop access with a strong focus on secure communication and network protocols.',
       techStack: ['Android SDK', 'Network Protocols', 'Security', 'Encryption'],
       image: 'https://i.imgur.com/m6Tyfa2.png',
       achievements: [
         'Ensured stable and secure communication through advanced user authentication.',
         'Applied encryption protocols to safeguard sensitive data during remote sessions.',
-        'Implemented performance optimisations across devices and resolutions to deliver a smooth user experience.'
+        'Implemented performance optimisations across devices and resolutions to deliver a smooth user experience.',
       ],
-      link: 'https://github.com/paul9834'
+      link: 'https://github.com/paul9834',
     },
     {
       title: 'DaviPlata Financial App (Valid)',
       role: 'Android Developer',
       chronology: 'Jun 2022 - Aug 2024',
-      description: "Development and maintenance of key features for Colombia's most-used financial app, serving over 18 million active users.",
+      startDate: new Date('2022-06-01'),
+      description:
+        "Development and maintenance of key features for Colombia's most-used financial app, serving over 18 million active users.",
       techStack: ['Kotlin', 'Java', 'Android SDK', 'Performance Optimization', 'Security'],
       image: 'https://i.imgur.com/4wvSkzx.jpeg',
       achievements: [
         'Ensured the stability, security, and smooth processing of millions of daily transactions on Android and Huawei builds.',
         'Drove performance optimisation and incident resolution.',
-        'Delivered continuous improvements to the UI and integrations with banking services.'
+        'Delivered continuous improvements to the UI and integrations with banking services.',
       ],
-      link: 'https://play.google.com/store/apps/details?id=com.davivienda.daviplataapp'
+      link: 'https://play.google.com/store/apps/details?id=com.davivienda.daviplataapp',
     },
     {
       title: 'SIBEL Biometric Solution (Grupo ASD)',
       role: 'Senior Android Developer',
       chronology: 'May 2025 - Dec 2025',
-      description: 'Specialised biometric solution deployed on Aratek Marshall 8 tablets for industrial environments.',
+      startDate: new Date('2025-05-01'),
+      description:
+        'Specialised biometric solution deployed on Aratek Marshall 8 tablets for industrial environments.',
       techStack: ['Android SDK', 'BMAPI SDK', 'Hardware Integration', 'Kotlin', 'Java'],
       image: 'https://i.imgur.com/1UvlqLD.jpeg',
       achievements: [
         'Integrated BMAPI SDK for fingerprint capture, MRZ reading, and QR code scanning.',
         'Optimised performance, stability, and power management for industrial Android devices.',
-        'Contributed to PoC testing and UI adaptation across varied screen form factors.'
+        'Contributed to PoC testing and UI adaptation across varied screen form factors.',
       ],
-      link: 'https://github.com/paul9834'
+      link: 'https://github.com/paul9834',
     },
     {
       title: 'Dinastía - Pet Management App',
       role: 'Senior Developer',
       chronology: 'Dec 2025 - Present',
-      description: 'Native iOS application for pet management with a focus on smooth user journeys and high-performance API integrations.',
+      startDate: new Date('2025-12-01'),
+      description:
+        'Native iOS application for pet management with a focus on smooth user journeys and high-performance API integrations.',
       techStack: ['Swift', 'Kotlin', 'Spring Boot', 'REST APIs', 'iOS SDK'],
       image: 'https://i.imgur.com/LFqB4es.png',
       achievements: [
         'Developed core pet management features adhering to Apple Human Interface Guidelines.',
         'Designed and built Kotlin-based backend services to support mobile functionality.',
-        'Collaborated with product and engineering teams to deliver reliable, scalable, production-ready releases.'
+        'Collaborated with product and engineering teams to deliver reliable, scalable, production-ready releases.',
       ],
-      link: 'https://github.com/paul9834'
-    }
+      link: 'https://github.com/paul9834',
+    },
   ];
 
   constructor(
     @Inject(PLATFORM_ID) platformId: object,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+
+    // Orden descendente: más reciente → más antiguo
+    this.projects.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
   }
 
   ngAfterViewInit(): void {
@@ -152,8 +164,8 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
       },
       {
         threshold: 0.15,
-        rootMargin: '0px 0px -40px 0px'
-      }
+        rootMargin: '0px 0px -40px 0px',
+      },
     );
 
     items.forEach((item) => this.observer?.observe(item));
@@ -187,7 +199,6 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  // Método optimizado para evitar saturación del hilo principal en móviles
   private updateParallax(): void {
     const wrappers = document.querySelectorAll<HTMLElement>('.parallax-wrapper');
     const isMobile = window.innerWidth <= 768;
@@ -199,11 +210,9 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
 
       const rect = wrapper.getBoundingClientRect();
 
-      // Si la tarjeta no está visible en pantalla, abortamos el cálculo para ahorrar RAM
       if (rect.bottom < 0 || rect.top > viewH) return;
 
       const progress = (viewH - rect.top) / (viewH + rect.height);
-      // Aplicamos intensidad 12 para móviles (suave) y 28 para desktop
       const intensity = isMobile ? 12 : 28;
       const offset = (progress - 0.5) * intensity;
 

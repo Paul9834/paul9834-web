@@ -4,7 +4,7 @@
 
     <div class="timeline">
       @for (project of projects; track project.title; let i = $index) {
-        <div class="timeline-item animated-on-scroll" [class.reverse]="i % 2 !== 0">
+        <div class="timeline-item animated-on-scroll" [class.reverse]="i % 2 === 0">
           <!-- Nodo central -->
           <div class="timeline-node">
             <div class="node-dot">
