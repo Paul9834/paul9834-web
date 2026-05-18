@@ -2,6 +2,29 @@
    hero.component.css — Layout del Hero (Unificado)
    ============================================================ */
 
+.stackoverflow-flair {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0 1.4rem;
+}
+
+.stackoverflow-flair a {
+  display: inline-flex;
+  transition: transform .25s ease, opacity .25s ease;
+}
+
+.stackoverflow-flair a:hover {
+  transform: translateY(-2px) scale(1.02);
+  opacity: .95;
+}
+
+.stackoverflow-flair img {
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+
 .hero {
   min-height: 100vh;
   display: flex;
