@@ -65,18 +65,28 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     },
     {
       title: 'Qinaya Remote Desktop',
-      role: 'Android Developer',
+
+      role: 'Android TV Developer',
+
       chronology: 'Oct 2020 - Jan 2022',
+
       startDate: new Date('2020-10-01'),
+
       description:
-        'Android applications for remote desktop access with a strong focus on secure communication and network protocols.',
-      techStack: ['Android SDK', 'Network Protocols', 'Security', 'Encryption'],
+        'Android TV application focused on IPTV streaming and multimedia playback using ExoPlayer and M3U8-based live content delivery.',
+
+      techStack: ['Kotlin', 'Java', 'Android TV', 'ExoPlayer', 'IPTV', 'M3U8', 'Media Streaming'],
+
       image: 'https://i.imgur.com/m6Tyfa2.png',
+
       achievements: [
-        'Ensured stable and secure communication through advanced user authentication.',
-        'Applied encryption protocols to safeguard sensitive data during remote sessions.',
-        'Implemented performance optimisations across devices and resolutions to deliver a smooth user experience.',
+        'Developed Android TV features for IPTV content playback and live streaming experiences.',
+
+        'Integrated ExoPlayer for adaptive video streaming and optimised media playback performance.',
+
+        'Implemented M3U8 playlist handling and streaming compatibility across different network conditions.',
       ],
+
       link: 'https://github.com/paul9834',
     },
     {
