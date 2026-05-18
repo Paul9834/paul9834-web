@@ -76,29 +76,47 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
       link: 'https://github.com/paul9834',
     },
     {
-      title: 'Qinaya Remote Desktop',
-
-      role: 'Android TV Developer',
-
-      chronology: 'Oct 2020 - Jan 2022',
-
-      startDate: new Date('2020-10-01'),
-
+      title: 'Android TV & IPTV Streaming Research',
+      role: 'Android Developer',
+      chronology: 'Aug 2019 - Oct 2020',
+      startDate: new Date('2019-08-01'),
       description:
-        'Android TV application focused on IPTV streaming and multimedia playback using ExoPlayer and M3U8-based live content delivery.',
-
+        'Independent research and development focused on Android TV media streaming technologies using ExoPlayer and IPTV protocols.',
       techStack: ['Kotlin', 'Java', 'Android TV', 'ExoPlayer', 'IPTV', 'M3U8', 'Media Streaming'],
-
       image: 'https://i.imgur.com/m6Tyfa2.png',
-
       achievements: [
-        'Developed Android TV features for IPTV content playback and live streaming experiences.',
-
-        'Integrated ExoPlayer for adaptive video streaming and optimised media playback performance.',
-
-        'Implemented M3U8 playlist handling and streaming compatibility across different network conditions.',
+        'Implemented adaptive video streaming using ExoPlayer for Android TV environments.',
+        'Worked with IPTV M3U8 playlists and live media streaming playback.',
+        'Explored buffering optimisation, media session handling, and playback performance.',
+        'Tested streaming compatibility across different Android TV devices and network conditions.',
       ],
+      link: 'https://github.com/paul9834',
+    },
 
+    {
+      title: 'Qinaya Cloud Desktop',
+      role: 'Android Developer',
+      chronology: 'Oct 2020 - Jan 2022',
+      startDate: new Date('2020-10-01'),
+      description:
+        'Android application focused on providing low-cost cloud computer access through subscription-based remote desktop services.',
+      techStack: [
+        'Kotlin',
+        'Java',
+        'Android SDK',
+        'Remote Desktop',
+        'Networking',
+        'Authentication',
+        'Performance Optimization',
+        'Security',
+      ],
+      image: 'https://i.imgur.com/m6Tyfa2.png',
+      achievements: [
+        'Developed Android features for cloud-based remote desktop access and subscription management.',
+        'Worked on secure authentication flows and stable communication between Android clients and remote systems.',
+        'Optimised application performance and connection stability across different Android devices and network conditions.',
+        'Collaborated on improving user experience for low-latency remote access sessions.',
+      ],
       link: 'https://github.com/paul9834',
     },
     {
