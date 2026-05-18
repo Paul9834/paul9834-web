@@ -83,7 +83,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
       description:
         'Independent research and development focused on Android TV media streaming technologies using ExoPlayer and IPTV protocols.',
       techStack: ['Kotlin', 'Java', 'Android TV', 'ExoPlayer', 'IPTV', 'M3U8', 'Media Streaming'],
-      image: 'https://i.imgur.com/m6Tyfa2.png',
+      image: 'https://i.sstatic.net/zegNf.jpg',
       achievements: [
         'Implemented adaptive video streaming using ExoPlayer for Android TV environments.',
         'Worked with IPTV M3U8 playlists and live media streaming playback.',
