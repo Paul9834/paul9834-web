@@ -25,9 +25,17 @@
 }
 
 .whatsapp-icon {
-  width: 28px;
-  height: 28px;
+  width: 32px;   /* antes 28px */
+  height: 32px;  /* antes 28px */
 }
+
+@media (max-width: 768px) {
+  .whatsapp-icon {
+    width: 28px;  /* antes 24px */
+    height: 28px;
+  }
+}
+
 
 @media (max-width: 768px) {
   :host {
