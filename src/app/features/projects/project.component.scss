@@ -112,7 +112,6 @@
       justify-content: center;
       box-shadow: 0 0 0 6px rgba(0, 98, 255, 0.1), var(--shadow-md);
       z-index: 1;
-      transition: transform var(--transition), box-shadow var(--transition);
       flex-shrink: 0;
 
       mat-icon {
@@ -144,11 +143,6 @@
     }
   }
 
-  .timeline-item:hover .node-dot {
-    transform: scale(1.08);
-    box-shadow: 0 0 0 8px rgba(0, 98, 255, 0.12), var(--shadow-lg);
-  }
-
   .project-card {
     background: var(--surface) !important;
     border-radius: var(--radius-xl) !important;
@@ -156,13 +150,9 @@
     overflow: hidden !important;
     min-width: 0;
     transition:
-      transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-hover) !important;
-    }
+      transform 320ms cubic-bezier(0.2, 0, 0, 1),
+      box-shadow 320ms cubic-bezier(0.2, 0, 0, 1),
+      filter 320ms cubic-bezier(0.2, 0, 0, 1);
 
     @media (max-width: 480px) {
       border-radius: 18px !important;
@@ -192,8 +182,59 @@
     object-fit: cover;
     object-position: center top;
     display: block;
-    transform: translateY(0);
+    transform: translate3d(0, var(--parallax-y, 0px), 0) scale(1.06);
+    transform-origin: center top;
+    backface-visibility: hidden;
     will-change: transform;
+    transition: transform 320ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .animated-on-scroll {
+    opacity: 0;
+    transform: translateY(24px) scale(0.985);
+    filter: blur(6px);
+  }
+
+  .timeline-item.animated-on-scroll.is-visible {
+    animation: project-enter 700ms cubic-bezier(0.2, 0, 0, 1) both;
+  }
+
+  .timeline-node .node-dot {
+    transition:
+      transform 320ms cubic-bezier(0.2, 0, 0, 1),
+      box-shadow 320ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .timeline-item:hover .node-dot {
+    transform: scale(1.08);
+    box-shadow: 0 0 0 8px rgba(0, 98, 255, 0.12), var(--shadow-lg);
+  }
+
+  .timeline-item:hover .project-card {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-hover) !important;
+  }
+
+  .timeline-item:hover .parallax-image {
+    transform: translate3d(0, var(--parallax-y, 0px), 0) scale(1.085);
+  }
+
+  @keyframes project-enter {
+    0% {
+      opacity: 0;
+      transform: translateY(24px) scale(0.985);
+      filter: blur(6px);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(-2px) scale(1);
+      filter: blur(0);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
   }
 
   .project-content {
@@ -348,76 +389,29 @@
     }
   }
 
-  @keyframes fade-in-left {
-    0% {
-      opacity: 0;
-      transform: translateX(-28px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes fade-in-right {
-    0% {
-      opacity: 0;
-      transform: translateX(28px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  .animated-on-scroll {
-    opacity: 0;
-    transform: translateX(28px);
-
-    &.reverse {
-      transform: translateX(-28px);
-    }
-
-    @media (max-width: 768px) {
-      transform: translateY(20px);
-
-      &.reverse {
-        transform: translateY(20px);
-      }
-    }
-  }
-
-
-  @media (max-width: 768px) {
-    .timeline-item.animated-on-scroll.is-visible,
-    .timeline-item.reverse.animated-on-scroll.is-visible {
-      animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-  }
-
-
-  @keyframes fade-in-up {
-    0% {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .timeline-item.animated-on-scroll.is-visible {
-    animation: fade-in-right 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  .timeline-item.reverse.animated-on-scroll.is-visible {
-    animation: fade-in-left 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
   .timeline-item:nth-child(1) { animation-delay: 0s; }
   .timeline-item:nth-child(2) { animation-delay: 0.1s; }
   .timeline-item:nth-child(3) { animation-delay: 0.15s; }
   .timeline-item:nth-child(4) { animation-delay: 0.2s; }
   .timeline-item:nth-child(5) { animation-delay: 0.25s; }
+  .timeline-item:nth-child(6) { animation-delay: 0.3s; }
+  .timeline-item:nth-child(7) { animation-delay: 0.35s; }
+  .timeline-item:nth-child(8) { animation-delay: 0.4s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animated-on-scroll,
+    .timeline-item.animated-on-scroll.is-visible,
+    .project-card,
+    .timeline-node .node-dot,
+    .parallax-image {
+      animation: none !important;
+      transition: none !important;
+      transform: none !important;
+      filter: none !important;
+    }
+
+    .parallax-image {
+      transform: scale(1.02) !important;
+    }
+  }
 }

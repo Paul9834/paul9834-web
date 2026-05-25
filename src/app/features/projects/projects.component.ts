@@ -44,7 +44,6 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
   private readonly isBrowser: boolean;
   private observer?: IntersectionObserver;
   private ticking = false;
-  private isParallaxReset = false;
 
   projects: Project[] = [
     {
@@ -92,7 +91,6 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
       ],
       link: 'https://github.com/paul9834',
     },
-
     {
       title: 'Qinaya Cloud Desktop',
       role: 'Android Developer',
@@ -174,8 +172,6 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     private ngZone: NgZone,
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
-
-    // Orden descendente: más reciente → más antiguo
     this.projects.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
   }
 
@@ -250,13 +246,16 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
 
       const rect = wrapper.getBoundingClientRect();
 
-      if (rect.bottom < 0 || rect.top > viewH) return;
+      if (rect.bottom < 0 || rect.top > viewH) {
+        img.style.setProperty('--parallax-y', '0px');
+        return;
+      }
 
       const progress = (viewH - rect.top) / (viewH + rect.height);
-      const intensity = isMobile ? 12 : 28;
+      const intensity = isMobile ? 10 : 16;
       const offset = (progress - 0.5) * intensity;
 
-      img.style.transform = `translateY(${offset}px)`;
+      img.style.setProperty('--parallax-y', `${offset.toFixed(2)}px`);
     });
   }
 }

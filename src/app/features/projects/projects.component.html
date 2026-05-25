@@ -5,7 +5,6 @@
     <div class="timeline">
       @for (project of projects; track project.title; let i = $index) {
         <div class="timeline-item animated-on-scroll" [class.reverse]="i % 2 === 0">
-          <!-- Nodo central -->
           <div class="timeline-node">
             <div class="node-dot">
               <mat-icon>work</mat-icon>
@@ -13,12 +12,14 @@
             <div class="node-line"></div>
           </div>
 
-          <!-- Card -->
           <mat-card class="project-card">
             <div class="project-image-wrapper parallax-wrapper">
-              <img [src]="project.image" [alt]="project.title"
-                   class="parallax-image"
-                   loading="lazy">
+              <img
+                [src]="project.image"
+                [alt]="project.title"
+                class="parallax-image"
+                loading="lazy"
+              >
             </div>
 
             <div class="project-content">
@@ -49,7 +50,6 @@
               </div>
             </div>
           </mat-card>
-
         </div>
       }
     </div>
