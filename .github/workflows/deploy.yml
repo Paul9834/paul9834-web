@@ -30,10 +30,8 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          # Mantenemos browser y server
           source: "dist/portfolio/**"
           target: /var/www/paul9834
-          # Saltamos 'dist' y 'portfolio' (2 niveles)
           strip_components: 2
 
       - name: Reiniciar PM2 y Nginx
@@ -43,13 +41,11 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            # Entramos a la carpeta del motor SSR que ahora sí existirá
-            cd /var/www/paul9834/server
-            # Instalamos dependencias del servidor si es necesario
-            npm install --production || true
-            # Matamos proceso viejo y lanzamos el nuevo
+            set -e
+            cd /var/www/paul9834
+            test -f server/server.mjs
             pm2 delete paul-portfolio || true
-            pm2 start server.mjs --name "paul-portfolio"
+            pm2 start server/server.mjs --name paul-portfolio
             pm2 save
-            # Refrescamos Nginx
-            sudo systemctl restart nginx
+            sudo nginx -t
+            sudo systemctl reload nginx
