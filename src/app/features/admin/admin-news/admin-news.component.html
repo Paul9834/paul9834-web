@@ -50,83 +50,6 @@
         </aside>
       </section>
 
-      @if (isEditorOpen()) {
-        <section class="admin-state-card">
-          <form [formGroup]="newsForm" (ngSubmit)="submitForm()" class="admin-editor-form">
-            <div class="card-header">
-              <span>{{ selectedArticle() ? 'Editar noticia' : 'Crear noticia' }}</span>
-            </div>
-
-            <div class="admin-editor-grid">
-              <label class="admin-editor-field">
-                <span>Título</span>
-                <input type="text" formControlName="title" placeholder="Título de la noticia" />
-              </label>
-
-              <label class="admin-editor-field">
-                <span>Slug</span>
-                <input
-                  type="text"
-                  formControlName="slug"
-                  placeholder="mi-noticia"
-                  [readonly]="!!selectedArticle()"
-                />
-              </label>
-
-              <label class="admin-editor-field">
-                <span>Categoría</span>
-                <input type="text" formControlName="category" placeholder="tech" />
-              </label>
-
-              <label class="admin-editor-field">
-                <span>Image URL</span>
-                <input
-                  type="url"
-                  formControlName="imageUrl"
-                  placeholder="https://..."
-                />
-              </label>
-
-              <label class="admin-editor-field admin-editor-field--full">
-                <span>Descripción</span>
-                <textarea
-                  rows="3"
-                  formControlName="description"
-                  placeholder="Resumen corto para la tarjeta y el listado"
-                ></textarea>
-              </label>
-
-              <label class="admin-editor-field admin-editor-field--full">
-                <span>Contenido</span>
-                <textarea
-                  rows="8"
-                  formControlName="content"
-                  placeholder="Contenido completo de la noticia"
-                ></textarea>
-              </label>
-            </div>
-
-            @if (submitError()) {
-              <p class="admin-form-error">{{ submitError() }}</p>
-            }
-
-            <div class="news-card__actions">
-              <button type="submit" class="btn-secondary" [disabled]="isSubmitting()">
-                {{
-                  isSubmitting()
-                    ? 'Guardando...'
-                    : (selectedArticle() ? 'Actualizar' : 'Crear')
-                }}
-              </button>
-
-              <button type="button" class="btn-secondary" (click)="closeEditor()">
-                Cancelar
-              </button>
-            </div>
-          </form>
-        </section>
-      }
-
       @if (isLoading()) {
         <section class="admin-state-card">
           <p>Cargando noticias...</p>
@@ -158,18 +81,17 @@
                 <h2>{{ article.title }}</h2>
                 <p>{{ article.description }}</p>
               </div>
+
               <div class="news-card__meta">
                 <span>Slug: {{ article.slug }}</span>
                 <span>
-    {{
+                  {{
                     article.publishedAt
                       ? 'Publicado: ' + formatPublishedAt(article.publishedAt)
                       : 'Aún no publicado'
                   }}
-  </span>
+                </span>
               </div>
-
-
 
               <div class="news-card__actions">
                 <button
@@ -203,4 +125,94 @@
       }
     </div>
   </div>
+
+  @if (isEditorOpen()) {
+    <div class="admin-editor-overlay" (click)="closeEditor()">
+      <section
+        class="admin-editor-dialog"
+        (click)="$event.stopPropagation()"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="admin-editor-title"
+      >
+        <form [formGroup]="newsForm" (ngSubmit)="submitForm()" class="admin-editor-form">
+          <div class="card-header card-header--editor">
+            <div class="card-header__eyebrow">
+              {{ selectedArticle() ? 'Edit mode' : 'Create mode' }}
+            </div>
+            <span id="admin-editor-title">
+              {{ selectedArticle() ? 'Editar noticia' : 'Crear noticia' }}
+            </span>
+          </div>
+
+          <div class="admin-editor-grid">
+            <label class="admin-editor-field">
+              <span>Título</span>
+              <input type="text" formControlName="title" placeholder="Título de la noticia" />
+            </label>
+
+            <label class="admin-editor-field">
+              <span>Slug</span>
+              <input
+                type="text"
+                formControlName="slug"
+                placeholder="mi-noticia"
+                [readonly]="!!selectedArticle()"
+              />
+            </label>
+
+            <label class="admin-editor-field">
+              <span>Categoría</span>
+              <input type="text" formControlName="category" placeholder="tech" />
+            </label>
+
+            <label class="admin-editor-field">
+              <span>Image URL</span>
+              <input
+                type="url"
+                formControlName="imageUrl"
+                placeholder="https://..."
+              />
+            </label>
+
+            <label class="admin-editor-field admin-editor-field--full">
+              <span>Descripción</span>
+              <textarea
+                rows="3"
+                formControlName="description"
+                placeholder="Resumen corto para la tarjeta y el listado"
+              ></textarea>
+            </label>
+
+            <label class="admin-editor-field admin-editor-field--full">
+              <span>Contenido</span>
+              <textarea
+                rows="8"
+                formControlName="content"
+                placeholder="Contenido completo de la noticia"
+              ></textarea>
+            </label>
+          </div>
+
+          @if (submitError()) {
+            <p class="admin-form-error">{{ submitError() }}</p>
+          }
+
+          <div class="news-card__actions news-card__actions--editor">
+            <button type="submit" class="btn-secondary" [disabled]="isSubmitting()">
+              {{
+                isSubmitting()
+                  ? 'Guardando...'
+                  : (selectedArticle() ? 'Actualizar' : 'Crear')
+              }}
+            </button>
+
+            <button type="button" class="btn-secondary" (click)="closeEditor()">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  }
 </section>
