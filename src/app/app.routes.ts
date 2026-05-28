@@ -8,7 +8,6 @@ import { PublicLayoutComponent } from './layout/public-layout/public-layout.comp
 import { BlogListComponent } from './features/blog/blog-list/blog-list.component';
 import { BlogDetailComponent } from './features/blog/blog-details/blog-detail.component';
 
-
 export const routes: Routes = [
   {
     path: '',
@@ -20,9 +19,7 @@ export const routes: Routes = [
       { path: 'blog/:slug', component: BlogDetailComponent },
     ],
   },
-
   { path: 'admin/login', component: AdminLoginComponent },
   { path: 'admin', component: AdminNewsComponent, canActivate: [authGuard] },
-
   { path: '**', redirectTo: '' },
 ];
