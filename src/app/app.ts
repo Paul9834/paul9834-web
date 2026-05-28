@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router'; // <-- 1. Importa RouterOutlet
-import { NavbarComponent } from './layout/navbar/navbar.component';
-import { WhatsappComponent } from './layout/whatsapp/whatsapp.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   // 2. Quitamos Hero y Projects. Agregamos RouterOutlet
-  imports: [NavbarComponent, WhatsappComponent, RouterOutlet],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
