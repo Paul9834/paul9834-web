@@ -1,0 +1,87 @@
+<section class="blog-detail-page">
+  <div class="blog-detail-hero">
+    <div class="container blog-detail-shell">
+      @if (isLoading()) {
+        <section class="blog-detail-state-card">
+          <p>Cargando noticia...</p>
+        </section>
+      } @else if (errorMessage()) {
+        <section class="blog-detail-state-card blog-detail-state-card--error">
+          <p>{{ errorMessage() }}</p>
+
+          <div class="blog-detail-actions">
+            <a class="btn-secondary" routerLink="/blog">Volver al blog</a>
+          </div>
+        </section>
+      } @else if (article(); as currentArticle) {
+        <ng-container>
+          <section class="blog-detail-intro">
+            <div class="blog-detail-copy">
+              <a class="blog-detail-back" routerLink="/blog">← Volver al blog</a>
+
+              <span class="eyebrow">{{ currentArticle.category }}</span>
+
+              <h1>{{ currentArticle.title }}</h1>
+
+              <p class="blog-detail-desc">
+                {{ currentArticle.description }}
+              </p>
+
+              <div class="blog-detail-meta-inline">
+                <span>{{ formatPublishedAt(currentArticle.publishedAt) }}</span>
+                <span>Slug: {{ currentArticle.slug }}</span>
+              </div>
+            </div>
+
+            <aside class="blog-detail-summary-card">
+              <div class="card-body">
+                <div class="card-header">
+                  <span>Article status</span>
+                </div>
+
+                <div class="stats-grid">
+                  <div class="stat">
+                    <span class="stat-value">{{ currentArticle.category }}</span>
+                    <span class="stat-label">Category</span>
+                  </div>
+
+                  <div class="stat">
+                    <span class="stat-value">
+                      {{ currentArticle.published ? 'Live' : 'Draft' }}
+                    </span>
+                    <span class="stat-label">Status</span>
+                  </div>
+
+                  <div class="stat">
+                    <span class="stat-value">01</span>
+                    <span class="stat-label">Entry</span>
+                  </div>
+                </div>
+
+                <div class="availability">Lectura pública disponible</div>
+              </div>
+            </aside>
+          </section>
+
+          @if (currentArticle.imageUrl) {
+            <section class="blog-detail-cover">
+              <img
+                [src]="currentArticle.imageUrl"
+                [alt]="'Imagen de ' + currentArticle.title"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+              />
+            </section>
+          }
+
+          <section class="blog-detail-content-card">
+            <div
+              class="blog-detail-content"
+              [innerHTML]="linkifyContent(currentArticle.content)"
+            ></div>
+          </section>
+        </ng-container>
+      }
+    </div>
+  </div>
+</section>

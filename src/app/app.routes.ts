@@ -6,6 +6,7 @@ import { AdminNewsComponent } from './features/admin/admin-news/admin-news.compo
 import { authGuard } from './core/guards/auth.guard';
 import { PublicLayoutComponent } from './layout/public-layout/public-layout.component';
 import { BlogListComponent } from './features/blog/blog-list/blog-list.component';
+import { BlogDetailComponent } from './features/blog/blog-details/blog-detail.component';
 
 
 export const routes: Routes = [
@@ -16,7 +17,7 @@ export const routes: Routes = [
       { path: '', component: HomeComponent },
       { path: 'about', component: AboutComponent },
       { path: 'blog', component: BlogListComponent },
-      { path: 'blog/:slug', component: HomeComponent },
+      { path: 'blog/:slug', component: BlogDetailComponent },
     ],
   },
 
