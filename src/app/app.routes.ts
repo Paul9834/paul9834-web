@@ -5,6 +5,8 @@ import { AdminLoginComponent } from './features/admin/admin-login/admin-login.co
 import { AdminNewsComponent } from './features/admin/admin-news/admin-news.component';
 import { authGuard } from './core/guards/auth.guard';
 import { PublicLayoutComponent } from './layout/public-layout/public-layout.component';
+import { BlogListComponent } from './features/blog/blog-list/blog-list.component';
+
 
 export const routes: Routes = [
   {
@@ -13,14 +15,11 @@ export const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'about', component: AboutComponent },
-
-      // Mock temporal mientras construimos blog público real
-      { path: 'blog', component: HomeComponent },
+      { path: 'blog', component: BlogListComponent },
       { path: 'blog/:slug', component: HomeComponent },
     ],
   },
 
-  // Admin fuera del layout público
   { path: 'admin/login', component: AdminLoginComponent },
   { path: 'admin', component: AdminNewsComponent, canActivate: [authGuard] },
 
