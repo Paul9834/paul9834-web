@@ -1,4 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
@@ -6,16 +7,18 @@ import { Meta, Title } from '@angular/platform-browser';
   standalone: true,
   imports: [],
   templateUrl: './about.component.html',
-  styleUrl: './about.component.scss'
+  styleUrl: './about.component.scss',
 })
 export class AboutComponent implements OnInit {
   private readonly titleService = inject(Title);
   private readonly meta = inject(Meta);
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly canonicalUrl = 'https://paul9834.com/about';
 
   ngOnInit(): void {
     const pageTitle = 'About Kevin Paul Montealegre Melo | Senior Mobile Engineer';
-    const description = 'About Kevin Paul Montealegre Melo, Senior Mobile Engineer based in Bogotá with experience in Android, iOS, Kotlin, Swift, Clean Architecture, fintech and enterprise mobile products.';
+    const description =
+      'About Kevin Paul Montealegre Melo, Senior Mobile Engineer based in Bogotá with experience in Android, iOS, Kotlin, Swift, Clean Architecture, fintech and enterprise mobile products.';
 
     this.titleService.setTitle(pageTitle);
 
@@ -37,6 +40,8 @@ export class AboutComponent implements OnInit {
   }
 
   private setCanonicalUrl(url: string): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     let link: HTMLLinkElement | null = document.querySelector('link[rel="canonical"]');
 
     if (!link) {

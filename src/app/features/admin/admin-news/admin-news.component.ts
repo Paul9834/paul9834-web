@@ -3,10 +3,11 @@ import {
   Component,
   OnDestroy,
   OnInit,
+  PLATFORM_ID,
   inject,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -28,6 +29,8 @@ import {
 export class AdminNewsComponent implements OnInit, OnDestroy {
   private readonly newsService = inject(NewsService);
   private readonly fb = inject(FormBuilder);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   readonly articles = signal<NewsArticle[]>([]);
   readonly isLoading = signal(true);
@@ -50,6 +53,8 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     content: ['', [Validators.required]],
     category: ['', [Validators.required, Validators.maxLength(80)]],
   });
+
+  private readonly urlRegex = /(https?:\/\/[^\s]+)/g;
 
   ngOnInit(): void {
     this.loadArticles();
@@ -146,7 +151,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     this.selectedImageName.set(file?.name ?? '');
     this.revokeImagePreviewUrl();
 
-    if (file) {
+    if (file && this.isBrowser) {
       const previewUrl = URL.createObjectURL(file);
       this.imagePreviewUrl.set(previewUrl);
     }
@@ -196,6 +201,10 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
   }
 
   deleteArticle(article: NewsArticle): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
     const confirmed = window.confirm(`¿Seguro que quieres eliminar la noticia "${article.title}"?`);
 
     if (!confirmed) {
@@ -226,8 +235,6 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
       },
     });
   }
-
-  private readonly urlRegex = /(https?:\/\/[^\s]+)/g;
 
   linkifyContent(content: string): string {
     if (!content?.trim()) {
@@ -313,7 +320,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
   private revokeImagePreviewUrl(): void {
     const currentPreview = this.imagePreviewUrl();
 
-    if (currentPreview) {
+    if (currentPreview && this.isBrowser) {
       URL.revokeObjectURL(currentPreview);
     }
 

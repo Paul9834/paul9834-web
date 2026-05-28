@@ -1,5 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+  signal,
+  PLATFORM_ID,
+} from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Meta, Title } from '@angular/platform-browser';
@@ -19,6 +26,7 @@ export class BlogDetailComponent implements OnInit {
   private readonly newsService = inject(NewsService);
   private readonly titleService = inject(Title);
   private readonly meta = inject(Meta);
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly urlRegex = /(https?:\/\/[^\s]+)/g;
   private readonly siteUrl = 'https://paul9834.com';
 
@@ -164,6 +172,8 @@ export class BlogDetailComponent implements OnInit {
   }
 
   private setCanonicalUrl(url: string): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     let link: HTMLLinkElement | null = document.querySelector('link[rel="canonical"]');
 
     if (!link) {
@@ -176,6 +186,8 @@ export class BlogDetailComponent implements OnInit {
   }
 
   private setStructuredData(article: NewsArticle, canonicalUrl: string, imageUrl: string): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const structuredData = {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
@@ -214,6 +226,8 @@ export class BlogDetailComponent implements OnInit {
   }
 
   private removeStructuredData(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const script = document.querySelector(
       'script[type="application/ld+json"][data-seo="blog-detail"]',
     );
