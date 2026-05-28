@@ -1,0 +1,195 @@
+<section class="admin-news-page">
+  <div class="admin-news-hero">
+    <div class="container admin-news-shell">
+      <section class="admin-news-intro">
+        <div class="admin-news-copy">
+          <span class="eyebrow">Private dashboard</span>
+          <h1>Admin <span class="gradient-text">News</span></h1>
+          <p class="admin-news-desc">
+            Gestiona borradores, publicaciones y el contenido del blog desde un
+            panel privado conectado a tus endpoints protegidos.
+          </p>
+
+          <div class="admin-news-actions">
+            <button type="button" class="admin-cta" (click)="openCreateEditor()">
+              <span class="admin-cta__icon">+</span>
+              <span>Nueva noticia</span>
+            </button>
+          </div>
+        </div>
+
+        <aside class="admin-summary-card">
+          <div class="card-body">
+            <div class="card-header">
+              <span>Panel status</span>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat">
+                <span class="stat-value">{{ articles().length }}</span>
+                <span class="stat-label">Articles</span>
+              </div>
+
+              <div class="stat">
+                <span class="stat-value">
+                  {{ articles().filter(article => article.published).length }}
+                </span>
+                <span class="stat-label">Published</span>
+              </div>
+
+              <div class="stat">
+                <span class="stat-value">
+                  {{ articles().filter(article => !article.published).length }}
+                </span>
+                <span class="stat-label">Drafts</span>
+              </div>
+            </div>
+
+            <div class="availability">Admin session active</div>
+          </div>
+        </aside>
+      </section>
+
+      @if (isEditorOpen()) {
+        <section class="admin-state-card">
+          <form [formGroup]="newsForm" (ngSubmit)="submitForm()" class="admin-editor-form">
+            <div class="card-header">
+              <span>{{ selectedArticle() ? 'Editar noticia' : 'Crear noticia' }}</span>
+            </div>
+
+            <div class="admin-editor-grid">
+              <label class="admin-editor-field">
+                <span>Título</span>
+                <input type="text" formControlName="title" placeholder="Título de la noticia" />
+              </label>
+
+              <label class="admin-editor-field">
+                <span>Slug</span>
+                <input
+                  type="text"
+                  formControlName="slug"
+                  placeholder="mi-noticia"
+                  [readonly]="!!selectedArticle()"
+                />
+              </label>
+
+              <label class="admin-editor-field">
+                <span>Categoría</span>
+                <input type="text" formControlName="category" placeholder="tech" />
+              </label>
+
+              <label class="admin-editor-field">
+                <span>Image URL</span>
+                <input
+                  type="url"
+                  formControlName="imageUrl"
+                  placeholder="https://..."
+                />
+              </label>
+
+              <label class="admin-editor-field admin-editor-field--full">
+                <span>Descripción</span>
+                <textarea
+                  rows="3"
+                  formControlName="description"
+                  placeholder="Resumen corto para la tarjeta y el listado"
+                ></textarea>
+              </label>
+
+              <label class="admin-editor-field admin-editor-field--full">
+                <span>Contenido</span>
+                <textarea
+                  rows="8"
+                  formControlName="content"
+                  placeholder="Contenido completo de la noticia"
+                ></textarea>
+              </label>
+            </div>
+
+            @if (submitError()) {
+              <p class="admin-form-error">{{ submitError() }}</p>
+            }
+
+            <div class="news-card__actions">
+              <button type="submit" class="btn-secondary" [disabled]="isSubmitting()">
+                {{
+                  isSubmitting()
+                    ? 'Guardando...'
+                    : (selectedArticle() ? 'Actualizar' : 'Crear')
+                }}
+              </button>
+
+              <button type="button" class="btn-secondary" (click)="closeEditor()">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </section>
+      }
+
+      @if (isLoading()) {
+        <section class="admin-state-card">
+          <p>Cargando noticias...</p>
+        </section>
+      } @else if (errorMessage()) {
+        <section class="admin-state-card admin-state-card--error">
+          <p>{{ errorMessage() }}</p>
+          <button type="button" class="btn-secondary" (click)="loadArticles()">
+            Reintentar
+          </button>
+        </section>
+      } @else if (articles().length === 0) {
+        <section class="admin-state-card">
+          <p>No hay noticias todavía.</p>
+        </section>
+      } @else {
+        <section class="news-grid">
+          @for (article of articles(); track article.slug) {
+            <article class="news-card">
+              <div class="news-card__top">
+                <span class="news-badge" [class.news-badge--published]="article.published">
+                  {{ article.published ? 'Publicado' : 'Borrador' }}
+                </span>
+
+                <span class="news-category">{{ article.category }}</span>
+              </div>
+
+              <div class="news-card__content">
+                <h2>{{ article.title }}</h2>
+                <p>{{ article.description }}</p>
+              </div>
+
+              <div class="news-card__meta">
+                <span>Slug: {{ article.slug }}</span>
+
+                @if (article.publishedAt) {
+                  <span>Publicado: {{ article.publishedAt }}</span>
+                } @else {
+                  <span>Aún no publicado</span>
+                }
+              </div>
+
+              <div class="news-card__actions">
+                <button
+                  type="button"
+                  class="btn-secondary"
+                  (click)="openEditEditor(article)"
+                >
+                  Editar
+                </button>
+
+                <button type="button" class="btn-secondary">
+                  Publicar
+                </button>
+
+                <button type="button" class="btn-secondary">
+                  Eliminar
+                </button>
+              </div>
+            </article>
+          }
+        </section>
+      }
+    </div>
+  </div>
+</section>

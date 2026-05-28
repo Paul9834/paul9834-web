@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
+
 export interface NewsArticle {
   slug: string;
   title: string;
@@ -43,9 +45,20 @@ export interface UpdateNewsRequest {
 
 @Injectable({ providedIn: 'root' })
 export class NewsService {
-  private readonly baseUrl = '/api/news';
+  private readonly baseUrl = `${environment.apiBaseUrl}/api/news`;
 
   constructor(private http: HttpClient) {}
+
+  getAdminNews(page = 0, size = 20): Observable<NewsListResponse> {
+    const params = new HttpParams().set('page', page).set('size', size);
+
+    return this.http.get<NewsListResponse>(`${this.baseUrl}/admin`, { params }).pipe(
+      map((response) => ({
+        ...response,
+        articles: response.articles.map((article) => this.normalizeArticle(article)),
+      })),
+    );
+  }
 
   getNews(page = 0, size = 10, category?: string): Observable<NewsListResponse> {
     let params = new HttpParams().set('page', page).set('size', size);
@@ -54,30 +67,30 @@ export class NewsService {
       params = params.set('category', category.trim());
     }
 
-    return this.http
-      .get<NewsListResponse>(this.baseUrl, { params })
-      .pipe(map(response => ({
+    return this.http.get<NewsListResponse>(this.baseUrl, { params }).pipe(
+      map((response) => ({
         ...response,
-        articles: response.articles.map(article => this.normalizeArticle(article)),
-      })));
+        articles: response.articles.map((article) => this.normalizeArticle(article)),
+      })),
+    );
   }
 
   getBySlug(slug: string): Observable<NewsArticle> {
     return this.http
       .get<NewsArticle>(`${this.baseUrl}/${slug}`)
-      .pipe(map(article => this.normalizeArticle(article)));
+      .pipe(map((article) => this.normalizeArticle(article)));
   }
 
   createNews(payload: CreateNewsRequest): Observable<NewsArticle> {
     return this.http
       .post<NewsArticle>(this.baseUrl, payload)
-      .pipe(map(article => this.normalizeArticle(article)));
+      .pipe(map((article) => this.normalizeArticle(article)));
   }
 
   updateNews(slug: string, payload: UpdateNewsRequest): Observable<NewsArticle> {
     return this.http
       .put<NewsArticle>(`${this.baseUrl}/${slug}`, payload)
-      .pipe(map(article => this.normalizeArticle(article)));
+      .pipe(map((article) => this.normalizeArticle(article)));
   }
 
   deleteNews(slug: string): Observable<void> {
@@ -87,7 +100,7 @@ export class NewsService {
   publishNews(slug: string): Observable<NewsArticle> {
     return this.http
       .patch<NewsArticle>(`${this.baseUrl}/${slug}/publish`, {})
-      .pipe(map(article => this.normalizeArticle(article)));
+      .pipe(map((article) => this.normalizeArticle(article)));
   }
 
   private normalizeArticle(article: NewsArticle): NewsArticle {
