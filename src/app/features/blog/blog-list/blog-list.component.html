@@ -1,0 +1,103 @@
+<section class="blog-page">
+  <div class="blog-hero">
+    <div class="container blog-shell">
+      <section class="blog-intro">
+        <div class="blog-copy">
+          <span class="eyebrow">Latest writing</span>
+          <h1>Blog <span class="gradient-text">News</span></h1>
+          <p class="blog-desc">
+            Noticias, ideas y actualizaciones sobre desarrollo, arquitectura de software,
+            tecnología y lo que voy construyendo.
+          </p>
+        </div>
+
+        <aside class="blog-summary-card">
+          <div class="card-body">
+            <div class="card-header">
+              <span>Public feed</span>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat">
+                <span class="stat-value">{{ articles().length }}</span>
+                <span class="stat-label">Posts</span>
+              </div>
+
+              <div class="stat">
+                <span class="stat-value">
+                  {{ articles().length > 0 ? 'Live' : '--' }}
+                </span>
+                <span class="stat-label">Status</span>
+              </div>
+
+              <div class="stat">
+                <span class="stat-value">2026</span>
+                <span class="stat-label">Edition</span>
+              </div>
+            </div>
+
+            <div class="availability">Contenido público disponible</div>
+          </div>
+        </aside>
+      </section>
+
+      @if (isLoading()) {
+        <section class="blog-state-card">
+          <p>Cargando noticias...</p>
+        </section>
+      } @else if (errorMessage()) {
+        <section class="blog-state-card blog-state-card--error">
+          <p>{{ errorMessage() }}</p>
+          <button type="button" class="btn-secondary" (click)="loadNews()">
+            Reintentar
+          </button>
+        </section>
+      } @else if (articles().length === 0) {
+        <section class="blog-state-card">
+          <p>Aún no hay noticias publicadas.</p>
+        </section>
+      } @else {
+        <section class="blog-grid">
+          @for (article of articles(); track article.slug) {
+            <article class="blog-card">
+              <a class="blog-card__media" [routerLink]="['/blog', article.slug]">
+                @if (article.imageUrl) {
+                  <img
+                    [src]="article.imageUrl"
+                    [alt]="'Imagen de ' + article.title"
+                    loading="lazy"
+                    referrerpolicy="no-referrer"
+                  />
+                } @else {
+                  <div class="blog-card__media blog-card__media--empty">
+                    <span>Sin imagen</span>
+                  </div>
+                }
+              </a>
+
+              <div class="blog-card__top">
+                <span class="blog-badge">{{ article.category }}</span>
+                <span class="blog-date">{{ formatPublishedAt(article.publishedAt) }}</span>
+              </div>
+
+              <div class="blog-card__content">
+                <h2>
+                  <a [routerLink]="['/blog', article.slug]">
+                    {{ article.title }}
+                  </a>
+                </h2>
+                <p>{{ article.description }}</p>
+              </div>
+
+              <div class="blog-card__actions">
+                <a class="btn-secondary" [routerLink]="['/blog', article.slug]">
+                  Leer noticia
+                </a>
+              </div>
+            </article>
+          }
+        </section>
+      }
+    </div>
+  </div>
+</section>

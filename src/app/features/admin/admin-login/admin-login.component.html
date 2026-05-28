@@ -1,0 +1,107 @@
+<section class="admin-login-page">
+  <div class="login-shell">
+    <div class="login-copy">
+      <span class="eyebrow">Admin access</span>
+
+      <h1>Gestiona tu blog desde un panel privado</h1>
+
+      <p>
+        Ingresa con tu contraseña maestra para crear, editar y publicar noticias
+        sin salir del ecosistema visual actual del portfolio.
+      </p>
+
+      <div class="login-copy__meta">
+        <div class="meta-item">
+          <mat-icon>verified_user</mat-icon>
+          <span>Autenticación por JWT</span>
+        </div>
+
+        <div class="meta-item">
+          <mat-icon>edit_square</mat-icon>
+          <span>Publicación y edición rápida</span>
+        </div>
+
+        <div class="meta-item">
+          <mat-icon>travel_explore</mat-icon>
+          <span>Base lista para SEO y blog público</span>
+        </div>
+      </div>
+    </div>
+
+    <mat-card class="login-card" appearance="outlined">
+      <div class="login-card__inner">
+        <div class="login-card__header">
+          <div class="login-icon">
+            <mat-icon>lock</mat-icon>
+          </div>
+
+          <div>
+            <h2>Iniciar sesión</h2>
+            <p>Acceso exclusivo para administración de contenido.</p>
+          </div>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="submit()" class="login-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Contraseña maestra</mat-label>
+            <input
+              matInput
+              [type]="hidePassword() ? 'password' : 'text'"
+              formControlName="password"
+              autocomplete="current-password"
+              placeholder="Ingresa tu contraseña"
+            />
+
+            <button
+              type="button"
+              mat-icon-button
+              matSuffix
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="hidePassword() ? 'Mostrar contraseña' : 'Ocultar contraseña'"
+            >
+              <mat-icon>{{ hidePassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
+            </button>
+
+            @if (passwordControl?.hasError('required') && passwordControl?.touched) {
+              <mat-error>La contraseña es obligatoria.</mat-error>
+            }
+
+            @if (passwordControl?.hasError('minlength') && passwordControl?.touched) {
+              <mat-error>La contraseña debe tener al menos 4 caracteres.</mat-error>
+            }
+          </mat-form-field>
+
+          @if (errorMessage()) {
+            <div class="login-error" role="alert">
+              <mat-icon>error</mat-icon>
+              <span>{{ errorMessage() }}</span>
+            </div>
+          }
+
+          <button
+            mat-flat-button
+            type="submit"
+            class="submit-button"
+            [disabled]="isSubmitting()"
+          >
+            @if (isSubmitting()) {
+              <mat-spinner diameter="20"></mat-spinner>
+              <span>Validando acceso...</span>
+            } @else {
+              <ng-container>
+                <mat-icon>arrow_forward</mat-icon>
+                <span>Entrar al panel</span>
+              </ng-container>
+            }
+
+          </button>
+
+          <a routerLink="/" class="back-link">
+            <mat-icon>arrow_back</mat-icon>
+            <span>Volver al sitio</span>
+          </a>
+        </form>
+      </div>
+    </mat-card>
+  </div>
+</section>

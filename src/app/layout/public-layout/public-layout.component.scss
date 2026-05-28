@@ -1,0 +1,21 @@
+.public-layout-main {
+  min-height: 100vh;
+}
+
+.flag-counter {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0 2rem;
+  opacity: 0.03;
+  transition: opacity 0.2s ease;
+}
+
+.flag-counter a,
+.flag-counter img {
+  display: block;
+}
+
+.flag-counter img {
+  max-width: min(100%, 180px);
+  height: auto;
+}
