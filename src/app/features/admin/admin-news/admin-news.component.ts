@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -18,7 +25,7 @@ import {
   styleUrl: './admin-news.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminNewsComponent implements OnInit {
+export class AdminNewsComponent implements OnInit, OnDestroy {
   private readonly newsService = inject(NewsService);
   private readonly fb = inject(FormBuilder);
 
@@ -31,17 +38,25 @@ export class AdminNewsComponent implements OnInit {
   readonly submitError = signal('');
   readonly selectedArticle = signal<NewsArticle | null>(null);
 
+  readonly selectedImageFile = signal<File | null>(null);
+  readonly selectedImageName = signal('');
+  readonly currentImageUrl = signal<string | null>(null);
+  readonly imagePreviewUrl = signal<string | null>(null);
+
   readonly newsForm = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.maxLength(160)]],
     slug: ['', [Validators.required, Validators.maxLength(180)]],
     description: ['', [Validators.required, Validators.maxLength(320)]],
     content: ['', [Validators.required]],
     category: ['', [Validators.required, Validators.maxLength(80)]],
-    imageUrl: ['', [Validators.required]],
   });
 
   ngOnInit(): void {
     this.loadArticles();
+  }
+
+  ngOnDestroy(): void {
+    this.revokeImagePreviewUrl();
   }
 
   loadArticles(): void {
@@ -50,6 +65,10 @@ export class AdminNewsComponent implements OnInit {
 
     this.newsService.getAdminNews(0, 20).subscribe({
       next: (response) => {
+        console.log('=== DEBUG: Response de getAdminNews ===');
+        console.log('Total articles:', response.articles.length);
+        console.log('Primer article:', response.articles[0]);
+        console.log('imageUrl del primer article:', response.articles[0].imageUrl);
         this.articles.set(response.articles);
         this.isLoading.set(false);
       },
@@ -74,28 +93,38 @@ export class AdminNewsComponent implements OnInit {
   openCreateEditor(): void {
     this.selectedArticle.set(null);
     this.submitError.set('');
+    this.selectedImageFile.set(null);
+    this.selectedImageName.set('');
+    this.currentImageUrl.set(null);
+    this.revokeImagePreviewUrl();
+
     this.newsForm.reset({
       title: '',
       slug: '',
       description: '',
       content: '',
       category: '',
-      imageUrl: '',
     });
+
     this.isEditorOpen.set(true);
   }
 
   openEditEditor(article: NewsArticle): void {
     this.selectedArticle.set(article);
     this.submitError.set('');
+    this.selectedImageFile.set(null);
+    this.selectedImageName.set('');
+    this.currentImageUrl.set(article.imageUrl?.trim() ? article.imageUrl : null);
+    this.revokeImagePreviewUrl();
+
     this.newsForm.reset({
       title: article.title,
       slug: article.slug,
       description: article.description,
       content: article.content,
       category: article.category,
-      imageUrl: article.imageUrl,
     });
+
     this.isEditorOpen.set(true);
   }
 
@@ -103,6 +132,24 @@ export class AdminNewsComponent implements OnInit {
     this.isEditorOpen.set(false);
     this.selectedArticle.set(null);
     this.submitError.set('');
+    this.selectedImageFile.set(null);
+    this.selectedImageName.set('');
+    this.currentImageUrl.set(null);
+    this.revokeImagePreviewUrl();
+  }
+
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0] ?? null;
+
+    this.selectedImageFile.set(file);
+    this.selectedImageName.set(file?.name ?? '');
+    this.revokeImagePreviewUrl();
+
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      this.imagePreviewUrl.set(previewUrl);
+    }
   }
 
   publishArticle(article: NewsArticle): void {
@@ -148,7 +195,6 @@ export class AdminNewsComponent implements OnInit {
     }).format(date);
   }
 
-
   deleteArticle(article: NewsArticle): void {
     const confirmed = window.confirm(`¿Seguro que quieres eliminar la noticia "${article.title}"?`);
 
@@ -181,9 +227,35 @@ export class AdminNewsComponent implements OnInit {
     });
   }
 
+  private readonly urlRegex = /(https?:\/\/[^\s]+)/g;
+
+  linkifyContent(content: string): string {
+    if (!content?.trim()) {
+      return '';
+    }
+
+    const escaped = content
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+
+    return escaped
+      .replace(this.urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>')
+      .replace(/\n/g, '<br>');
+  }
+
   submitForm(): void {
     if (this.newsForm.invalid) {
       this.newsForm.markAllAsTouched();
+      return;
+    }
+
+    const selected = this.selectedArticle();
+
+    if (!selected && !this.selectedImageFile()) {
+      this.submitError.set('Debes seleccionar una imagen para crear la noticia.');
       return;
     }
 
@@ -191,7 +263,6 @@ export class AdminNewsComponent implements OnInit {
     this.submitError.set('');
 
     const raw = this.newsForm.getRawValue();
-    const selected = this.selectedArticle();
 
     if (selected) {
       const payload: UpdateNewsRequest = {
@@ -199,10 +270,9 @@ export class AdminNewsComponent implements OnInit {
         description: raw.description,
         content: raw.content,
         category: raw.category,
-        imageUrl: raw.imageUrl,
       };
 
-      this.newsService.updateNews(selected.slug, payload).subscribe({
+      this.newsService.updateNews(selected.slug, payload, this.selectedImageFile()).subscribe({
         next: () => {
           this.isSubmitting.set(false);
           this.closeEditor();
@@ -224,10 +294,9 @@ export class AdminNewsComponent implements OnInit {
       description: raw.description,
       content: raw.content,
       category: raw.category,
-      imageUrl: raw.imageUrl,
     };
 
-    this.newsService.createNews(payload).subscribe({
+    this.newsService.createNews(payload, this.selectedImageFile()).subscribe({
       next: () => {
         this.isSubmitting.set(false);
         this.closeEditor();
@@ -239,5 +308,15 @@ export class AdminNewsComponent implements OnInit {
         this.isSubmitting.set(false);
       },
     });
+  }
+
+  private revokeImagePreviewUrl(): void {
+    const currentPreview = this.imagePreviewUrl();
+
+    if (currentPreview) {
+      URL.revokeObjectURL(currentPreview);
+    }
+
+    this.imagePreviewUrl.set(null);
   }
 }

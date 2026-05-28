@@ -77,9 +77,25 @@
                 <span class="news-category">{{ article.category }}</span>
               </div>
 
+              <div class="news-card__media" *ngIf="article.imageUrl as imageUrl; else noImageBlock">
+                <img
+                  [src]="imageUrl"
+                  [alt]="'Imagen de ' + article.title"
+                  loading="lazy"
+                  referrerpolicy="no-referrer"
+                />
+              </div>
+
+              <ng-template #noImageBlock>
+                <div class="news-card__media news-card__media--empty">
+                  <span>Sin imagen</span>
+                </div>
+              </ng-template>
+
               <div class="news-card__content">
                 <h2>{{ article.title }}</h2>
                 <p>{{ article.description }}</p>
+                <div class="news-card__body" [innerHTML]="linkifyContent(article.content)"></div>
               </div>
 
               <div class="news-card__meta">
@@ -167,13 +183,49 @@
             </label>
 
             <label class="admin-editor-field">
-              <span>Image URL</span>
+              <span>{{ selectedArticle() ? 'Reemplazar imagen' : 'Imagen' }}</span>
               <input
-                type="url"
-                formControlName="imageUrl"
-                placeholder="https://..."
+                type="file"
+                accept="image/*"
+                (change)="onImageSelected($event)"
               />
             </label>
+
+            @if (selectedImageName() || imagePreviewUrl() || currentImageUrl()) {
+              <div class="admin-editor-field admin-editor-field--full">
+                <span>
+                  {{
+                    selectedImageName()
+                      ? 'Vista previa de la nueva imagen'
+                      : 'Imagen actual'
+                  }}
+                </span>
+
+                @if (selectedImageName()) {
+                  <p>{{ selectedImageName() }}</p>
+                }
+
+                @if (imagePreviewUrl()) {
+                  <div class="admin-image-preview">
+                    <img
+                      [src]="imagePreviewUrl()!"
+                      alt="Vista previa de la nueva imagen seleccionada"
+                    />
+                  </div>
+                } @else if (currentImageUrl()) {
+                  <div class="admin-image-preview">
+                    <img
+                      [src]="currentImageUrl()!"
+                      alt="Imagen actual de la noticia"
+                    />
+                  </div>
+
+                  <a [href]="currentImageUrl()!" target="_blank" rel="noopener noreferrer">
+                    Ver imagen actual
+                  </a>
+                }
+              </div>
+            }
 
             <label class="admin-editor-field admin-editor-field--full">
               <span>Descripción</span>

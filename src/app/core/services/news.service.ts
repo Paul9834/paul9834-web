@@ -28,7 +28,6 @@ export interface CreateNewsRequest {
   description: string;
   content: string;
   category: string;
-  imageUrl: string;
   published?: boolean;
   publishedAt?: string | null;
 }
@@ -38,7 +37,6 @@ export interface UpdateNewsRequest {
   description: string;
   content: string;
   category: string;
-  imageUrl: string;
   published?: boolean;
   publishedAt?: string | null;
 }
@@ -81,15 +79,23 @@ export class NewsService {
       .pipe(map((article) => this.normalizeArticle(article)));
   }
 
-  createNews(payload: CreateNewsRequest): Observable<NewsArticle> {
+  createNews(payload: CreateNewsRequest, imageFile?: File | null): Observable<NewsArticle> {
+    const formData = this.buildNewsFormData(payload, imageFile);
+
     return this.http
-      .post<NewsArticle>(this.baseUrl, payload)
+      .post<NewsArticle>(this.baseUrl, formData)
       .pipe(map((article) => this.normalizeArticle(article)));
   }
 
-  updateNews(slug: string, payload: UpdateNewsRequest): Observable<NewsArticle> {
+  updateNews(
+    slug: string,
+    payload: UpdateNewsRequest,
+    imageFile?: File | null,
+  ): Observable<NewsArticle> {
+    const formData = this.buildNewsFormData(payload, imageFile);
+
     return this.http
-      .put<NewsArticle>(`${this.baseUrl}/${slug}`, payload)
+      .put<NewsArticle>(`${this.baseUrl}/${slug}`, formData)
       .pipe(map((article) => this.normalizeArticle(article)));
   }
 
@@ -103,10 +109,42 @@ export class NewsService {
       .pipe(map((article) => this.normalizeArticle(article)));
   }
 
+  private buildNewsFormData(
+    payload: CreateNewsRequest | UpdateNewsRequest,
+    imageFile?: File | null,
+  ): FormData {
+    const formData = new FormData();
+
+    formData.append('article', new Blob([JSON.stringify(payload)], { type: 'application/json' }));
+
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+
+    return formData;
+  }
+
   private normalizeArticle(article: NewsArticle): NewsArticle {
     return {
       ...article,
+      imageUrl: this.normalizeImageUrl(article.imageUrl),
       publishedAt: article.publishedAt?.trim() ? article.publishedAt : null,
     };
+  }
+
+  private normalizeImageUrl(imageUrl: string | null | undefined): string {
+    if (!imageUrl?.trim()) {
+      return '';
+    }
+
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+
+    if (imageUrl.startsWith('/')) {
+      return `${environment.apiBaseUrl}${imageUrl}`;
+    }
+
+    return `${environment.apiBaseUrl}/${imageUrl}`;
   }
 }
