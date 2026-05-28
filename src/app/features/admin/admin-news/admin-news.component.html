@@ -158,16 +158,18 @@
                 <h2>{{ article.title }}</h2>
                 <p>{{ article.description }}</p>
               </div>
-
               <div class="news-card__meta">
                 <span>Slug: {{ article.slug }}</span>
-
-                @if (article.publishedAt) {
-                  <span>Publicado: {{ article.publishedAt }}</span>
-                } @else {
-                  <span>Aún no publicado</span>
-                }
+                <span>
+    {{
+                    article.publishedAt
+                      ? 'Publicado: ' + formatPublishedAt(article.publishedAt)
+                      : 'Aún no publicado'
+                  }}
+  </span>
               </div>
+
+
 
               <div class="news-card__actions">
                 <button
@@ -178,11 +180,20 @@
                   Editar
                 </button>
 
-                <button type="button" class="btn-secondary">
-                  Publicar
+                <button
+                  type="button"
+                  class="btn-secondary"
+                  (click)="publishArticle(article)"
+                  [disabled]="article.published"
+                >
+                  {{ article.published ? 'Publicado' : 'Publicar' }}
                 </button>
 
-                <button type="button" class="btn-secondary">
+                <button
+                  type="button"
+                  class="btn-secondary"
+                  (click)="deleteArticle(article)"
+                >
                   Eliminar
                 </button>
               </div>

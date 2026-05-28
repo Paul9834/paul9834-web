@@ -105,6 +105,82 @@ export class AdminNewsComponent implements OnInit {
     this.submitError.set('');
   }
 
+  publishArticle(article: NewsArticle): void {
+    if (article.published) {
+      return;
+    }
+
+    this.errorMessage.set('');
+    this.submitError.set('');
+
+    this.newsService.publishNews(article.slug).subscribe({
+      next: () => {
+        this.loadArticles();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error publishing news:', error);
+
+        if (error.status === 401 || error.status === 403) {
+          this.errorMessage.set(
+            'Tu sesión no es válida o no tienes permisos para publicar noticias.',
+          );
+        } else {
+          this.errorMessage.set('No se pudo publicar la noticia.');
+        }
+      },
+    });
+  }
+
+  formatPublishedAt(value: string | null): string {
+    if (!value?.trim()) {
+      return 'Aún no publicado';
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    return new Intl.DateTimeFormat('es-CO', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    }).format(date);
+  }
+
+
+  deleteArticle(article: NewsArticle): void {
+    const confirmed = window.confirm(`¿Seguro que quieres eliminar la noticia "${article.title}"?`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.errorMessage.set('');
+    this.submitError.set('');
+
+    this.newsService.deleteNews(article.slug).subscribe({
+      next: () => {
+        if (this.selectedArticle()?.slug === article.slug) {
+          this.closeEditor();
+        }
+
+        this.loadArticles();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error deleting news:', error);
+
+        if (error.status === 401 || error.status === 403) {
+          this.errorMessage.set(
+            'Tu sesión no es válida o no tienes permisos para eliminar noticias.',
+          );
+        } else {
+          this.errorMessage.set('No se pudo eliminar la noticia.');
+        }
+      },
+    });
+  }
+
   submitForm(): void {
     if (this.newsForm.invalid) {
       this.newsForm.markAllAsTouched();
