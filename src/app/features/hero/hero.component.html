@@ -1,11 +1,10 @@
-<section class="hero">
+<section class="hero" aria-labelledby="home-hero-title">
   <div class="hero-content">
+    <header class="text-col">
+      <p class="eyebrow">Mobile Engineer Portfolio</p>
 
-    <!-- Left column -->
-    <div class="text-col">
-
-      <h1>
-        Kevin Paul<br>
+      <h1 id="home-hero-title">
+        Kevin Paul<br />
         <span class="gradient-text">Montealegre Melo</span>
       </h1>
 
@@ -19,29 +18,31 @@
       </p>
 
       <div class="hero-buttons">
-        <a href="#projects" class="btn-primary">
-          <mat-icon>rocket_launch</mat-icon> View Projects
+        <a href="#projects" class="btn-primary" aria-label="View projects section">
+          <mat-icon aria-hidden="true">rocket_launch</mat-icon>
+          <span>View Projects</span>
         </a>
 
-        <a href="mailto:paul9834developer@gmail.com" class="btn-secondary">
-          <mat-icon>mail</mat-icon> Contact
+        <a
+          href="mailto:paul9834developer@gmail.com"
+          class="btn-secondary"
+          aria-label="Contact Kevin Paul Montealegre Melo by email"
+        >
+          <mat-icon aria-hidden="true">mail</mat-icon>
+          <span>Contact by Email</span>
         </a>
       </div>
+    </header>
 
-    </div>
-
-    <!-- Right column -->
-    <div class="card-col">
+    <aside class="card-col" aria-label="Technical profile summary">
       <mat-card class="stack-card" appearance="raised">
         <div class="card-body">
-
           <div class="card-header">
-            <mat-icon>code</mat-icon>
+            <mat-icon aria-hidden="true">code</mat-icon>
             <span>Core Stack</span>
           </div>
 
           <div class="stack-grid">
-            <!-- Android -->
             <span class="skill-chip">Kotlin</span>
             <span class="skill-chip">Android SDK</span>
             <span class="skill-chip">Jetpack Compose</span>
@@ -51,48 +52,40 @@
             <span class="skill-chip">SDK Integrations</span>
             <span class="skill-chip">Hardware Integrations</span>
             <span class="skill-chip">Android TV</span>
-
-
-            <!-- iOS -->
             <span class="skill-chip">Swift</span>
             <span class="skill-chip">SwiftUI</span>
-
-            <!-- Frontend -->
             <span class="skill-chip">Angular</span>
-
-            <!-- Backend -->
             <span class="skill-chip">Spring Boot</span>
             <span class="skill-chip">REST APIs</span>
             <span class="skill-chip">Firebase</span>
             <span class="skill-chip">Spring Security</span>
-
-            <!-- Databases -->
             <span class="skill-chip">MySQL</span>
             <span class="skill-chip">MongoDB</span>
-
-            <!-- DevOps -->
             <span class="skill-chip">CI/CD</span>
           </div>
 
           <mat-divider></mat-divider>
 
           <div class="stackoverflow-flair">
-            <a href="https://stackoverflow.com/users/10305186/kevin-paul-montealegre-melo"
-               target="_blank"
-               rel="noopener noreferrer">
-
+            <a
+              href="https://stackoverflow.com/users/10305186/kevin-paul-montealegre-melo"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open Stack Overflow profile of Kevin Paul Montealegre Melo"
+            >
               <img
                 src="https://stackoverflow.com/users/flair/10305186.png"
                 width="208"
                 height="58"
-                alt="Stack Overflow profile flair"
+                alt="Stack Overflow profile flair of Kevin Paul Montealegre Melo"
+                loading="lazy"
               />
             </a>
           </div>
 
           <mat-divider></mat-divider>
 
-          <div class="stats-grid">
+          <div class="stats-grid" aria-label="Career highlights">
             <div class="stat">
               <span class="stat-value">6+</span>
               <span class="stat-label">Years building mobile apps</span>
@@ -107,11 +100,12 @@
             </div>
           </div>
 
-          <div class="availability"> <span class="status-dot"></span> Open to remote &amp; relocation </div>
-
+          <div class="availability">
+            <span class="status-dot" aria-hidden="true"></span>
+            Open to remote &amp; relocation
+          </div>
         </div>
       </mat-card>
-    </div>
-
+    </aside>
   </div>
 </section>

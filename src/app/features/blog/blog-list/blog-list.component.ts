@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@ang
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Meta, Title } from '@angular/platform-browser';
 
 import { NewsArticle, NewsService } from '../../../core/services/news.service';
 
@@ -15,12 +16,16 @@ import { NewsArticle, NewsService } from '../../../core/services/news.service';
 })
 export class BlogListComponent implements OnInit {
   private readonly newsService = inject(NewsService);
+  private readonly titleService = inject(Title);
+  private readonly meta = inject(Meta);
+  private readonly canonicalUrl = 'https://paul9834.com/blog';
 
   readonly articles = signal<NewsArticle[]>([]);
   readonly isLoading = signal(true);
   readonly errorMessage = signal('');
 
   ngOnInit(): void {
+    this.setPageSeo();
     this.loadNews();
   }
 
@@ -61,5 +66,40 @@ export class BlogListComponent implements OnInit {
     return new Intl.DateTimeFormat('es-CO', {
       dateStyle: 'medium',
     }).format(date);
+  }
+
+  private setPageSeo(): void {
+    const pageTitle = 'Blog de Kevin Paul Montealegre Melo | Mobile Engineering, Software Architecture and Tech';
+    const description = 'Blog with news, ideas and updates about Android, iOS, software architecture, fintech, backend integration and technology by Kevin Paul Montealegre Melo.';
+
+    this.titleService.setTitle(pageTitle);
+
+    this.meta.updateTag({ name: 'description', content: description });
+    this.meta.updateTag({ name: 'robots', content: 'index, follow' });
+
+    this.meta.updateTag({ property: 'og:title', content: pageTitle });
+    this.meta.updateTag({ property: 'og:description', content: description });
+    this.meta.updateTag({ property: 'og:type', content: 'website' });
+    this.meta.updateTag({ property: 'og:url', content: this.canonicalUrl });
+    this.meta.updateTag({ property: 'og:image', content: 'https://paul9834.com/assets/og-image.jpg' });
+
+    this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.meta.updateTag({ name: 'twitter:title', content: pageTitle });
+    this.meta.updateTag({ name: 'twitter:description', content: description });
+    this.meta.updateTag({ name: 'twitter:image', content: 'https://paul9834.com/assets/og-image.jpg' });
+
+    this.setCanonicalUrl(this.canonicalUrl);
+  }
+
+  private setCanonicalUrl(url: string): void {
+    let link: HTMLLinkElement | null = document.querySelector('link[rel="canonical"]');
+
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
+    }
+
+    link.setAttribute('href', url);
   }
 }
