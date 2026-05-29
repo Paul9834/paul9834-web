@@ -6,14 +6,13 @@ import {
   signal,
   PLATFORM_ID,
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Meta, Title } from '@angular/platform-browser';
 
 import { NewsArticle, NewsService } from '../../../core/services/news.service';
 import { finalize } from 'rxjs';
-
 
 @Component({
   selector: 'app-blog-list',
@@ -28,6 +27,7 @@ export class BlogListComponent implements OnInit {
   private readonly titleService = inject(Title);
   private readonly meta = inject(Meta);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly document = inject(DOCUMENT);
   private readonly canonicalUrl = 'https://paul9834.com/blog';
 
   readonly articles = signal<NewsArticle[]>([]);
@@ -110,14 +110,16 @@ export class BlogListComponent implements OnInit {
   }
 
   private setCanonicalUrl(url: string): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
 
-    let link: HTMLLinkElement | null = document.querySelector('link[rel="canonical"]');
+    let link: HTMLLinkElement | null = this.document.querySelector('link[rel="canonical"]');
 
     if (!link) {
-      link = document.createElement('link');
+      link = this.document.createElement('link');
       link.setAttribute('rel', 'canonical');
-      document.head.appendChild(link);
+      this.document.head.appendChild(link);
     }
 
     link.setAttribute('href', url);

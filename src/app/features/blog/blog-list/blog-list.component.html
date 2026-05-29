@@ -15,8 +15,6 @@
             Análisis, opinión y seguimiento a hechos de interés público, tecnología,
             desarrollo y tendencias que impactan el entorno digital.
           </p>
-
-
         </div>
 
         <aside class="blog-summary-card">
@@ -27,16 +25,16 @@
 
             <div class="stats-grid">
               <div class="stat">
-        <span class="stat-value">
-          {{ isLoading() ? '--' : articles().length }}
-        </span>
+                <span class="stat-value">
+                  {{ isLoading() ? '--' : articles().length }}
+                </span>
                 <span class="stat-label">Artículos</span>
               </div>
 
               <div class="stat">
-        <span class="stat-value">
-          {{ isLoading() ? '...' : articles().length > 0 ? 'Activo' : '--' }}
-        </span>
+                <span class="stat-value">
+                  {{ isLoading() ? '...' : articles().length > 0 ? 'Activo' : '--' }}
+                </span>
                 <span class="stat-label">Estado</span>
               </div>
 
@@ -47,7 +45,6 @@
             </div>
           </div>
         </aside>
-
       </section>
 
       <section class="blog-grid-wrap">
@@ -126,7 +123,17 @@
 
                 <div class="blog-card__top">
                   <span class="blog-badge">{{ article.category }}</span>
-                  <span class="blog-date">{{ formatPublishedAt(article.publishedAt) }}</span>
+
+                  <div class="blog-card__meta">
+                    <span class="blog-likes" aria-label="Cantidad de me gusta">
+                      <span class="material-icons blog-likes__icon" aria-hidden="true">
+                        favorite
+                      </span>
+                      <span class="blog-likes__count">{{ article.likesCount }}</span>
+                    </span>
+
+                    <span class="blog-date">{{ formatPublishedAt(article.publishedAt) }}</span>
+                  </div>
                 </div>
 
                 <div class="blog-card__content">

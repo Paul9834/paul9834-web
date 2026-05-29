@@ -2,16 +2,23 @@
   @if (isLoading()) {
     <div class="blog-detail-loading-overlay" aria-live="polite" aria-busy="true">
       <div class="blog-detail-loading-backdrop"></div>
-      <div class="blog-detail-loading-indicator" role="status" aria-label="Cargando noticia">
-        <mat-progress-spinner
-          mode="indeterminate"
-          diameter="36"
-          strokeWidth="4"
-          color="primary"
-        />
+      <div class="blog-detail-loading-card" role="status" aria-label="Cargando noticia">
+        <span class="blog-detail-loading-orb blog-detail-loading-orb--one"></span>
+        <span class="blog-detail-loading-orb blog-detail-loading-orb--two"></span>
+
+        <div class="blog-detail-loading-spinner" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="blog-detail-loading-copy">
+          <span class="blog-detail-loading-label">Cargando</span>
+          <h2>Preparando noticia</h2>
+          <p>Estamos obteniendo el contenido más reciente del artículo.</p>
+        </div>
       </div>
-
-
     </div>
   }
 
@@ -42,6 +49,25 @@
               <div class="blog-detail-meta-inline">
                 <span>{{ formatPublishedAt(currentArticle.publishedAt) }}</span>
                 <span>Slug: {{ currentArticle.slug }}</span>
+
+              </div>
+
+              <div class="blog-detail-like-row">
+                <button
+                  type="button"
+                  class="blog-detail-like-button"
+                  [disabled]="isLiking()"
+                  [class.blog-detail-like-button--loading]="isLiking()"
+                  (click)="likeArticle()"
+                  aria-label="Dar me gusta al artículo"
+                >
+                  <span class="material-icons" aria-hidden="true">favorite</span>
+                  <span>{{ isLiking() ? 'Registrando...' : 'Me gusta' }}</span>
+                </button>
+
+                @if (likeErrorMessage()) {
+                  <p class="blog-detail-like-error">{{ likeErrorMessage() }}</p>
+                }
               </div>
             </div>
           </section>
@@ -67,8 +93,6 @@
           <div class="blog-detail-actions blog-detail-actions--bottom">
             <a class="btn-secondary" routerLink="/blog">← Volver al blog</a>
           </div>
-
-
         </ng-container>
       }
     </div>

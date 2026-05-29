@@ -1,10 +1,19 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+  signal,
+  PLATFORM_ID,
+} from '@angular/core';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
-
-import { NewsArticle } from '../../../core/services/news.service';
+import { finalize } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { HttpErrorResponse } from '@angular/common/http';
+
+import { NewsArticle, NewsService } from '../../../core/services/news.service';
 
 @Component({
   selector: 'app-blog-detail',
@@ -18,12 +27,18 @@ export class BlogDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly titleService = inject(Title);
   private readonly meta = inject(Meta);
+  private readonly document = inject(DOCUMENT);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly newsService = inject(NewsService);
+
   private readonly urlRegex = /(https?:\/\/[^\s]+)/g;
   private readonly siteUrl = 'https://paul9834.com';
 
   readonly article = signal<NewsArticle | null>(null);
   readonly isLoading = signal(true);
+  readonly isLiking = signal(false);
   readonly errorMessage = signal('');
+  readonly likeErrorMessage = signal('');
 
   ngOnInit(): void {
     const resolvedArticle = this.route.snapshot.data['article'] as NewsArticle | undefined;
@@ -71,8 +86,32 @@ export class BlogDetailComponent implements OnInit {
       .replace(/'/g, '&#39;');
 
     return escaped
-      .replace(this.urlRegex, '<a href=\"$1\" target=\"_blank\" rel=\"noopener noreferrer\">$1</a>')
+      .replace(this.urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>')
       .replace(/\n/g, '<br>');
+  }
+
+  likeArticle(): void {
+    const currentArticle = this.article();
+
+    if (!currentArticle || this.isLiking()) {
+      return;
+    }
+
+    this.isLiking.set(true);
+    this.likeErrorMessage.set('');
+
+    this.newsService
+      .likeNews(currentArticle.slug)
+      .pipe(finalize(() => this.isLiking.set(false)))
+      .subscribe({
+        next: (updatedArticle) => {
+          this.article.set(updatedArticle);
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error liking article:', error);
+          this.likeErrorMessage.set('No se pudo registrar tu me gusta. Intenta nuevamente.');
+        },
+      });
   }
 
   private setArticleSeo(article: NewsArticle): void {
@@ -156,62 +195,59 @@ export class BlogDetailComponent implements OnInit {
   }
 
   private setCanonicalUrl(url: string): void {
-    let link: HTMLLinkElement | null = document.querySelector('link[rel=\"canonical\"]');
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    let link = this.document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
 
     if (!link) {
-      link = document.createElement('link');
+      link = this.document.createElement('link');
       link.setAttribute('rel', 'canonical');
-      document.head.appendChild(link);
+      this.document.head.appendChild(link);
     }
 
     link.setAttribute('href', url);
   }
 
   private setStructuredData(article: NewsArticle, canonicalUrl: string, imageUrl: string): void {
-    const structuredData = {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    this.removeStructuredData();
+
+    const script = this.document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'article-structured-data';
+    script.text = JSON.stringify({
       '@context': 'https://schema.org',
-      '@type': 'BlogPosting',
+      '@type': 'Article',
       headline: article.title,
       description: article.description,
-      image: [imageUrl],
-      mainEntityOfPage: canonicalUrl,
-      url: canonicalUrl,
-      articleSection: article.category,
-      datePublished: article.publishedAt ?? undefined,
-      dateModified: article.publishedAt ?? undefined,
+      image: imageUrl,
       author: {
         '@type': 'Person',
         name: 'Kevin Paul Montealegre Melo',
-        url: 'https://paul9834.com/about',
       },
       publisher: {
         '@type': 'Person',
         name: 'Kevin Paul Montealegre Melo',
-        url: 'https://paul9834.com/',
       },
-    };
+      datePublished: article.publishedAt,
+      mainEntityOfPage: canonicalUrl,
+      url: canonicalUrl,
+    });
 
-    let script = document.querySelector(
-      'script[type=\"application/ld+json\"][data-seo=\"blog-detail\"]',
-    ) as HTMLScriptElement | null;
-
-    if (!script) {
-      script = document.createElement('script');
-      script.type = 'application/ld+json';
-      script.setAttribute('data-seo', 'blog-detail');
-      document.head.appendChild(script);
-    }
-
-    script.textContent = JSON.stringify(structuredData);
+    this.document.head.appendChild(script);
   }
 
   private removeStructuredData(): void {
-    const script = document.querySelector(
-      'script[type=\"application/ld+json\"][data-seo=\"blog-detail\"]',
-    );
-
-    if (script) {
-      script.remove();
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
     }
+
+    const existingScript = this.document.getElementById('article-structured-data');
+    existingScript?.remove();
   }
 }
