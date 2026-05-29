@@ -7,6 +7,7 @@ import { authGuard } from './core/guards/auth.guard';
 import { PublicLayoutComponent } from './layout/public-layout/public-layout.component';
 import { BlogListComponent } from './features/blog/blog-list/blog-list.component';
 import { BlogDetailComponent } from './features/blog/blog-details/blog-detail.component';
+import { blogArticleResolver } from './core/resolvers/blog-article.resolver';
 
 export const routes: Routes = [
   {
@@ -18,7 +19,14 @@ export const routes: Routes = [
     ],
   },
   { path: 'blog', component: BlogListComponent },
-  { path: 'blog/:slug', component: BlogDetailComponent },
+  {
+    path: 'blog/:slug',
+    component: BlogDetailComponent,
+    resolve: {
+      article: blogArticleResolver,
+    },
+  },
+
   { path: 'admin/login', component: AdminLoginComponent },
   { path: 'admin', component: AdminNewsComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: '' },

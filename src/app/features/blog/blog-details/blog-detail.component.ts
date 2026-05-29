@@ -8,11 +8,9 @@ import {
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Meta, Title } from '@angular/platform-browser';
-import { finalize } from 'rxjs';
 
-import { NewsArticle, NewsService } from '../../../core/services/news.service';
+import { NewsArticle } from '../../../core/services/news.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
@@ -25,7 +23,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class BlogDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
-  private readonly newsService = inject(NewsService);
   private readonly titleService = inject(Title);
   private readonly meta = inject(Meta);
   private readonly platformId = inject(PLATFORM_ID);
@@ -37,44 +34,18 @@ export class BlogDetailComponent implements OnInit {
   readonly errorMessage = signal('');
 
   ngOnInit(): void {
-    const slug = this.route.snapshot.paramMap.get('slug');
+    const resolvedArticle = this.route.snapshot.data['article'] as NewsArticle | undefined;
 
-    if (!slug?.trim()) {
-      this.errorMessage.set('No se encontró el identificador de la noticia.');
+    if (!resolvedArticle) {
+      this.errorMessage.set('No se pudo cargar la noticia.');
       this.isLoading.set(false);
       this.setFallbackSeo();
       return;
     }
 
-    this.loadArticle(slug);
-  }
-
-  loadArticle(slug: string): void {
-    this.isLoading.set(true);
-    this.errorMessage.set('');
-
-    this.newsService
-      .getBySlug(slug)
-      .pipe(finalize(() => this.isLoading.set(false)))
-      .subscribe({
-        next: (article) => {
-          this.article.set(article);
-          this.setArticleSeo(article);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error loading blog detail:', error);
-
-          if (error.status === 404) {
-            this.errorMessage.set('La noticia que buscas no existe o ya no está disponible.');
-          } else if (error.status === 0) {
-            this.errorMessage.set('No fue posible conectar con el servicio de noticias.');
-          } else {
-            this.errorMessage.set('No se pudo cargar la noticia.');
-          }
-
-          this.setFallbackSeo();
-        },
-      });
+    this.article.set(resolvedArticle);
+    this.setArticleSeo(resolvedArticle);
+    this.isLoading.set(false);
   }
 
   formatPublishedAt(value: string | null): string {
@@ -130,6 +101,7 @@ export class BlogDetailComponent implements OnInit {
     this.meta.updateTag({ property: 'og:type', content: 'article' });
     this.meta.updateTag({ property: 'og:url', content: canonicalUrl });
     this.meta.updateTag({ property: 'og:image', content: imageUrl });
+    this.meta.updateTag({ property: 'og:image:secure_url', content: imageUrl });
     this.meta.updateTag({ property: 'og:site_name', content: 'Paul Montealegre' });
 
     if (article.publishedAt) {
