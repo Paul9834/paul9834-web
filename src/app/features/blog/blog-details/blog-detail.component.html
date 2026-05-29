@@ -50,6 +50,12 @@
                 <span>{{ formatPublishedAt(currentArticle.publishedAt) }}</span>
                 <span>Slug: {{ currentArticle.slug }}</span>
 
+                <span class="blog-detail-likes-chip">
+                  <span class="material-icons blog-detail-likes-chip__icon" aria-hidden="true">
+                    favorite
+                  </span>
+                  <span>{{ currentArticle.likesCount }}</span>
+                </span>
               </div>
 
               <div class="blog-detail-like-row">
@@ -62,7 +68,7 @@
                   aria-label="Dar me gusta al artículo"
                 >
                   <span class="material-icons" aria-hidden="true">favorite</span>
-                  <span>{{ isLiking() ? 'Registrando...' : 'Me gusta' }}</span>
+                  <span>{{ isLiking() ? '....' : 'Me gusta' }}</span>
                 </button>
 
                 @if (likeErrorMessage()) {
