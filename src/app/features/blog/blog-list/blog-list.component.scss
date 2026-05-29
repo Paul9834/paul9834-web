@@ -446,7 +446,12 @@
     right: -8%;
     width: min(52vw, 920px);
     height: calc(100% + 220px);
-    background: var(--grad-blob);
+    background: linear-gradient(
+      135deg,
+      rgb(0 81 255) 0%,
+      rgb(7 139 232 / 0.84) 45%,
+      rgb(8 39 175 / 0.12) 100%
+    );
     border-radius: 58% 0 0 26%;
     opacity: 1;
   }
@@ -652,3 +657,5 @@
     width: 140px;
   }
 }
+
+
