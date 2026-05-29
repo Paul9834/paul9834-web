@@ -304,6 +304,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
       category: raw.category,
     };
 
+
     this.newsService.createNews(payload, this.selectedImageFile()).subscribe({
       next: () => {
         this.isSubmitting.set(false);
@@ -311,8 +312,8 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
         this.loadArticles();
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error creating news:', error);
-        this.submitError.set('No se pudo crear la noticia.');
+        console.error('Error creating news:', error.status, error.error, error);
+        this.submitError.set(error.error?.error ?? 'No se pudo crear la noticia.');
         this.isSubmitting.set(false);
       },
     });
