@@ -12,6 +12,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Meta, Title } from '@angular/platform-browser';
 
 import { NewsArticle, NewsService } from '../../../core/services/news.service';
+import { finalize } from 'rxjs';
+
 
 @Component({
   selector: 'app-blog-list',
@@ -41,23 +43,23 @@ export class BlogListComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    this.newsService.getNews(0, 12).subscribe({
-      next: (response) => {
-        this.articles.set(response.articles);
-        this.isLoading.set(false);
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error loading public news:', error);
+    this.newsService
+      .getNews(0, 12)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          this.articles.set(response.articles);
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error loading public news:', error);
 
-        if (error.status === 0) {
-          this.errorMessage.set('No fue posible conectar con el servicio de noticias.');
-        } else {
-          this.errorMessage.set('No se pudieron cargar las noticias publicadas.');
-        }
-
-        this.isLoading.set(false);
-      },
-    });
+          if (error.status === 0) {
+            this.errorMessage.set('No fue posible conectar con el servicio de noticias.');
+          } else {
+            this.errorMessage.set('No se pudieron cargar las noticias publicadas.');
+          }
+        },
+      });
   }
 
   formatPublishedAt(value: string | null): string {

@@ -20,120 +20,133 @@
         <aside class="blog-summary-card">
           <div class="card-body">
             <div class="card-header">
-              <span>Public feed</span>
+              <span>Noticias publicadas</span>
             </div>
 
             <div class="stats-grid">
               <div class="stat">
-                <span class="stat-value">
-                  {{ isLoading() ? '--' : articles().length }}
-                </span>
-                <span class="stat-label">Posts</span>
+        <span class="stat-value">
+          {{ isLoading() ? '--' : articles().length }}
+        </span>
+                <span class="stat-label">Artículos</span>
               </div>
 
               <div class="stat">
-                <span class="stat-value">
-                  {{ isLoading() ? '...' : articles().length > 0 ? 'Live' : '--' }}
-                </span>
-                <span class="stat-label">Status</span>
+        <span class="stat-value">
+          {{ isLoading() ? '...' : articles().length > 0 ? 'Activo' : '--' }}
+        </span>
+                <span class="stat-label">Estado</span>
               </div>
 
               <div class="stat">
                 <span class="stat-value">2026</span>
-                <span class="stat-label">Edition</span>
+                <span class="stat-label">Edición</span>
               </div>
-            </div>
-
-            <div class="availability">
-              {{ isLoading() ? 'Cargando contenido público...' : 'Contenido público disponible' }}
             </div>
           </div>
         </aside>
+
       </section>
 
-      @if (isLoading()) {
-        <section class="blog-grid" aria-busy="true" aria-label="Cargando noticias">
-          @for (item of [1, 2, 3, 4, 5, 6]; track item) {
-            <article class="blog-card blog-card--skeleton">
-              <div class="blog-card__media skeleton-box"></div>
+      <section class="blog-grid-wrap">
+        @if (isLoading()) {
+          <div class="blog-loading-banner" role="status" aria-live="polite">
+            <span class="blog-loading-banner__dot" aria-hidden="true"></span>
+            <span>Cargando noticias publicadas...</span>
+          </div>
+        }
 
-              <div class="blog-card__top">
-                <span class="skeleton-line skeleton-badge"></span>
-                <span class="skeleton-line skeleton-date"></span>
-              </div>
+        <section
+          class="blog-grid"
+          [class.blog-grid--loading]="isLoading()"
+          [attr.aria-busy]="isLoading()"
+          aria-label="Noticias del blog"
+        >
+          @if (isLoading()) {
+            <div class="blog-grid__blur" aria-hidden="true"></div>
+          }
 
-              <div class="blog-card__content">
-                <div class="skeleton-line skeleton-title"></div>
-                <div class="skeleton-line skeleton-title skeleton-title--short"></div>
+          @if (!isLoading() && errorMessage()) {
+            <section class="blog-state-card blog-state-card--error">
+              <p>{{ errorMessage() }}</p>
 
-                <div class="skeleton-copy">
-                  <div class="skeleton-line skeleton-text"></div>
-                  <div class="skeleton-line skeleton-text"></div>
-                  <div class="skeleton-line skeleton-text skeleton-text--short"></div>
+              <button type="button" class="btn-secondary" (click)="loadNews()">
+                Reintentar
+              </button>
+            </section>
+          } @else if (!isLoading() && articles().length === 0) {
+            <section class="blog-state-card">
+              <p>Aún no hay noticias publicadas.</p>
+            </section>
+          } @else if (isLoading()) {
+            @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+              <article class="blog-card blog-card--loading">
+                <div class="blog-card__media skeleton-box"></div>
+
+                <div class="blog-card__top">
+                  <span class="skeleton-line skeleton-badge"></span>
+                  <span class="skeleton-line skeleton-date"></span>
                 </div>
-              </div>
 
-              <div class="blog-card__actions">
-                <span class="skeleton-line skeleton-button"></span>
-              </div>
-            </article>
-          }
-        </section>
-      } @else if (errorMessage()) {
-        <section class="blog-state-card blog-state-card--error">
-          <p>{{ errorMessage() }}</p>
+                <div class="blog-card__content">
+                  <div class="skeleton-line skeleton-title"></div>
+                  <div class="skeleton-line skeleton-title skeleton-title--short"></div>
 
-          <button type="button" class="btn-secondary" (click)="loadNews()">
-            Reintentar
-          </button>
-        </section>
-      } @else if (articles().length === 0) {
-        <section class="blog-state-card">
-          <p>Aún no hay noticias publicadas.</p>
-        </section>
-      } @else {
-        <section class="blog-grid">
-          @for (article of articles(); track article.slug) {
-            <article class="blog-card">
-              <a class="blog-card__media" [routerLink]="['/blog', article.slug]">
-                @if (article.imageUrl) {
-                  <img
-                    [src]="article.imageUrl"
-                    [alt]="'Imagen de ' + article.title"
-                    loading="lazy"
-                    referrerpolicy="no-referrer"
-                  />
-                } @else {
-                  <div class="blog-card__media blog-card__media--empty">
-                    <span>Sin imagen</span>
+                  <div class="skeleton-copy">
+                    <div class="skeleton-line skeleton-text"></div>
+                    <div class="skeleton-line skeleton-text"></div>
+                    <div class="skeleton-line skeleton-text skeleton-text--short"></div>
                   </div>
-                }
-              </a>
+                </div>
 
-              <div class="blog-card__top">
-                <span class="blog-badge">{{ article.category }}</span>
-                <span class="blog-date">{{ formatPublishedAt(article.publishedAt) }}</span>
-              </div>
-
-              <div class="blog-card__content">
-                <h2>
-                  <a [routerLink]="['/blog', article.slug]">
-                    {{ article.title }}
-                  </a>
-                </h2>
-
-                <p>{{ article.description }}</p>
-              </div>
-
-              <div class="blog-card__actions">
-                <a class="btn-secondary" [routerLink]="['/blog', article.slug]">
-                  Leer noticia
+                <div class="blog-card__actions">
+                  <span class="skeleton-line skeleton-button"></span>
+                </div>
+              </article>
+            }
+          } @else {
+            @for (article of articles(); track article.slug) {
+              <article class="blog-card">
+                <a class="blog-card__media" [routerLink]="['/blog', article.slug]">
+                  @if (article.imageUrl) {
+                    <img
+                      [src]="article.imageUrl"
+                      [alt]="'Imagen de ' + article.title"
+                      loading="lazy"
+                      referrerpolicy="no-referrer"
+                    />
+                  } @else {
+                    <div class="blog-card__media blog-card__media--empty">
+                      <span>Sin imagen</span>
+                    </div>
+                  }
                 </a>
-              </div>
-            </article>
+
+                <div class="blog-card__top">
+                  <span class="blog-badge">{{ article.category }}</span>
+                  <span class="blog-date">{{ formatPublishedAt(article.publishedAt) }}</span>
+                </div>
+
+                <div class="blog-card__content">
+                  <h2>
+                    <a [routerLink]="['/blog', article.slug]">
+                      {{ article.title }}
+                    </a>
+                  </h2>
+
+                  <p>{{ article.description }}</p>
+                </div>
+
+                <div class="blog-card__actions">
+                  <a class="btn-secondary" [routerLink]="['/blog', article.slug]">
+                    Leer noticia
+                  </a>
+                </div>
+              </article>
+            }
           }
         </section>
-      }
+      </section>
     </div>
   </div>
 </section>
