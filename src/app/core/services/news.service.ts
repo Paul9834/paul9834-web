@@ -9,13 +9,12 @@ export interface NewsArticle {
   title: string;
   description: string;
   content: string;
-  imageUrl: string;
+  imageUrl: string | null;
   category: string;
   published: boolean;
   publishedAt: string | null;
   likesCount: number;
 }
-
 
 export interface NewsListResponse {
   articles: NewsArticle[];
@@ -31,7 +30,6 @@ export interface CreateNewsRequest {
   content: string;
   category: string;
   published?: boolean;
-  publishedAt?: string | null;
 }
 
 export interface UpdateNewsRequest {
@@ -41,7 +39,6 @@ export interface UpdateNewsRequest {
   category: string;
   imageUrl?: string | null;
   published?: boolean;
-  publishedAt?: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -64,7 +61,7 @@ export class NewsService {
   getNews(page = 0, size = 10, category?: string): Observable<NewsListResponse> {
     let params = new HttpParams().set('page', page).set('size', size);
 
-    if (category && category.trim()) {
+    if (category?.trim()) {
       params = params.set('category', category.trim());
     }
 
@@ -83,7 +80,16 @@ export class NewsService {
   }
 
   createNews(payload: CreateNewsRequest, imageFile?: File | null): Observable<NewsArticle> {
-    const formData = this.buildNewsFormData(payload, imageFile);
+    const normalizedPayload: CreateNewsRequest = {
+      ...payload,
+      slug: payload.slug.trim(),
+      title: payload.title.trim(),
+      description: payload.description.trim(),
+      content: payload.content.trim(),
+      category: payload.category.trim(),
+    };
+
+    const formData = this.buildNewsFormData(normalizedPayload, imageFile);
 
     return this.http
       .post<NewsArticle>(this.baseUrl, formData)
@@ -96,7 +102,6 @@ export class NewsService {
       .pipe(map((article) => this.normalizeArticle(article)));
   }
 
-
   updateNews(
     slug: string,
     payload: UpdateNewsRequest,
@@ -104,7 +109,11 @@ export class NewsService {
   ): Observable<NewsArticle> {
     const normalizedPayload: UpdateNewsRequest = {
       ...payload,
-      imageUrl: imageFile ? null : (payload.imageUrl ?? null),
+      title: payload.title.trim(),
+      description: payload.description.trim(),
+      content: payload.content.trim(),
+      category: payload.category.trim(),
+      imageUrl: imageFile ? null : payload.imageUrl?.trim() || null,
     };
 
     const formData = this.buildNewsFormData(normalizedPayload, imageFile);
@@ -133,7 +142,7 @@ export class NewsService {
     formData.append('article', new Blob([JSON.stringify(payload)], { type: 'application/json' }));
 
     if (imageFile) {
-      formData.append('image', imageFile);
+      formData.append('image', imageFile, imageFile.name);
     }
 
     return formData;
@@ -148,9 +157,9 @@ export class NewsService {
     };
   }
 
-  private normalizeImageUrl(imageUrl: string | null | undefined): string {
+  private normalizeImageUrl(imageUrl: string | null | undefined): string | null {
     if (!imageUrl?.trim()) {
-      return '';
+      return null;
     }
 
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
