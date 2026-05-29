@@ -13,7 +13,9 @@ export interface NewsArticle {
   category: string;
   published: boolean;
   publishedAt: string | null;
+  likesCount: number;
 }
+
 
 export interface NewsListResponse {
   articles: NewsArticle[];
@@ -88,6 +90,13 @@ export class NewsService {
       .pipe(map((article) => this.normalizeArticle(article)));
   }
 
+  likeNews(slug: string): Observable<NewsArticle> {
+    return this.http
+      .patch<NewsArticle>(`${this.baseUrl}/${slug}/like`, {})
+      .pipe(map((article) => this.normalizeArticle(article)));
+  }
+
+
   updateNews(
     slug: string,
     payload: UpdateNewsRequest,
@@ -135,6 +144,7 @@ export class NewsService {
       ...article,
       imageUrl: this.normalizeImageUrl(article.imageUrl),
       publishedAt: article.publishedAt?.trim() ? article.publishedAt : null,
+      likesCount: Number(article.likesCount ?? 0),
     };
   }
 
