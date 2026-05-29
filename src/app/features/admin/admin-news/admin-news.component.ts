@@ -245,7 +245,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
+      .replace(/\"/g, '&quot;')
       .replace(/'/g, '&#39;');
 
     return escaped
@@ -277,6 +277,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
         description: raw.description,
         content: raw.content,
         category: raw.category,
+        imageUrl: this.currentImageUrl(),
       };
 
       this.newsService.updateNews(selected.slug, payload, this.selectedImageFile()).subscribe({

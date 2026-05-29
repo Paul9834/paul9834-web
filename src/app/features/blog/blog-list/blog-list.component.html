@@ -3,8 +3,14 @@
     <div class="container blog-shell">
       <section class="blog-intro">
         <div class="blog-copy">
+          <a class="blog-back-home" routerLink="/">
+            <span aria-hidden="true">←</span>
+            <span>Volver al inicio</span>
+          </a>
+
           <span class="eyebrow">Latest writing</span>
           <h1>Blog <span class="gradient-text">News</span></h1>
+
           <p class="blog-desc">
             Noticias, ideas y actualizaciones sobre desarrollo, arquitectura de software,
             tecnología y lo que voy construyendo.
@@ -19,13 +25,15 @@
 
             <div class="stats-grid">
               <div class="stat">
-                <span class="stat-value">{{ articles().length }}</span>
+                <span class="stat-value">
+                  {{ isLoading() ? '--' : articles().length }}
+                </span>
                 <span class="stat-label">Posts</span>
               </div>
 
               <div class="stat">
                 <span class="stat-value">
-                  {{ articles().length > 0 ? 'Live' : '--' }}
+                  {{ isLoading() ? '...' : articles().length > 0 ? 'Live' : '--' }}
                 </span>
                 <span class="stat-label">Status</span>
               </div>
@@ -36,18 +44,45 @@
               </div>
             </div>
 
-            <div class="availability">Contenido público disponible</div>
+            <div class="availability">
+              {{ isLoading() ? 'Cargando contenido público...' : 'Contenido público disponible' }}
+            </div>
           </div>
         </aside>
       </section>
 
       @if (isLoading()) {
-        <section class="blog-state-card">
-          <p>Cargando noticias...</p>
+        <section class="blog-grid" aria-busy="true" aria-label="Cargando noticias">
+          @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+            <article class="blog-card blog-card--skeleton">
+              <div class="blog-card__media skeleton-box"></div>
+
+              <div class="blog-card__top">
+                <span class="skeleton-line skeleton-badge"></span>
+                <span class="skeleton-line skeleton-date"></span>
+              </div>
+
+              <div class="blog-card__content">
+                <div class="skeleton-line skeleton-title"></div>
+                <div class="skeleton-line skeleton-title skeleton-title--short"></div>
+
+                <div class="skeleton-copy">
+                  <div class="skeleton-line skeleton-text"></div>
+                  <div class="skeleton-line skeleton-text"></div>
+                  <div class="skeleton-line skeleton-text skeleton-text--short"></div>
+                </div>
+              </div>
+
+              <div class="blog-card__actions">
+                <span class="skeleton-line skeleton-button"></span>
+              </div>
+            </article>
+          }
         </section>
       } @else if (errorMessage()) {
         <section class="blog-state-card blog-state-card--error">
           <p>{{ errorMessage() }}</p>
+
           <button type="button" class="btn-secondary" (click)="loadNews()">
             Reintentar
           </button>
@@ -86,6 +121,7 @@
                     {{ article.title }}
                   </a>
                 </h2>
+
                 <p>{{ article.description }}</p>
               </div>
 

@@ -88,6 +88,7 @@ export class BlogDetailComponent implements OnInit {
     return new Intl.DateTimeFormat('es-CO', {
       dateStyle: 'medium',
       timeStyle: 'short',
+      timeZone: 'America/Bogota',
     }).format(date);
   }
 

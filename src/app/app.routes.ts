@@ -15,10 +15,10 @@ export const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'about', component: AboutComponent },
-      { path: 'blog', component: BlogListComponent },
-      { path: 'blog/:slug', component: BlogDetailComponent },
     ],
   },
+  { path: 'blog', component: BlogListComponent },
+  { path: 'blog/:slug', component: BlogDetailComponent },
   { path: 'admin/login', component: AdminLoginComponent },
   { path: 'admin', component: AdminNewsComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: '' },
