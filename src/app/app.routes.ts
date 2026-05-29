@@ -18,7 +18,10 @@ export const routes: Routes = [
       { path: 'about', component: AboutComponent },
     ],
   },
-  { path: 'blog', component: BlogListComponent },
+  {
+    path: 'blog',
+    component: BlogListComponent,
+  },
   {
     path: 'blog/:slug',
     component: BlogDetailComponent,
@@ -26,8 +29,17 @@ export const routes: Routes = [
       article: blogArticleResolver,
     },
   },
-
-  { path: 'admin/login', component: AdminLoginComponent },
-  { path: 'admin', component: AdminNewsComponent, canActivate: [authGuard] },
-  { path: '**', redirectTo: '' },
+  {
+    path: 'admin/login',
+    component: AdminLoginComponent,
+  },
+  {
+    path: 'admin',
+    component: AdminNewsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: '**',
+    redirectTo: '',
+  },
 ];
