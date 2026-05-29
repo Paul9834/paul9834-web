@@ -37,6 +37,7 @@ export interface UpdateNewsRequest {
   description: string;
   content: string;
   category: string;
+  imageUrl?: string | null;
   published?: boolean;
   publishedAt?: string | null;
 }
@@ -92,7 +93,12 @@ export class NewsService {
     payload: UpdateNewsRequest,
     imageFile?: File | null,
   ): Observable<NewsArticle> {
-    const formData = this.buildNewsFormData(payload, imageFile);
+    const normalizedPayload: UpdateNewsRequest = {
+      ...payload,
+      imageUrl: imageFile ? null : (payload.imageUrl ?? null),
+    };
+
+    const formData = this.buildNewsFormData(normalizedPayload, imageFile);
 
     return this.http
       .put<NewsArticle>(`${this.baseUrl}/${slug}`, formData)
