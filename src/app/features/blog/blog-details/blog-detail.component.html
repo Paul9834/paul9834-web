@@ -34,31 +34,33 @@
             </div>
 
             <aside class="blog-detail-summary-card">
-              <div class="card-body">
-                <div class="card-header">
-                  <span>Article status</span>
-                </div>
+              <div class="card-body blog-detail-reading-card">
+                <span class="reading-kicker">Resumen</span>
 
-                <div class="stats-grid">
-                  <div class="stat">
-                    <span class="stat-value">{{ currentArticle.category }}</span>
-                    <span class="stat-label">Category</span>
+                <h2 class="reading-title">Detalles de lectura</h2>
+
+                <div class="reading-meta-list">
+                  <div class="reading-meta-item">
+                    <span class="reading-meta-label">Categoría</span>
+                    <span class="reading-meta-value">{{ currentArticle.category }}</span>
                   </div>
 
-                  <div class="stat">
-                    <span class="stat-value">
-                      {{ currentArticle.published ? 'Live' : 'Draft' }}
+                  <div class="reading-meta-item">
+                    <span class="reading-meta-label">Publicado</span>
+                    <span class="reading-meta-value">
+                      {{ formatPublishedAt(currentArticle.publishedAt) }}
                     </span>
-                    <span class="stat-label">Status</span>
                   </div>
 
-                  <div class="stat">
-                    <span class="stat-value">01</span>
-                    <span class="stat-label">Entry</span>
+                  <div class="reading-meta-item">
+                    <span class="reading-meta-label">Estado</span>
+                    <span class="reading-meta-value">
+                      {{ currentArticle.published ? 'Disponible' : 'Borrador' }}
+                    </span>
                   </div>
                 </div>
 
-                <div class="availability">Lectura pública disponible</div>
+                <p class="reading-note">Una lectura abierta para explorar con calma.</p>
               </div>
             </aside>
           </section>

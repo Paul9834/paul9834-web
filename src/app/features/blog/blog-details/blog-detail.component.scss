@@ -107,65 +107,69 @@
   gap: 24px;
   padding: 32px;
   border-radius: var(--radius-xl);
-  background: var(--surface);
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: var(--shadow-lg);
   text-align: left;
 }
 
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1rem;
-  font-weight: 500;
+.blog-detail-reading-card {
+  max-width: 420px;
+}
+
+.reading-kicker {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-main);
+}
+
+.reading-title {
+  margin: 0;
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  line-height: 1.2;
   color: var(--text-primary);
 }
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.stat {
+.reading-meta-list {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 16px 10px;
-  text-align: center;
-  background: var(--surface-2);
-  border-radius: var(--radius-md);
+  gap: 14px;
 }
 
-.stat-value {
-  font-size: 1rem;
-  font-weight: 800;
-  color: var(--brand-dark);
-  line-height: 1.2;
-  word-break: break-word;
+.reading-meta-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--divider);
 }
 
-.stat-label {
-  font-size: 0.68rem;
-  font-weight: 500;
+.reading-meta-item:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.reading-meta-label {
+  font-size: 0.84rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   color: var(--text-muted);
 }
 
-.availability {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  align-self: flex-start;
-  padding: 11px 18px;
-  border-radius: var(--radius-full);
-  background: var(--surface-2);
-  color: var(--brand-dark);
-  font-size: 0.82rem;
-  font-weight: 500;
+.reading-meta-value {
+  text-align: right;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.reading-note {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-muted);
 }
 
 .blog-detail-cover {
@@ -193,10 +197,16 @@
   box-shadow: var(--shadow-md);
 }
 
+.blog-detail-content-card {
+  margin-top: 24px;
+}
+
 .blog-detail-content {
   color: var(--text-secondary);
   font-size: 1rem;
   line-height: 1.95;
+  max-width: 78ch;
+  margin: 0 auto;
 }
 
 .blog-detail-content a {
