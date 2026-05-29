@@ -15,7 +15,7 @@
         </section>
       } @else if (article(); as currentArticle) {
         <ng-container>
-          <section class="blog-detail-intro">
+          <section class="blog-detail-intro blog-detail-intro--single">
             <div class="blog-detail-copy">
               <a class="blog-detail-back" routerLink="/blog">← Volver al blog</a>
 
@@ -32,37 +32,6 @@
                 <span>Slug: {{ currentArticle.slug }}</span>
               </div>
             </div>
-
-            <aside class="blog-detail-summary-card">
-              <div class="card-body blog-detail-reading-card">
-                <span class="reading-kicker">Resumen</span>
-
-                <h2 class="reading-title">Detalles de lectura</h2>
-
-                <div class="reading-meta-list">
-                  <div class="reading-meta-item">
-                    <span class="reading-meta-label">Categoría</span>
-                    <span class="reading-meta-value">{{ currentArticle.category }}</span>
-                  </div>
-
-                  <div class="reading-meta-item">
-                    <span class="reading-meta-label">Publicado</span>
-                    <span class="reading-meta-value">
-                      {{ formatPublishedAt(currentArticle.publishedAt) }}
-                    </span>
-                  </div>
-
-                  <div class="reading-meta-item">
-                    <span class="reading-meta-label">Estado</span>
-                    <span class="reading-meta-value">
-                      {{ currentArticle.published ? 'Disponible' : 'Borrador' }}
-                    </span>
-                  </div>
-                </div>
-
-                <p class="reading-note">Una lectura abierta para explorar con calma.</p>
-              </div>
-            </aside>
           </section>
 
           @if (currentArticle.imageUrl) {
