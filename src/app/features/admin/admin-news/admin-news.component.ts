@@ -49,7 +49,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
   readonly newsForm = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.maxLength(160)]],
     slug: ['', [Validators.required, Validators.maxLength(180)]],
-    description: ['', [Validators.required, Validators.maxLength(320)]],
+    description: ['', [Validators.required, Validators.maxLength(2000)]],
     content: ['', [Validators.required]],
     category: ['', [Validators.required, Validators.maxLength(80)]],
   });
