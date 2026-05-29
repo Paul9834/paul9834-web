@@ -11,23 +11,20 @@ const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
 
-/**
- * ✅ AJUSTE PARA SSRF:
- * Agregamos los hosts permitidos para que el motor renderice el HTML
- * en lugar de hacer fallback a Client-Side Rendering.
- */
+app.set('trust proxy', true);
+
 const angularApp = new AngularNodeAppEngine({
   allowedHosts: [
     'paul9834.com',
     'www.paul9834.com',
+    'api.paul9834.com',
     'localhost',
-    '65.38.98.151'
-  ]
+    '127.0.0.1',
+    '65.38.98.151',
+  ],
+  trustProxyHeaders: true,
 });
 
-/**
- * Serve static files from /browser
- */
 app.use(
   express.static(browserDistFolder, {
     maxAge: '1y',
@@ -36,9 +33,6 @@ app.use(
   }),
 );
 
-/**
- * Handle all other requests by rendering the Angular application.
- */
 app.use((req, res, next) => {
   angularApp
     .handle(req)
@@ -46,9 +40,6 @@ app.use((req, res, next) => {
     .catch(next);
 });
 
-/**
- * Start the server if this module is the main entry point, or it is ran via PM2.
- */
 if (isMainModule(import.meta.url) || process.env['pm_id']) {
   const port = process.env['PORT'] || 4000;
   app.listen(port, () => {
