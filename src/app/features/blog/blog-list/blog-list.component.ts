@@ -2,9 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
+  PLATFORM_ID,
+  computed,
   inject,
   signal,
-  PLATFORM_ID,
 } from '@angular/core';
 import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -12,7 +13,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Meta, Title } from '@angular/platform-browser';
 
 import { NewsArticle, NewsService } from '../../../core/services/news.service';
-import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-blog-list',
@@ -44,23 +44,23 @@ export class BlogListComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    this.newsService
-      .getNews(0, 12)
-      .pipe(finalize(() => this.isLoading.set(false)))
-      .subscribe({
-        next: (response) => {
-          this.articles.set(response.articles);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error loading public news:', error);
+    this.newsService.getNews(0, 12).subscribe({
+      next: (response) => {
+        this.articles.set(response.articles);
+        this.isLoading.set(false);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error loading public news:', error);
 
-          if (error.status === 0) {
-            this.errorMessage.set('No fue posible conectar con el servicio de noticias.');
-          } else {
-            this.errorMessage.set('No se pudieron cargar las noticias publicadas.');
-          }
-        },
-      });
+        if (error.status === 0) {
+          this.errorMessage.set('No fue posible conectar con el servicio de noticias.');
+        } else {
+          this.errorMessage.set('No se pudieron cargar las noticias publicadas.');
+        }
+
+        this.isLoading.set(false);
+      },
+    });
   }
 
   formatPublishedAt(value: string | null): string {
@@ -113,6 +113,16 @@ export class BlogListComponent implements OnInit {
     return total.toString();
   }
 
+  readingLabel(): string {
+    const count = this.articles().length;
+
+    if (!count) {
+      return '--';
+    }
+
+    return count === 1 ? '1 lectura' : `${count} lecturas`;
+  }
+
   private extractDateLabel(value: string): string {
     const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
 
@@ -122,16 +132,6 @@ export class BlogListComponent implements OnInit {
 
     const [, year, month, day] = match;
     return `${day}/${month}/${year}`;
-  }
-
-  readingLabel(): string {
-    const count = this.articles().length;
-
-    if (!count) {
-      return '--';
-    }
-
-    return count === 1 ? '1 lectura' : `${count} lecturas`;
   }
 
   private setPageSeo(): void {
