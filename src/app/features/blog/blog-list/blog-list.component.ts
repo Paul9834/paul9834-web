@@ -33,6 +33,7 @@ export class BlogListComponent implements OnInit {
   readonly articles = signal<NewsArticle[]>([]);
   readonly isLoading = signal(true);
   readonly errorMessage = signal('');
+  readonly loadedImages = signal<Set<string>>(new Set());
 
   ngOnInit(): void {
     this.setPageSeo();
@@ -76,6 +77,17 @@ export class BlogListComponent implements OnInit {
     return new Intl.DateTimeFormat('es-CO', {
       dateStyle: 'medium',
     }).format(date);
+  }
+
+  onImageLoad(slug: string): void {
+    const current = this.loadedImages();
+    const next = new Set(current);
+    next.add(slug);
+    this.loadedImages.set(next);
+  }
+
+  isImageLoaded(slug: string): boolean {
+    return this.loadedImages().has(slug);
   }
 
   latestArticleDate(): string {

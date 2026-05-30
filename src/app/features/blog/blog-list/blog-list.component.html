@@ -8,7 +8,6 @@
             <span>Volver al inicio</span>
           </a>
 
-          <span class="eyebrow">Actualidad y análisis</span>
           <h1>Blog <span class="gradient-text">Noticias</span></h1>
 
           <p class="blog-desc">
@@ -110,12 +109,17 @@
               <article class="blog-card">
                 <a class="blog-card__media" [routerLink]="['/blog', article.slug]">
                   @if (article.imageUrl) {
-                    <img
-                      [src]="article.imageUrl"
-                      [alt]="'Imagen de ' + article.title"
-                      loading="lazy"
-                      referrerpolicy="no-referrer"
-                    />
+                    <div class="blog-card__media-wrapper">
+                      <img
+                        [src]="article.imageUrl"
+                        [alt]="'Imagen de ' + article.title"
+                        loading="lazy"
+                        referrerpolicy="no-referrer"
+                        (load)="onImageLoad(article.slug)"
+                        [class.blog-card__media-img--loaded]="isImageLoaded(article.slug)"
+                      />
+                      <div class="blog-card__media-shimmer" [class.blog-card__media-shimmer--loaded]="isImageLoaded(article.slug)"></div>
+                    </div>
                   } @else {
                     <div class="blog-card__media blog-card__media--empty">
                       <span>Sin imagen</span>
