@@ -62,17 +62,7 @@ export class BlogDetailComponent implements OnInit {
       return 'Fecha no disponible';
     }
 
-    const date = new Date(value);
-
-    if (Number.isNaN(date.getTime())) {
-      return value;
-    }
-
-    return new Intl.DateTimeFormat('es-CO', {
-      dateStyle: 'medium',
-      timeStyle: 'short',
-      timeZone: 'America/Bogota',
-    }).format(date);
+    return value;
   }
 
   linkifyContent(content: string): string {

@@ -8,20 +8,35 @@
 .whatsapp-float {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
-  background-color: #25d366;
-  color: #ffffff;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  border: 1px solid color-mix(in srgb, var(--accent-main) 10%, var(--divider));
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition),
+    color var(--transition),
+    border-color var(--transition),
+    background var(--transition);
 }
 
 .whatsapp-float:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22);
+  color: var(--accent-main);
+  border-color: color-mix(in srgb, var(--accent-main) 18%, var(--divider));
+  box-shadow: var(--shadow-hover);
+}
+
+.whatsapp-float:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent-main) 32%, transparent);
+  outline-offset: 3px;
 }
 
 .whatsapp-icon {
@@ -39,6 +54,7 @@
   .whatsapp-float {
     width: 44px;
     height: 44px;
+    border-radius: 14px;
   }
 
   .whatsapp-icon {
