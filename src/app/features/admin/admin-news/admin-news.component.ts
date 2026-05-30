@@ -70,11 +70,10 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
 
     this.newsService.getAdminNews(0, 20).subscribe({
       next: (response) => {
-        console.log('=== DEBUG: Response de getAdminNews ===');
-        console.log('Total articles:', response.articles.length);
-        console.log('Primer article:', response.articles[0]);
-        console.log('imageUrl del primer article:', response.articles[0].imageUrl);
-        this.articles.set(response.articles);
+        const sorted = [...response.articles].sort((a, b) =>
+          (b.publishedAt ?? '').localeCompare(a.publishedAt ?? '')
+        );
+        this.articles.set(sorted);
         this.isLoading.set(false);
       },
       error: (error: HttpErrorResponse) => {
