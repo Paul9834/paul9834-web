@@ -78,6 +78,50 @@ export class BlogListComponent implements OnInit {
     }).format(date);
   }
 
+  latestArticleDate(): string {
+    const articles = this.articles();
+
+    if (!articles.length) {
+      return '--';
+    }
+
+    const latest = [...articles]
+      .filter((article) => !!article.publishedAt?.trim())
+      .sort((a, b) => (b.publishedAt ?? '').localeCompare(a.publishedAt ?? ''))[0];
+
+    if (!latest?.publishedAt) {
+      return '--';
+    }
+
+    return this.extractDateLabel(latest.publishedAt);
+  }
+
+  totalLikes(): string {
+    const total = this.articles().reduce((sum, article) => sum + article.likesCount, 0);
+    return total.toString();
+  }
+
+  private extractDateLabel(value: string): string {
+    const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+
+    if (!match) {
+      return value;
+    }
+
+    const [, year, month, day] = match;
+    return `${day}/${month}/${year}`;
+  }
+
+  readingLabel(): string {
+    const count = this.articles().length;
+
+    if (!count) {
+      return '--';
+    }
+
+    return count === 1 ? '1 lectura' : `${count} lecturas`;
+  }
+
   private setPageSeo(): void {
     const pageTitle =
       'Blog de Kevin Paul Montealegre Melo | Mobile Engineering, Software Architecture and Tech';

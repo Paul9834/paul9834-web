@@ -86,27 +86,29 @@
             </div>
           </section>
 
-          @if (currentArticle.imageUrl) {
-            <section class="blog-detail-cover">
-              <img
-                [src]="currentArticle.imageUrl"
-                [alt]="'Imagen de ' + currentArticle.title"
-                loading="lazy"
-                referrerpolicy="no-referrer"
-              />
-            </section>
-          }
-
           <section class="blog-detail-content-card">
+            @if (currentArticle.imageUrl) {
+              <div class="blog-detail-cover blog-detail-cover--embedded">
+                <img
+                  [src]="currentArticle.imageUrl"
+                  [alt]="'Imagen de ' + currentArticle.title"
+                  loading="lazy"
+                  referrerpolicy="no-referrer"
+                />
+              </div>
+            }
+
             <div
               class="blog-detail-content"
               [innerHTML]="linkifyContent(currentArticle.content)"
             ></div>
-          </section>
 
-          <div class="blog-detail-actions blog-detail-actions--bottom">
-            <a class="btn-secondary" routerLink="/blog">← Volver al blog</a>
-          </div>
+            <div class="blog-detail-actions blog-detail-actions--bottom">
+              <a class="blog-detail-back blog-detail-back--bottom" routerLink="/blog">
+                ← Volver al blog
+              </a>
+            </div>
+          </section>
         </ng-container>
       }
     </div>

@@ -28,19 +28,21 @@
                 <span class="stat-value">
                   {{ isLoading() ? '--' : articles().length }}
                 </span>
-                <span class="stat-label">Artículos</span>
+                <span class="stat-label">Publicaciones</span>
+              </div>
+
+              <div class="stat stat--date">
+                <span class="stat-value stat-value--date">
+                  {{ isLoading() ? '--' : latestArticleDate() }}
+                </span>
+                <span class="stat-label">Más reciente</span>
               </div>
 
               <div class="stat">
                 <span class="stat-value">
-                  {{ isLoading() ? '...' : articles().length > 0 ? 'Activo' : '--' }}
+                  {{ isLoading() ? '--' : totalLikes() }}
                 </span>
-                <span class="stat-label">Estado</span>
-              </div>
-
-              <div class="stat">
-                <span class="stat-value">2026</span>
-                <span class="stat-label">Edición</span>
+                <span class="stat-label">Reacciones</span>
               </div>
             </div>
           </div>
