@@ -3,8 +3,8 @@
       <div class="container admin-news-shell">
         <section class="admin-news-intro">
           <div class="admin-news-copy">
-            <span class="eyebrow">Private dashboard</span>
-            <h1>Admin <span class="gradient-text">News</span></h1>
+            <span class="eyebrow">Panel privado</span>
+            <h1>Admin <span class="gradient-text">Noticias</span></h1>
             <p class="admin-news-desc">
               Gestiona borradores, publicaciones y el contenido del blog desde un
               panel privado conectado a tus endpoints protegidos.
@@ -21,31 +21,31 @@
           <aside class="admin-summary-card">
             <div class="card-body">
               <div class="card-header">
-                <span>Panel status</span>
+                <span>Estado del panel</span>
               </div>
 
               <div class="stats-grid">
                 <div class="stat">
                   <span class="stat-value">{{ articles().length }}</span>
-                  <span class="stat-label">Articles</span>
+                  <span class="stat-label">Artículos</span>
                 </div>
 
                 <div class="stat">
                   <span class="stat-value">
                     {{ articles().filter(article => article.published).length }}
                   </span>
-                  <span class="stat-label">Published</span>
+                  <span class="stat-label">Publicados</span>
                 </div>
 
                 <div class="stat">
                   <span class="stat-value">
                     {{ articles().filter(article => !article.published).length }}
                   </span>
-                  <span class="stat-label">Drafts</span>
+                  <span class="stat-label">Borradores</span>
                 </div>
               </div>
 
-              <div class="availability">Admin session active</div>
+              <div class="availability">Sesión activa</div>
             </div>
           </aside>
         </section>
@@ -153,9 +153,6 @@
         >
           <form [formGroup]="newsForm" (ngSubmit)="submitForm()" class="admin-editor-form">
             <div class="card-header card-header--editor">
-              <div class="card-header__eyebrow">
-                {{ selectedArticle() ? 'Edit mode' : 'Create mode' }}
-              </div>
               <span id="admin-editor-title">
                 {{ selectedArticle() ? 'Editar noticia' : 'Crear noticia' }}
               </span>
@@ -164,7 +161,7 @@
             <div class="admin-editor-grid">
               <label class="admin-editor-field">
                 <span>Título</span>
-                <input type="text" formControlName="title" placeholder="Título de la noticia" />
+                <input type="text" formControlName="title" placeholder="Ingrese el título principal del artículo" />
               </label>
 
               <label class="admin-editor-field">
@@ -172,14 +169,14 @@
                 <input
                   type="text"
                   formControlName="slug"
-                  placeholder="mi-noticia"
+                  placeholder="identificador-url-del-articulo"
                   [readonly]="!!selectedArticle()"
                 />
               </label>
 
               <label class="admin-editor-field">
                 <span>Categoría</span>
-                <input type="text" formControlName="category" placeholder="tech" />
+                <input type="text" formControlName="category" placeholder="Ej. Tecnología, IA, Producto" />
               </label>
 
               <label class="admin-editor-field">
@@ -232,7 +229,7 @@
                 <textarea
                   rows="3"
                   formControlName="description"
-                  placeholder="Resumen corto para la tarjeta y el listado"
+                  placeholder="Redacte un resumen ejecutivo para la vista previa del artículo"
                 ></textarea>
               </label>
 
@@ -241,7 +238,7 @@
                 <textarea
                   rows="8"
                   formControlName="content"
-                  placeholder="Contenido completo de la noticia"
+                  placeholder="Desarrolle el contenido completo del artículo con estructura clara y enfoque editorial"
                 ></textarea>
               </label>
             </div>
