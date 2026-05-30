@@ -37,6 +37,7 @@ export class BlogDetailComponent implements OnInit {
   readonly article = signal<NewsArticle | null>(null);
   readonly isLoading = signal(true);
   readonly isLiking = signal(false);
+  readonly hasLiked = signal(false);
   readonly errorMessage = signal('');
   readonly likeErrorMessage = signal('');
 
@@ -51,6 +52,7 @@ export class BlogDetailComponent implements OnInit {
     }
 
     this.article.set(resolvedArticle);
+    this.syncLikedState(resolvedArticle.slug);
     this.setArticleSeo(resolvedArticle);
     this.isLoading.set(false);
   }
@@ -93,7 +95,7 @@ export class BlogDetailComponent implements OnInit {
   likeArticle(): void {
     const currentArticle = this.article();
 
-    if (!currentArticle || this.isLiking()) {
+    if (!currentArticle || this.isLiking() || this.hasLiked()) {
       return;
     }
 
@@ -106,12 +108,46 @@ export class BlogDetailComponent implements OnInit {
       .subscribe({
         next: (updatedArticle) => {
           this.article.set(updatedArticle);
+          this.markArticleAsLiked(updatedArticle.slug);
+          this.hasLiked.set(true);
         },
         error: (error: HttpErrorResponse) => {
           console.error('Error liking article:', error);
           this.likeErrorMessage.set('No se pudo registrar tu me gusta. Intenta nuevamente.');
         },
       });
+  }
+
+  private syncLikedState(slug: string): void {
+    this.hasLiked.set(this.wasArticleLiked(slug));
+  }
+
+  private wasArticleLiked(slug: string): boolean {
+    if (!isPlatformBrowser(this.platformId)) {
+      return false;
+    }
+
+    try {
+      return localStorage.getItem(this.buildLikeStorageKey(slug)) === 'true';
+    } catch {
+      return false;
+    }
+  }
+
+  private markArticleAsLiked(slug: string): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    try {
+      localStorage.setItem(this.buildLikeStorageKey(slug), 'true');
+    } catch {
+      // no-op
+    }
+  }
+
+  private buildLikeStorageKey(slug: string): string {
+    return `blog-liked-${slug}`;
   }
 
   private setArticleSeo(article: NewsArticle): void {

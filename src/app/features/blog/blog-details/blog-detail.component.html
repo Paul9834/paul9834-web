@@ -62,13 +62,21 @@
                 <button
                   type="button"
                   class="blog-detail-like-button"
-                  [disabled]="isLiking()"
+                  [disabled]="isLiking() || hasLiked()"
                   [class.blog-detail-like-button--loading]="isLiking()"
+                  [attr.aria-label]="hasLiked() ? 'Ya diste me gusta a este artículo' : 'Dar me gusta al artículo'"
                   (click)="likeArticle()"
-                  aria-label="Dar me gusta al artículo"
                 >
                   <span class="material-icons" aria-hidden="true">favorite</span>
-                  <span>{{ isLiking() ? '....' : 'Me gusta' }}</span>
+                  <span>
+                    {{
+                      isLiking()
+                        ? '...'
+                        : hasLiked()
+                          ? 'Ya te gustó'
+                          : 'Me gusta'
+                    }}
+                  </span>
                 </button>
 
                 @if (likeErrorMessage()) {
