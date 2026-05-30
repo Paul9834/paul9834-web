@@ -1,5 +1,5 @@
 /* ============================================================
-   navbar.component.css — Corregido para Dark Mode
+   navbar.component.css — Ajustado a un estilo más Material 3
    ============================================================ */
 
 .navbar {
@@ -11,18 +11,13 @@
   justify-content: space-between;
   padding-inline: 24px;
   height: var(--nav-height);
-
-  /* Usamos la variable de fondo con transparencia para el efecto blur */
   background: rgba(var(--bg-rgb, 255, 255, 255), 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-
-  /* Usamos la variable de divider en lugar de un color fijo */
   border-bottom: 1px solid var(--divider);
   transition: background var(--transition), border-color var(--transition);
 }
 
-/* ── Logo ──────────────────────────────────────────────────── */
 .nav-logo {
   font-family: var(--font-main);
   font-weight: 700;
@@ -37,7 +32,6 @@
   color: var(--accent-main);
 }
 
-/* ── Nav links ─────────────────────────────────────────────── */
 .nav-links {
   display: flex;
   gap: 4px;
@@ -60,69 +54,87 @@
   color: var(--text-primary);
 }
 
-/* ── Actions (GitHub / LinkedIn / Toggle) ──────────────────── */
 .nav-actions {
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
-/* Estilo para los iconos de Material (Toggle y Hamburguesa) */
 .nav-actions button mat-icon,
 .mobile-only button mat-icon {
   color: var(--text-primary);
 }
 
-.btn-github,
-.btn-linkedin {
+.social-link {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--divider);
+  background: var(--surface);
+  color: var(--text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
   font-family: var(--font-main);
   font-size: 0.85rem;
   font-weight: 500;
-  padding: 8px 16px;
-  border-radius: var(--radius-full);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: all var(--transition);
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition),
+    transform var(--transition);
 }
 
-/* GitHub: Se invierte solo usando las variables de texto */
-.btn-github {
-  background: var(--text-primary);
-  color: var(--text-inverse);
+.social-link mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: currentColor;
 }
 
-.btn-github:hover {
-  opacity: 0.9;
+.social-link:hover {
+  background: var(--surface-2);
+  color: var(--text-primary);
+  border-color: color-mix(in srgb, var(--accent-main) 18%, var(--divider));
   transform: translateY(-1px);
 }
 
-/* LinkedIn: Mantenemos el color de marca pero ajustamos hover */
-.btn-linkedin {
-  background: #0077b5;
-  color: #ffffff;
+.social-link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent-main) 32%, transparent);
+  outline-offset: 2px;
 }
 
-.btn-linkedin:hover {
-  background: #005fa3;
-  transform: translateY(-1px);
+.mobile-only {
+  display: none;
 }
-
-/* ── Mobile ────────────────────────────────────────────────── */
-.mobile-only { display: none; }
 
 @media (max-width: 768px) {
-  .navbar { padding-inline: 16px; }
-  .desktop-only { display: none; }
-  .mobile-only { display: block; }
-  .nav-actions { gap: 6px; }
+  .navbar {
+    padding-inline: 16px;
+  }
 
-  .btn-github, .btn-linkedin {
-    padding: 8px 10px;
-    font-size: 0.78rem;
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+
+  .nav-actions {
+    gap: 6px;
+  }
+
+  .social-link {
+    min-width: 40px;
+    padding: 0 10px;
     border-radius: var(--radius-lg);
   }
-  .btn-github span, .btn-linkedin span { display: none; }
+
+  .social-link span {
+    display: none;
+  }
 }
