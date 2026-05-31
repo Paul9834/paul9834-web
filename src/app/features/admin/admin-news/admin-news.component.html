@@ -95,7 +95,7 @@
                 <div class="news-card__content">
                   <h2>{{ article.title }}</h2>
                   <p>{{ article.description }}</p>
-                  <div class="news-card__body" [innerHTML]="linkifyContent(article.content)"></div>
+                  <div class="news-card__body editor-content" [innerHTML]="renderFormattedContent(article.content)"></div>
                 </div>
 
                 <div class="news-card__meta">
@@ -233,14 +233,82 @@
                 ></textarea>
               </label>
 
-              <label class="admin-editor-field admin-editor-field--full">
-                <span>Contenido</span>
-                <textarea
-                  rows="8"
-                  formControlName="content"
-                  placeholder="Desarrolle el contenido completo del artículo con estructura clara y enfoque editorial"
-                ></textarea>
-              </label>
+              <div class="admin-editor-field admin-editor-field--full form-field--editor">
+                <div class="editor-label-row">
+                  <span>Contenido</span>
+                  <span class="editor-label-hint">Formato enriquecido solo para el cuerpo del artículo</span>
+                </div>
+
+                <div class="m3-editor" [class.m3-editor--invalid]="contentControl.invalid && contentControl.touched">
+                  <div class="m3-editor__toolbar" role="toolbar" aria-label="Herramientas de formato para contenido">
+                    <button type="button" class="m3-editor__tool" (mousedown)="$event.preventDefault()" (click)="applyEditorCommand('bold')" [class.m3-editor__tool--active]="isSelectionInsideTag('strong') || isSelectionInsideTag('b')" aria-label="Negrilla">
+                      <mat-icon>format_bold</mat-icon>
+                    </button>
+                    <button type="button" class="m3-editor__tool" (mousedown)="$event.preventDefault()" (click)="applyEditorCommand('italic')" [class.m3-editor__tool--active]="isSelectionInsideTag('em') || isSelectionInsideTag('i')" aria-label="Cursiva">
+                      <mat-icon>format_italic</mat-icon>
+                    </button>
+                    <button type="button" class="m3-editor__tool" (click)="applyEditorCommand('underline')" [class.m3-editor__tool--active]="isSelectionInsideTag('u')" aria-label="Subrayado">
+                      <mat-icon>format_underlined</mat-icon>
+                    </button>
+                    <span class="m3-editor__divider" aria-hidden="true"></span>
+                    <button type="button" class="m3-editor__tool" (mousedown)="$event.preventDefault()" (click)="applyTextSize('sm')" [class.m3-editor__tool--active]="isSelectionUsingSize('sm')" aria-label="Texto pequeño">
+                      <mat-icon>text_decrease</mat-icon>
+                    </button>
+                    <button type="button" class="m3-editor__tool" (click)="applyTextSize('md')" [class.m3-editor__tool--active]="isSelectionUsingSize('md')" aria-label="Texto normal">
+                      <mat-icon>format_size</mat-icon>
+                    </button>
+                    <button type="button" class="m3-editor__tool" (click)="applyTextSize('lg')" [class.m3-editor__tool--active]="isSelectionUsingSize('lg')" aria-label="Texto grande">
+                      <mat-icon>text_increase</mat-icon>
+                    </button>
+                    <button type="button" class="m3-editor__tool" (click)="clearTextAlignment()" [class.m3-editor__tool--active]="isSelectionLeftAligned()" aria-label="Alinear a la izquierda">
+                      <mat-icon>format_align_left</mat-icon>
+                    </button>
+                    <button type="button" class="m3-editor__tool" (click)="toggleCenterText()" [class.m3-editor__tool--active]="isSelectionCentered()" aria-label="Centrar texto">
+                      <mat-icon>format_align_center</mat-icon>
+                    </button>
+                    <button type="button" class="m3-editor__tool" (click)="toggleJustifyText()" [class.m3-editor__tool--active]="isSelectionJustified()" aria-label="Justificar texto">
+                      <mat-icon>format_align_justify</mat-icon>
+                    </button>
+                    <span class="m3-editor__divider" aria-hidden="true"></span>
+                    <button type="button" class="m3-editor__tool" (click)="formatBlock('h2')" [class.m3-editor__tool--active]="isSelectionInsideTag('h2')" aria-label="Título 2">
+                      <mat-icon>title</mat-icon>
+                    </button>
+                    <button type="button" class="m3-editor__tool" (click)="formatBlock('h3')" [class.m3-editor__tool--active]="isSelectionInsideTag('h3')" aria-label="Título 3">
+                      <mat-icon>short_text</mat-icon>
+                    </button>
+                    <button type="button" class="m3-editor__tool" (click)="formatBlock('blockquote')" [class.m3-editor__tool--active]="isSelectionInsideTag('blockquote')" aria-label="Cita">
+                      <mat-icon>format_quote</mat-icon>
+                    </button>
+                    <span class="m3-editor__divider" aria-hidden="true"></span>
+                    <button type="button" class="m3-editor__tool" (click)="applyEditorCommand('insertUnorderedList')" [class.m3-editor__tool--active]="isSelectionInsideTag('ul')" aria-label="Lista con viñetas">
+                      <mat-icon>format_list_bulleted</mat-icon>
+                    </button>
+                    <button type="button" class="m3-editor__tool" (click)="applyEditorCommand('insertOrderedList')" [class.m3-editor__tool--active]="isSelectionInsideTag('ol')" aria-label="Lista numerada">
+                      <mat-icon>format_list_numbered</mat-icon>
+                    </button>
+                    <button type="button" class="m3-editor__tool" (click)="setEditorLink()" aria-label="Insertar enlace">
+                      <mat-icon>link</mat-icon>
+                    </button>
+                    <button type="button" class="m3-editor__tool" (click)="clearEditorFormatting()" aria-label="Limpiar formato">
+                      <mat-icon>format_clear</mat-icon>
+                    </button>
+                  </div>
+
+                  <div
+                    #contentEditor
+                    class="m3-editor__surface editor-content"
+                    contenteditable="true"
+                    role="textbox"
+                    aria-multiline="true"
+                    aria-label="Editor de contenido de la noticia"
+                    data-placeholder="Escribe el contenido del artículo con estilo editorial Material 3"
+                    (input)="onEditorInput(contentEditor.innerHTML)"
+                    (blur)="onEditorBlur()"
+                  ></div>
+                </div>
+
+                <small class="editor-helper">Usa una sola voz visual: Poppins, jerarquías limpias y formatos editoriales sobrios.</small>
+              </div>
             </div>
 
             @if (submitError()) {

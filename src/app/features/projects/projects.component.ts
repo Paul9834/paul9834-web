@@ -186,8 +186,12 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    this.setupIntersectionObserver();
-    this.scheduleParallaxUpdate();
+    this.ngZone.runOutsideAngular(() => {
+      requestAnimationFrame(() => {
+        this.setupIntersectionObserver();
+        this.scheduleParallaxUpdate();
+      });
+    });
   }
 
   ngOnDestroy(): void {

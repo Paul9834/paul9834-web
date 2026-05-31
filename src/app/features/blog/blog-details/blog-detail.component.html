@@ -104,8 +104,8 @@
             }
 
             <div
-              class="blog-detail-content"
-              [innerHTML]="linkifyContent(currentArticle.content)"
+              class="blog-detail-content editor-content"
+              [innerHTML]="renderRichContent(currentArticle.content)"
             ></div>
 
             <div class="blog-detail-actions blog-detail-actions--bottom">

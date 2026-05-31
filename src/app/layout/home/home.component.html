@@ -1,2 +1,7 @@
 <app-hero></app-hero>
-<app-projects></app-projects>
+
+@defer (on viewport) {
+  <app-projects></app-projects>
+} @placeholder {
+  <section id="projects" class="projects-section" aria-label="Projects loading"></section>
+}
