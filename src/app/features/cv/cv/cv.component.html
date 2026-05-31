@@ -1,75 +1,33 @@
 <section class="cv-page">
-  <div class="cv-page__backdrop" aria-hidden="true">
-    <span class="cv-page__shape cv-page__shape--one"></span>
-    <span class="cv-page__shape cv-page__shape--two"></span>
-  </div>
+  <div class="cv-shell">
+    <div class="cv-main">
+      <p class="cv-eyebrow">Resume</p>
 
-  <mat-card class="cv-hero" appearance="outlined">
-    <div class="cv-hero__copy">
-      <div class="cv-hero__eyebrow">
-        <mat-icon>description</mat-icon>
-        <span>Hoja de vida</span>
-      </div>
+      <h1 class="cv-title">Kevin Montealegre Melo</h1>
 
-      <h1>CV profesional</h1>
-      <p>
-        Aquí puedes revisar una previsualización de mi hoja de vida en PDF con una interfaz alineada al estilo Material 3 del portafolio.
+      <p class="cv-lead">
+        A clean PDF preview tailored for recruiters, with quick access to review the English CV.
       </p>
 
-      <mat-chip-set aria-label="Tecnologías destacadas">
-        @for (item of stack; track item) {
-          <mat-chip>{{ item }}</mat-chip>
-        }
-      </mat-chip-set>
-
-      <div class="cv-hero__actions">
-        <a mat-flat-button color="primary" [href]="cvPdfPath" target="_blank" rel="noopener noreferrer">
-          <mat-icon>open_in_new</mat-icon>
-          Abrir PDF
+      <div class="cv-actions" aria-label="Resume actions">
+        <a class="cv-action-link" [href]="cvPdfPath" target="_blank" rel="noopener noreferrer">
+          <mat-icon aria-hidden="true">open_in_new</mat-icon>
+          <span>Open resume</span>
         </a>
 
-        <a mat-stroked-button [href]="cvPdfPath" download>
-          <mat-icon>download</mat-icon>
-          Descargar
+        <a class="cv-action-link" [href]="cvPdfPath" download>
+          <mat-icon aria-hidden="true">download</mat-icon>
+          <span>Download PDF</span>
         </a>
       </div>
     </div>
 
-    <div class="cv-hero__meta">
-      <div class="cv-hero__meta-item">
-        <span class="label">Formato</span>
-        <strong>PDF</strong>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="cv-hero__meta-item">
-        <span class="label">Ubicación</span>
-        <strong>assets/cv</strong>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="cv-hero__meta-item">
-        <span class="label">Ruta pública</span>
-        <strong>/cv</strong>
-      </div>
-    </div>
-  </mat-card>
-
-  <mat-card class="cv-viewer">
-    <div class="cv-viewer__header">
-      <div>
-        <h2>Previsualización</h2>
-        <p>El documento se carga desde la carpeta de assets del proyecto.</p>
-      </div>
-      <mat-icon aria-hidden="true">picture_as_pdf</mat-icon>
-    </div>
-
-    <mat-divider></mat-divider>
-
-    <div class="cv-viewer__frame">
+    <div class="cv-viewer-panel">
       <iframe
         [src]="cvPdfPreviewUrl"
-        title="Previsualización del CV en PDF"
+        title="Kevin Montealegre Melo English CV PDF preview"
         loading="lazy">
       </iframe>
     </div>
-  </mat-card>
+  </div>
 </section>
