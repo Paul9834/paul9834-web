@@ -8,6 +8,7 @@ import { PublicLayoutComponent } from './layout/public-layout/public-layout.comp
 import { BlogListComponent } from './features/blog/blog-list/blog-list.component';
 import { BlogDetailComponent } from './features/blog/blog-details/blog-detail.component';
 import { blogArticleResolver } from './core/resolvers/blog-article.resolver';
+import { CvComponent } from './features/cv/cv/cv.component';
 
 export const routes: Routes = [
   {
@@ -16,6 +17,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'about', component: AboutComponent },
+      { path: 'cv', component: CvComponent },
     ],
   },
   {

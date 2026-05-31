@@ -1,0 +1,33 @@
+<section class="cv-page">
+  <div class="cv-shell">
+    <div class="cv-main">
+      <p class="cv-eyebrow">Resume</p>
+
+      <h1 class="cv-title">Kevin Montealegre Melo</h1>
+
+      <p class="cv-lead">
+        A clean PDF preview tailored for recruiters, with quick access to review the English CV.
+      </p>
+
+      <div class="cv-actions" aria-label="Resume actions">
+        <a class="cv-action-link" [href]="cvPdfPath" target="_blank" rel="noopener noreferrer">
+          <mat-icon aria-hidden="true">open_in_new</mat-icon>
+          <span>Open resume</span>
+        </a>
+
+        <a class="cv-action-link" [href]="cvPdfPath" download>
+          <mat-icon aria-hidden="true">download</mat-icon>
+          <span>Download PDF</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="cv-viewer-panel">
+      <iframe
+        [src]="cvPdfPreviewUrl"
+        title="Kevin Montealegre Melo English CV PDF preview"
+        loading="lazy">
+      </iframe>
+    </div>
+  </div>
+</section>

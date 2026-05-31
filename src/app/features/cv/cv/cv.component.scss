@@ -1,0 +1,144 @@
+:host {
+  display: block;
+}
+
+.cv-page {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+  padding: clamp(72px, 10vw, 120px) 0;
+}
+
+.cv-shell {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+.cv-main {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 760px;
+}
+
+.cv-eyebrow {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-glow, #004BD6);
+}
+
+.cv-title {
+  margin: 0;
+  max-width: 14ch;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.cv-lead {
+  margin: 0;
+  max-width: 58ch;
+  font-size: clamp(1rem, 1.35vw, 1.08rem);
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+.cv-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.cv-action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.cv-action-link mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--accent-glow, #004BD6);
+}
+
+.cv-action-link:hover,
+.cv-action-link:focus-visible {
+  background: var(--surface-2);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.cv-viewer-panel {
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-lg);
+}
+
+.cv-viewer-panel iframe {
+  display: block;
+  width: 100%;
+  height: 78vh;
+  min-height: 760px;
+  border: 0;
+  background: white;
+}
+
+@media (min-width: 768px) {
+  .cv-shell {
+    padding: 0 40px;
+  }
+}
+
+@media (min-width: 992px) {
+  .cv-shell {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    padding: 0 48px;
+  }
+}
+
+@media (max-width: 767px) {
+  .cv-title {
+    max-width: none;
+  }
+
+  .cv-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cv-action-link {
+    justify-content: center;
+  }
+
+  .cv-viewer-panel iframe {
+    height: 70vh;
+    min-height: 560px;
+  }
+}
