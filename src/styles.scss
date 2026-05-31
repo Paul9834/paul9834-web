@@ -96,7 +96,7 @@
 
   --shadow-md:       0 8px 16px  rgba(17, 24, 39, 0.08);
   --shadow-lg:       0 16px 32px rgba(17, 24, 39, 0.1);
-  --shadow-hover:    0 24px 48px rgba(0, 98, 255, 0.15);
+  --shadow-hover:    0 24px 48px rgba(17, 17, 17, 0.14);
 
   --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px; --radius-xl: 28px; --radius-full: 9999px;
   --container-max: 1200px; --nav-height: 64px;
@@ -161,7 +161,12 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-main) !important; line-height: 
 // ============================================================
 //  5. Global utility classes
 // ============================================================
-.container { max-width: var(--container-max); margin: 0 auto; padding-inline: 24px; width: 100%; }
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-inline: 24px;
+  width: 100%;
+}
 
 .btn-primary {
   display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px;

@@ -22,7 +22,9 @@ import { MatDividerModule } from '@angular/material/divider';
 })
 export class HeroComponent implements AfterViewInit, OnDestroy {
   private readonly isBrowser: boolean;
-  private ticking = false;
+  private frameId?: number;
+  private resizeTimeout?: ReturnType<typeof setTimeout>;
+  private readonly reducedMotion: boolean;
   private heroElement?: HTMLElement;
   private heroTop = 0;
   private heroHeight = 0;
@@ -32,6 +34,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     private ngZone: NgZone,
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+    this.reducedMotion = this.isBrowser && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
   ngAfterViewInit(): void {
@@ -41,11 +44,12 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
 
     this.heroElement = document.querySelector<HTMLElement>('.hero') ?? undefined;
     this.recalculateHeroMetrics();
-    this.queueParallaxUpdate();
+    this.scheduleParallaxUpdate();
     window.addEventListener('load', this.handleWindowLoad, { once: true });
-    setTimeout(() => {
+
+    this.resizeTimeout = setTimeout(() => {
       this.recalculateHeroMetrics();
-      this.queueParallaxUpdate();
+      this.scheduleParallaxUpdate();
     }, 120);
   }
 
@@ -55,6 +59,14 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     }
 
     window.removeEventListener('load', this.handleWindowLoad);
+
+    if (this.frameId) {
+      cancelAnimationFrame(this.frameId);
+    }
+
+    if (this.resizeTimeout) {
+      clearTimeout(this.resizeTimeout);
+    }
   }
 
   @HostListener('window:scroll')
@@ -63,7 +75,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    this.queueParallaxUpdate();
+    this.scheduleParallaxUpdate();
   }
 
   @HostListener('window:resize')
@@ -72,26 +84,30 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    this.recalculateHeroMetrics();
-    this.queueParallaxUpdate();
+    if (this.resizeTimeout) {
+      clearTimeout(this.resizeTimeout);
+    }
+
+    this.resizeTimeout = setTimeout(() => {
+      this.recalculateHeroMetrics();
+      this.scheduleParallaxUpdate();
+    }, 80);
   }
 
   private readonly handleWindowLoad = () => {
     this.recalculateHeroMetrics();
-    this.queueParallaxUpdate();
+    this.scheduleParallaxUpdate();
   };
 
-  private queueParallaxUpdate(): void {
-    if (this.ticking) {
+  private scheduleParallaxUpdate(): void {
+    if (this.reducedMotion || this.frameId) {
       return;
     }
 
-    this.ticking = true;
-
     this.ngZone.runOutsideAngular(() => {
-      requestAnimationFrame(() => {
+      this.frameId = requestAnimationFrame(() => {
         this.updateHeroParallax();
-        this.ticking = false;
+        this.frameId = undefined;
       });
     });
   }
@@ -118,12 +134,14 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     const heroBottom = this.heroTop + this.heroHeight;
 
     if (scrollY + viewportHeight < this.heroTop || scrollY > heroBottom) {
+      this.heroElement.style.setProperty('--hero-shape-y-1', '0px');
+      this.heroElement.style.setProperty('--hero-shape-y-2', '0px');
       return;
     }
 
     const relativeScroll = scrollY - this.heroTop;
 
-    this.heroElement.style.setProperty('--hero-shape-y-1', `${(relativeScroll * -0.1).toFixed(2)}px`);
-    this.heroElement.style.setProperty('--hero-shape-y-2', `${(relativeScroll * 0.07).toFixed(2)}px`);
+    this.heroElement.style.setProperty('--hero-shape-y-1', `${(relativeScroll * -0.06).toFixed(2)}px`);
+    this.heroElement.style.setProperty('--hero-shape-y-2', `${(relativeScroll * 0.04).toFixed(2)}px`);
   }
 }

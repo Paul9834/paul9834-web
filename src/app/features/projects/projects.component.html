@@ -1,30 +1,39 @@
 <section id="projects" class="projects-section">
   <div class="container">
-    <h2 class="section-title">Career <span class="gradient-text">Journey</span></h2>
+    <div class="projects-header">
+      <h2 class="section-title">Career <span class="gradient-text">Journey</span></h2>
+      <p class="projects-intro">
+        Explore the most relevant stages of my professional path in a horizontal showcase designed for faster scanning.
+      </p>
+    </div>
 
-    <div class="timeline">
+    <div class="projects-rail" aria-label="Projects carousel">
       @for (project of projects; track project.title; let i = $index) {
-        <div class="timeline-item animated-on-scroll" [class.reverse]="i % 2 === 0">
-          <div class="timeline-node">
-            <div class="node-dot">
+        <article class="project-slide animated-on-scroll" [attr.aria-label]="'Project ' + (i + 1)">
+          <div class="project-stage">
+            <div class="stage-badge">
               <mat-icon>work</mat-icon>
+              <span>{{ project.chronology }}</span>
             </div>
-            <div class="node-line"></div>
+            <span class="stage-index">0{{ i + 1 }}</span>
           </div>
 
           <mat-card class="project-card">
-            <div class="project-image-wrapper parallax-wrapper">
-              <img
-                [src]="project.image"
-                [alt]="project.title"
-                class="parallax-image"
-                loading="lazy"
-              >
+            <div class="project-image-shell">
+              <div class="project-image-skeleton skeleton-block" aria-hidden="true"></div>
+              <div class="project-image-wrapper parallax-wrapper">
+                <img
+                  [src]="project.image"
+                  [alt]="project.title"
+                  class="parallax-image"
+                  loading="lazy"
+                >
+              </div>
             </div>
             <div class="project-content">
               <div class="card-header-text">
                 <h3 class="project-title">{{ project.title }}</h3>
-                <p class="role-chronology">{{ project.role }} • {{ project.chronology }}</p>
+                <p class="role-chronology">{{ project.role }}</p>
               </div>
 
               <p class="project-description">{{ project.description }}</p>
@@ -49,7 +58,7 @@
               </div>
             </div>
           </mat-card>
-        </div>
+        </article>
       }
     </div>
   </div>

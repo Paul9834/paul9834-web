@@ -43,7 +43,12 @@ interface Project {
 export class ProjectsComponent implements AfterViewInit, OnDestroy {
   private readonly isBrowser: boolean;
   private observer?: IntersectionObserver;
-  private ticking = false;
+  private parallaxFrame?: number;
+  private resizeTimeout?: ReturnType<typeof setTimeout>;
+  private readonly reducedMotion: boolean;
+
+  readonly skeletonSlides = Array.from({ length: 3 });
+  isLoading = false;
 
   projects: Project[] = [
     {
@@ -172,18 +177,29 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     private ngZone: NgZone,
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+    this.reducedMotion = this.isBrowser && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.projects.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
   }
 
   ngAfterViewInit(): void {
-    if (!this.isBrowser) return;
+    if (!this.isBrowser) {
+      return;
+    }
 
     this.setupIntersectionObserver();
-    this.updateParallax();
+    this.scheduleParallaxUpdate();
   }
 
   ngOnDestroy(): void {
     this.observer?.disconnect();
+
+    if (this.parallaxFrame) {
+      cancelAnimationFrame(this.parallaxFrame);
+    }
+
+    if (this.resizeTimeout) {
+      clearTimeout(this.resizeTimeout);
+    }
   }
 
   private setupIntersectionObserver(): void {
@@ -199,8 +215,8 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
         });
       },
       {
-        threshold: 0.15,
-        rootMargin: '0px 0px -40px 0px',
+        threshold: 0.05,
+        rootMargin: '80px 0px -8% 0px',
       },
     );
 
@@ -209,28 +225,29 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
 
   @HostListener('window:scroll')
   onScroll(): void {
-    if (!this.isBrowser || this.ticking) return;
-
-    this.ticking = true;
-
-    this.ngZone.runOutsideAngular(() => {
-      requestAnimationFrame(() => {
-        this.updateParallax();
-        this.ticking = false;
-      });
-    });
+    if (!this.isBrowser) return;
+    this.scheduleParallaxUpdate();
   }
 
   @HostListener('window:resize')
   onResize(): void {
-    if (!this.isBrowser || this.ticking) return;
+    if (!this.isBrowser) return;
 
-    this.ticking = true;
+    if (this.resizeTimeout) {
+      clearTimeout(this.resizeTimeout);
+    }
+
+    this.resizeTimeout = setTimeout(() => this.scheduleParallaxUpdate(), 80);
+  }
+
+  private scheduleParallaxUpdate(): void {
+    if (this.reducedMotion) return;
+    if (this.parallaxFrame) return;
 
     this.ngZone.runOutsideAngular(() => {
-      requestAnimationFrame(() => {
+      this.parallaxFrame = requestAnimationFrame(() => {
         this.updateParallax();
-        this.ticking = false;
+        this.parallaxFrame = undefined;
       });
     });
   }
@@ -252,7 +269,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
       }
 
       const progress = (viewH - rect.top) / (viewH + rect.height);
-      const intensity = isMobile ? 10 : 16;
+      const intensity = isMobile ? 4 : 8;
       const offset = (progress - 0.5) * intensity;
 
       img.style.setProperty('--parallax-y', `${offset.toFixed(2)}px`);

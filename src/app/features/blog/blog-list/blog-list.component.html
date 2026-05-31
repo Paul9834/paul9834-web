@@ -18,8 +18,18 @@
 
         <aside class="blog-summary-card">
           <div class="card-body">
-            <div class="card-header">
+            <div class="card-header card-header--between">
               <span>Noticias publicadas</span>
+
+              <button
+                mat-icon-button
+                type="button"
+                class="blog-theme-toggle"
+                (click)="themeService.toggleTheme()"
+                [attr.aria-label]="themeService.isDarkMode() ? 'Activar modo claro' : 'Activar modo oscuro'"
+              >
+                <mat-icon>{{ themeService.isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+              </button>
             </div>
 
             <div class="stats-grid">
