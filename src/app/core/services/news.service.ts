@@ -12,6 +12,7 @@ export interface NewsArticle {
   imageUrl: string | null;
   category: string;
   published: boolean;
+  createdAt: string | null;
   publishedAt: string | null;
   likesCount: number;
 }
@@ -152,6 +153,7 @@ export class NewsService {
     return {
       ...article,
       imageUrl: this.normalizeImageUrl(article.imageUrl),
+      createdAt: article.createdAt?.trim() ? article.createdAt : null,
       publishedAt: article.publishedAt?.trim() ? article.publishedAt : null,
       likesCount: Number(article.likesCount ?? 0),
     };

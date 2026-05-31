@@ -57,12 +57,63 @@ export class BlogDetailComponent implements OnInit {
     this.isLoading.set(false);
   }
 
-  formatPublishedAt(value: string | null): string {
+  formatDate(value: string | null): string {
     if (!value?.trim()) {
       return 'Fecha no disponible';
     }
 
-    return value;
+    const normalizedValue = this.normalizePublishedAt(value);
+    const date = new Date(normalizedValue);
+
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    return new Intl.DateTimeFormat('es-CO', {
+      dateStyle: 'full',
+      timeZone: 'America/Bogota',
+    }).format(date);
+  }
+
+  formatDateWithTime(value: string | null): string {
+    if (!value?.trim()) {
+      return 'Fecha no disponible';
+    }
+
+    const normalizedValue = this.normalizePublishedAt(value);
+    const date = new Date(normalizedValue);
+
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    return new Intl.DateTimeFormat('es-CO', {
+      dateStyle: 'full',
+      timeStyle: this.hasExplicitTime(value) ? 'short' : undefined,
+      timeZone: 'America/Bogota',
+    }).format(date);
+  }
+
+  formatPublishedAt(value: string | null): string {
+    return this.formatDate(value);
+  }
+
+  formatPublishedTime(value: string | null): string {
+    if (!value?.trim() || !this.hasExplicitTime(value)) {
+      return '';
+    }
+
+    const normalizedValue = this.normalizePublishedAt(value);
+    const date = new Date(normalizedValue);
+
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+
+    return new Intl.DateTimeFormat('es-CO', {
+      timeStyle: 'short',
+      timeZone: 'America/Bogota',
+    }).format(date);
   }
 
   linkifyContent(content: string): string {
@@ -140,15 +191,31 @@ export class BlogDetailComponent implements OnInit {
     return `blog-liked-${slug}`;
   }
 
+  private normalizePublishedAt(value: string): string {
+    const trimmed = value.trim();
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+      return `${trimmed}T12:00:00`;
+    }
+
+    if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(trimmed)) {
+      return trimmed.replace(' ', 'T').replace(/\.\d+$/, '');
+    }
+
+    return trimmed;
+  }
+
+  private hasExplicitTime(value: string): boolean {
+    return /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}/.test(value.trim());
+  }
+
   private setArticleSeo(article: NewsArticle): void {
     const pageTitle = `${article.title} | Blog | Paul Montealegre`;
     const description = article.description?.trim()
       ? article.description.trim()
       : 'Lee este artículo del blog de Paul Montealegre.';
     const canonicalUrl = `${this.siteUrl}/blog/${article.slug}`;
-    const imageUrl = article.imageUrl?.trim()
-      ? article.imageUrl.trim()
-      : `${this.siteUrl}/assets/og-image.jpg`;
+    const imageUrl = this.resolveSocialImageUrl(article.imageUrl);
 
     this.titleService.setTitle(pageTitle);
 
@@ -189,11 +256,30 @@ export class BlogDetailComponent implements OnInit {
     this.setStructuredData(article, canonicalUrl, imageUrl);
   }
 
+  private resolveSocialImageUrl(imageUrl: string | null | undefined): string {
+    const fallbackImagePath = '/android-chrome-512x512.png';
+    const normalizedImageUrl = imageUrl?.trim();
+
+    if (!normalizedImageUrl) {
+      return `${this.siteUrl}${fallbackImagePath}`;
+    }
+
+    if (/^https?:\/\//i.test(normalizedImageUrl)) {
+      return normalizedImageUrl;
+    }
+
+    const normalizedPath = normalizedImageUrl.startsWith('/')
+      ? normalizedImageUrl
+      : `/${normalizedImageUrl}`;
+
+    return `${this.siteUrl}${normalizedPath}`;
+  }
+
   private setFallbackSeo(): void {
     const pageTitle = 'Blog | Paul Montealegre';
     const description = 'Noticias, artículos y actualizaciones del blog de Paul Montealegre.';
     const canonicalUrl = `${this.siteUrl}/blog`;
-    const imageUrl = `${this.siteUrl}/assets/og-image.jpg`;
+    const imageUrl = this.resolveSocialImageUrl(null);
 
     this.titleService.setTitle(pageTitle);
 

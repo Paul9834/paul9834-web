@@ -63,19 +63,21 @@ export class BlogListComponent implements OnInit {
     });
   }
 
-  formatPublishedAt(value: string | null): string {
+  formatDate(value: string | null): string {
     if (!value?.trim()) {
-      return 'Fecha no disponible';
+      return '--';
     }
 
-    const date = new Date(value);
+    const normalizedValue = this.normalizePublishedAt(value);
+    const date = new Date(normalizedValue);
 
     if (Number.isNaN(date.getTime())) {
-      return value;
+      return this.extractDateLabel(value);
     }
 
     return new Intl.DateTimeFormat('es-CO', {
       dateStyle: 'medium',
+      timeZone: 'America/Bogota',
     }).format(date);
   }
 
@@ -99,13 +101,17 @@ export class BlogListComponent implements OnInit {
 
     const latest = [...articles]
       .filter((article) => !!article.publishedAt?.trim())
-      .sort((a, b) => (b.publishedAt ?? '').localeCompare(a.publishedAt ?? ''))[0];
+      .sort((a, b) => {
+        const left = this.normalizePublishedAt(a.publishedAt ?? '');
+        const right = this.normalizePublishedAt(b.publishedAt ?? '');
+        return right.localeCompare(left);
+      })[0];
 
     if (!latest?.publishedAt) {
       return '--';
     }
 
-    return this.extractDateLabel(latest.publishedAt);
+    return this.formatDate(latest.publishedAt);
   }
 
   totalLikes(): string {
@@ -132,6 +138,24 @@ export class BlogListComponent implements OnInit {
 
     const [, year, month, day] = match;
     return `${day}/${month}/${year}`;
+  }
+
+  private normalizePublishedAt(value: string): string {
+    const trimmed = value.trim();
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+      return `${trimmed}T12:00:00`;
+    }
+
+    if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(trimmed)) {
+      return trimmed.replace(' ', 'T').replace(/\.\d+$/, '');
+    }
+
+    return trimmed;
+  }
+
+  private hasExplicitTime(value: string): boolean {
+    return /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}/.test(value.trim());
   }
 
   private setPageSeo(): void {
