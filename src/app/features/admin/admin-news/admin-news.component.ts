@@ -1,15 +1,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   OnDestroy,
   OnInit,
   PLATFORM_ID,
+  ViewChild,
   inject,
   signal,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatIconModule } from '@angular/material/icon';
 
 import {
@@ -30,6 +33,7 @@ import {
 export class AdminNewsComponent implements OnInit, OnDestroy {
   private readonly newsService = inject(NewsService);
   private readonly fb = inject(FormBuilder);
+  private readonly sanitizer = inject(DomSanitizer);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
@@ -47,6 +51,8 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
   readonly currentImageUrl = signal<string | null>(null);
   readonly imagePreviewUrl = signal<string | null>(null);
 
+  @ViewChild('contentEditor') private contentEditor?: ElementRef<HTMLDivElement>;
+
   readonly newsForm = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.maxLength(160)]],
     slug: ['', [Validators.required, Validators.maxLength(180)]],
@@ -56,6 +62,25 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
   });
 
   private readonly urlRegex = /(https?:\/\/[^\s]+)/g;
+  private readonly allowedTags = new Set([
+    'P',
+    'BR',
+    'STRONG',
+    'B',
+    'EM',
+    'I',
+    'U',
+    'A',
+    'H2',
+    'H3',
+    'UL',
+    'OL',
+    'LI',
+    'BLOCKQUOTE',
+    'SPAN',
+  ]);
+  private readonly allowedSizeClasses = new Set(['editor-size-sm', 'editor-size-md', 'editor-size-lg']);
+  private readonly allowedAlignClasses = new Set(['editor-align-left', 'editor-align-center', 'editor-align-justify']);
 
   ngOnInit(): void {
     this.loadArticles();
@@ -124,6 +149,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     });
 
     this.isEditorOpen.set(true);
+    this.syncEditorFromForm();
   }
 
   openEditEditor(article: NewsArticle): void {
@@ -143,6 +169,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     });
 
     this.isEditorOpen.set(true);
+    this.syncEditorFromForm();
   }
 
   closeEditor(): void {
@@ -283,6 +310,388 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
         }
       },
     });
+  }
+
+  get contentControl() {
+    return this.newsForm.controls.content;
+  }
+
+  onEditorInput(rawHtml: string): void {
+    const sanitized = this.sanitizeEditorHtml(rawHtml);
+    this.contentControl.setValue(sanitized);
+    this.contentControl.markAsDirty();
+  }
+
+  onEditorBlur(): void {
+    this.contentControl.markAsTouched();
+    this.syncEditorFromForm();
+  }
+
+  applyEditorCommand(command: 'bold' | 'italic' | 'underline' | 'insertUnorderedList' | 'insertOrderedList'): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    this.focusEditor();
+    document.execCommand(command);
+    this.captureEditorState();
+  }
+
+  applyTextSize(size: 'sm' | 'md' | 'lg'): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    const editor = this.contentEditor?.nativeElement;
+    if (!editor) {
+      return;
+    }
+
+    this.focusEditor();
+
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) {
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const fontSize = size === 'sm' ? '0.84rem' : size === 'lg' ? '1.16rem' : '0.98rem';
+
+    document.execCommand('styleWithCSS', false, 'true');
+    document.execCommand('fontSize', false, '3');
+
+    const spans = editor.querySelectorAll('font[size="3"], span[style*="font-size"]');
+    spans.forEach((span) => {
+      const s = span as HTMLElement;
+      if (s.tagName === 'FONT') {
+        s.removeAttribute('size');
+        s.style.fontSize = fontSize;
+      } else if (s.tagName === 'SPAN') {
+        s.style.fontSize = fontSize;
+      }
+    });
+
+    this.captureEditorState();
+  }
+
+  toggleJustifyText(): void {
+    this.toggleBlockAlignment('editor-align-justify');
+  }
+
+  toggleCenterText(): void {
+    this.toggleBlockAlignment('editor-align-center');
+  }
+
+  clearTextAlignment(): void {
+    this.toggleBlockAlignment('editor-align-left');
+  }
+
+  isSelectionUsingSize(size: 'sm' | 'md' | 'lg'): boolean {
+    return this.isSelectionInsideClass(`editor-size-${size}`);
+  }
+
+  isSelectionJustified(): boolean {
+    return this.isSelectionInsideClass('editor-align-justify');
+  }
+
+  isSelectionCentered(): boolean {
+    return this.isSelectionInsideClass('editor-align-center');
+  }
+
+  isSelectionLeftAligned(): boolean {
+    return !this.isSelectionJustified() && !this.isSelectionCentered();
+  }
+
+  formatBlock(tagName: 'h2' | 'h3' | 'blockquote'): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    this.focusEditor();
+    document.execCommand('formatBlock', false, tagName);
+    this.captureEditorState();
+  }
+
+  setEditorLink(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    const url = window.prompt('Pega la URL del enlace');
+    if (!url) {
+      return;
+    }
+
+    this.focusEditor();
+    document.execCommand('createLink', false, url.trim());
+    this.captureEditorState();
+  }
+
+  clearEditorFormatting(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    this.focusEditor();
+    document.execCommand('removeFormat');
+    document.execCommand('unlink');
+    this.captureEditorState();
+  }
+
+  isSelectionInsideTag(tagName: string): boolean {
+    if (!this.isBrowser) {
+      return false;
+    }
+
+    const selection = window.getSelection();
+    const anchorNode = selection?.anchorNode;
+    const editor = this.contentEditor?.nativeElement;
+
+    if (!anchorNode || !editor) {
+      return false;
+    }
+
+    let current: HTMLElement | null = anchorNode.nodeType === Node.ELEMENT_NODE
+      ? (anchorNode as HTMLElement)
+      : anchorNode.parentElement;
+
+    while (current && current !== editor) {
+      if (current.tagName.toLowerCase() === tagName.toLowerCase()) {
+        return true;
+      }
+      current = current.parentElement;
+    }
+
+    return false;
+  }
+
+  isSelectionInsideClass(className: string): boolean {
+    if (!this.isBrowser) {
+      return false;
+    }
+
+    const selection = window.getSelection();
+    const anchorNode = selection?.anchorNode;
+    const editor = this.contentEditor?.nativeElement;
+
+    if (!anchorNode || !editor) {
+      return false;
+    }
+
+    let current: HTMLElement | null = anchorNode.nodeType === Node.ELEMENT_NODE
+      ? (anchorNode as HTMLElement)
+      : anchorNode.parentElement;
+
+    while (current && current !== editor) {
+      if (current.classList.contains(className)) {
+        return true;
+      }
+      current = current.parentElement;
+    }
+
+    return false;
+  }
+
+  private findClosestMatchingClass(node: Node | null, editor: HTMLElement, pattern: RegExp): HTMLElement | null {
+    let current: HTMLElement | null = node?.nodeType === Node.ELEMENT_NODE
+      ? (node as HTMLElement)
+      : node?.parentElement ?? null;
+
+    while (current && current !== editor) {
+      if ([...current.classList].some((className) => pattern.test(className))) {
+        return current;
+      }
+      current = current.parentElement;
+    }
+
+    return null;
+  }
+
+  private findClosestBlockElement(node: Node | null, editor: HTMLElement): HTMLElement | null {
+    let current: HTMLElement | null = node?.nodeType === Node.ELEMENT_NODE
+      ? (node as HTMLElement)
+      : node?.parentElement ?? null;
+
+    while (current && current !== editor) {
+      if (['P', 'H2', 'H3', 'BLOCKQUOTE', 'LI'].includes(current.tagName)) {
+        return current;
+      }
+      current = current.parentElement;
+    }
+
+    return editor;
+  }
+
+  private toggleBlockAlignment(alignmentClass: 'editor-align-left' | 'editor-align-center' | 'editor-align-justify'): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    const editor = this.contentEditor?.nativeElement;
+    if (!editor) {
+      return;
+    }
+
+    this.focusEditor();
+
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) {
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const isCenter = alignmentClass === 'editor-align-center';
+    const isJustify = alignmentClass === 'editor-align-justify';
+    const textAlign = isCenter ? 'center' : isJustify ? 'justify' : '';
+
+    const allBlocks = Array.from(editor.querySelectorAll('p, h2, h3, blockquote, li, div')) as HTMLElement[];
+    const affectedBlocks = allBlocks.filter((block) => range.intersectsNode(block));
+
+    if (affectedBlocks.length === 0) {
+      const fallbackBlock = this.findClosestBlockElement(selection.anchorNode, editor);
+      if (fallbackBlock) {
+        fallbackBlock.style.textAlign = textAlign;
+        this.updateBlockClass(fallbackBlock, alignmentClass);
+      }
+      this.captureEditorState();
+      return;
+    }
+
+    affectedBlocks.forEach((block) => {
+      block.style.textAlign = textAlign;
+      this.updateBlockClass(block, alignmentClass);
+    });
+
+    this.captureEditorState();
+  }
+
+  renderFormattedContent(content: string | null | undefined): SafeHtml {
+    const sanitized = this.sanitizeEditorHtml(content ?? '');
+    return this.sanitizer.bypassSecurityTrustHtml(sanitized);
+  }
+
+  private syncEditorFromForm(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    queueMicrotask(() => {
+      const editor = this.contentEditor?.nativeElement;
+      if (!editor) {
+        return;
+      }
+
+      const nextHtml = this.sanitizeEditorHtml(this.contentControl.value);
+      if (editor.innerHTML !== nextHtml) {
+        editor.innerHTML = nextHtml;
+      }
+    });
+  }
+
+  private focusEditor(): void {
+    this.contentEditor?.nativeElement.focus();
+  }
+
+  private updateBlockClass(block: HTMLElement, className: 'editor-align-left' | 'editor-align-center' | 'editor-align-justify'): void {
+    block.classList.remove('editor-align-left', 'editor-align-center', 'editor-align-justify');
+
+    if (className !== 'editor-align-left') {
+      block.classList.add(className);
+    }
+  }
+
+  private captureEditorState(): void {
+    const editor = this.contentEditor?.nativeElement;
+    if (!editor) {
+      return;
+    }
+
+    const sanitized = this.sanitizeEditorHtml(editor.innerHTML);
+    this.contentControl.setValue(sanitized);
+    this.contentControl.markAsDirty();
+  }
+
+  private sanitizeEditorHtml(rawHtml: string): string {
+    if (!this.isBrowser || !rawHtml?.trim()) {
+      return '';
+    }
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(rawHtml, 'text/html');
+
+    const sanitizeNode = (node: Node): void => {
+      const children = Array.from(node.childNodes);
+
+      for (const child of children) {
+        if (child.nodeType === Node.ELEMENT_NODE) {
+          const element = child as HTMLElement;
+
+          if (!this.allowedTags.has(element.tagName)) {
+            const fragment = doc.createDocumentFragment();
+            while (element.firstChild) {
+              fragment.appendChild(element.firstChild);
+            }
+            element.replaceWith(fragment);
+            continue;
+          }
+
+          Array.from(element.attributes).forEach((attribute) => {
+            const name = attribute.name.toLowerCase();
+            const value = attribute.value.trim();
+
+            if (element.tagName === 'A' && name === 'href' && /^https?:\/\//i.test(value)) {
+              element.setAttribute('href', value);
+              element.setAttribute('target', '_blank');
+              element.setAttribute('rel', 'noopener noreferrer');
+              return;
+            }
+
+            if (name === 'class') {
+              const allClasses = value.split(/\s+/);
+              const keptSizeClasses = allClasses.filter((className) => this.allowedSizeClasses.has(className));
+              const keptAlignClasses = allClasses.filter((className) => this.allowedAlignClasses.has(className));
+              const finalClasses = [...keptSizeClasses, ...keptAlignClasses];
+
+              if (finalClasses.length > 0) {
+                element.className = finalClasses.join(' ');
+              } else {
+                element.removeAttribute('class');
+              }
+              return;
+            }
+
+            if (name === 'style') {
+              const safeStyle = value
+                .split(';')
+                .map((rule) => rule.trim())
+                .filter(Boolean)
+                .filter((rule) => /^font-size\s*:/i.test(rule) || /^text-align\s*:/i.test(rule))
+                .join('; ');
+
+              if (safeStyle) {
+                element.setAttribute('style', safeStyle);
+              } else {
+                element.removeAttribute('style');
+              }
+              return;
+            }
+
+            element.removeAttribute(attribute.name);
+          });
+
+          sanitizeNode(element);
+        } else if (child.nodeType === Node.COMMENT_NODE) {
+          child.remove();
+        }
+      }
+    };
+
+    sanitizeNode(doc.body);
+
+    return doc.body.innerHTML
+      .replace(/<div>/gi, '<p>')
+      .replace(/<\/div>/gi, '</p>')
+      .trim();
   }
 
   linkifyContent(content: string): string {

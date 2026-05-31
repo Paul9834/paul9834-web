@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Meta, Title } from '@angular/platform-browser';
+import { Meta, Title, DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { finalize } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -27,11 +27,28 @@ export class BlogDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly titleService = inject(Title);
   private readonly meta = inject(Meta);
+  private readonly sanitizer = inject(DomSanitizer);
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly newsService = inject(NewsService);
 
   private readonly urlRegex = /(https?:\/\/[^\s]+)/g;
+  private readonly allowedTags = new Set([
+    'P',
+    'BR',
+    'STRONG',
+    'B',
+    'EM',
+    'I',
+    'U',
+    'A',
+    'H2',
+    'H3',
+    'UL',
+    'OL',
+    'LI',
+    'BLOCKQUOTE',
+  ]);
   private readonly siteUrl = 'https://paul9834.com';
 
   readonly article = signal<NewsArticle | null>(null);
@@ -116,6 +133,11 @@ export class BlogDetailComponent implements OnInit {
     }).format(date);
   }
 
+  renderRichContent(content: string | null | undefined): SafeHtml {
+    const sanitized = this.sanitizeRichContent(content ?? '');
+    return this.sanitizer.bypassSecurityTrustHtml(sanitized);
+  }
+
   linkifyContent(content: string): string {
     if (!content?.trim()) {
       return '';
@@ -131,6 +153,60 @@ export class BlogDetailComponent implements OnInit {
     return escaped
       .replace(this.urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>')
       .replace(/\n/g, '<br>');
+  }
+
+  private sanitizeRichContent(rawHtml: string): string {
+    if (!rawHtml?.trim() || !isPlatformBrowser(this.platformId)) {
+      return '';
+    }
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(rawHtml, 'text/html');
+
+    const sanitizeNode = (node: Node): void => {
+      const children = Array.from(node.childNodes);
+
+      for (const child of children) {
+        if (child.nodeType === Node.ELEMENT_NODE) {
+          const element = child as HTMLElement;
+
+          if (!this.allowedTags.has(element.tagName)) {
+            const fragment = doc.createDocumentFragment();
+            while (element.firstChild) {
+              fragment.appendChild(element.firstChild);
+            }
+            element.replaceWith(fragment);
+            continue;
+          }
+
+          Array.from(element.attributes).forEach((attribute) => {
+            const name = attribute.name.toLowerCase();
+            const value = attribute.value.trim();
+
+            if (element.tagName === 'A' && name === 'href' && /^https?:\/\//i.test(value)) {
+              element.setAttribute('href', value);
+              element.setAttribute('target', '_blank');
+              element.setAttribute('rel', 'noopener noreferrer');
+              return;
+            }
+
+            element.removeAttribute(attribute.name);
+          });
+
+          sanitizeNode(element);
+        } else if (child.nodeType === Node.COMMENT_NODE) {
+          child.remove();
+        }
+      }
+    };
+
+    sanitizeNode(doc.body);
+
+    return doc.body.innerHTML
+      .replace(/<div>/gi, '<p>')
+      .replace(/<\/div>/gi, '</p>')
+      .replace(/<p>\s*<\/p>/gi, '')
+      .trim();
   }
 
   likeArticle(): void {

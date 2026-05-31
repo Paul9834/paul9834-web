@@ -10,7 +10,7 @@ import {
 import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Meta, Title } from '@angular/platform-browser';
+import { DomSanitizer, Meta, SafeHtml, Title } from '@angular/platform-browser';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -29,6 +29,7 @@ export class BlogListComponent implements OnInit {
   private readonly newsService = inject(NewsService);
   private readonly titleService = inject(Title);
   private readonly meta = inject(Meta);
+  private readonly sanitizer = inject(DomSanitizer);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly document = inject(DOCUMENT);
   readonly themeService = inject(ThemeService);
@@ -121,6 +122,24 @@ export class BlogListComponent implements OnInit {
   totalLikes(): string {
     const total = this.articles().reduce((sum, article) => sum + article.likesCount, 0);
     return total.toString();
+  }
+
+  renderPreviewContent(article: NewsArticle): SafeHtml {
+    const source = article.content?.trim() || article.description?.trim() || '';
+    const normalized = this.normalizePreviewHtml(source);
+    return this.sanitizer.bypassSecurityTrustHtml(normalized);
+  }
+
+  private normalizePreviewHtml(content: string): string {
+    if (!content) {
+      return '';
+    }
+
+    const normalized = content
+      .replace(/<div/gi, '<p')
+      .replace(/<\/div>/gi, '</p>');
+
+    return normalized;
   }
 
   readingLabel(): string {

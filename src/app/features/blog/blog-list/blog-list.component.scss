@@ -752,8 +752,17 @@
   }
 
   .blog-grid {
-    grid-template-columns: repeat(2, minmax(320px, 1fr));
-    gap: 28px;
+    column-count: 2;
+    column-gap: 28px;
+    display: block;
+    overflow: visible;
+  }
+
+  .blog-card {
+    break-inside: avoid;
+    margin: 0 0 28px;
+    width: 100%;
+    display: inline-flex;
   }
 }
 
