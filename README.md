@@ -1,4 +1,4 @@
-# KP Portfolio - Angular SSR
+# Kevin Paul Montealegre Melo Portfolio - Angular SSR
 
 Portfolio profesional desarrollado con Angular 21, renderizado híbrido con SSR, estructura modular basada en features y despliegue automatizado hacia un VPS. Este proyecto centraliza presentación profesional, branding técnico y consumo de APIs para contenido dinámico, priorizando mantenibilidad, performance y una operación simple en producción. [cite:3][cite:4]
 
