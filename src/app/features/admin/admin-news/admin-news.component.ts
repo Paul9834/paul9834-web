@@ -70,9 +70,21 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
 
     this.newsService.getAdminNews(0, 20).subscribe({
       next: (response) => {
-        const sorted = [...response.articles].sort((a, b) =>
-          (b.publishedAt ?? '').localeCompare(a.publishedAt ?? '')
-        );
+        const sorted = [...response.articles].sort((a, b) => {
+          if (a.published !== b.published) {
+            return a.published ? 1 : -1;
+          }
+
+          const leftDate = a.published
+            ? this.normalizeSortableDate(a.publishedAt)
+            : this.normalizeSortableDate(a.createdAt);
+          const rightDate = b.published
+            ? this.normalizeSortableDate(b.publishedAt)
+            : this.normalizeSortableDate(b.createdAt);
+
+          return rightDate.localeCompare(leftDate);
+        });
+
         this.articles.set(sorted);
         this.isLoading.set(false);
       },
@@ -187,7 +199,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
       return 'Aún no publicado';
     }
 
-    const date = new Date(value);
+    const date = new Date(this.normalizeSortableDate(value));
 
     if (Number.isNaN(date.getTime())) {
       return value;
@@ -196,7 +208,44 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     return new Intl.DateTimeFormat('es-CO', {
       dateStyle: 'medium',
       timeStyle: 'short',
+      timeZone: 'America/Bogota',
     }).format(date);
+  }
+
+  formatCreatedAt(value: string | null): string {
+    if (!value?.trim()) {
+      return 'Fecha no disponible';
+    }
+
+    const date = new Date(this.normalizeSortableDate(value));
+
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    return new Intl.DateTimeFormat('es-CO', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      timeZone: 'America/Bogota',
+    }).format(date);
+  }
+
+  private normalizeSortableDate(value: string | null): string {
+    const trimmed = value?.trim();
+
+    if (!trimmed) {
+      return '';
+    }
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+      return `${trimmed}T12:00:00`;
+    }
+
+    if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(trimmed)) {
+      return trimmed.replace(' ', 'T').replace(/\.\d+$/, '');
+    }
+
+    return trimmed;
   }
 
   deleteArticle(article: NewsArticle): void {

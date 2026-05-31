@@ -138,7 +138,9 @@
                       <span class="blog-likes__count">{{ article.likesCount }}</span>
                     </span>
 
-                    <span class="blog-date">{{ formatPublishedAt(article.publishedAt) }}</span>
+                    <span class="blog-date">
+                      {{ formatDate(article.publishedAt) }}
+                    </span>
                   </div>
                 </div>
 

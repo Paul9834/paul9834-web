@@ -47,7 +47,12 @@
               </p>
 
               <div class="blog-detail-meta-inline">
-                <span>{{ formatPublishedAt(currentArticle.publishedAt) }}</span>
+                <span>
+                  <time [attr.datetime]="currentArticle.publishedAt ?? ''">
+                    {{ formatDateWithTime(currentArticle.publishedAt) }}
+                  </time>
+                </span>
+
                 <span>Slug: {{ currentArticle.slug }}</span>
 
                 <span class="blog-detail-likes-chip">

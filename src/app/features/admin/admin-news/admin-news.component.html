@@ -102,9 +102,9 @@
                   <span>Slug: {{ article.slug }}</span>
                   <span>
                     {{
-                      article.publishedAt
-                        ? 'Publicado: ' + formatPublishedAt(article.publishedAt)
-                        : 'Aún no publicado'
+                      article.published
+                        ? 'Publicada: ' + formatPublishedAt(article.publishedAt)
+                        : 'Creada: ' + formatCreatedAt(article.createdAt)
                     }}
                   </span>
                 </div>
