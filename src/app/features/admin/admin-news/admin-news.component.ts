@@ -10,6 +10,7 @@ import {
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 
 import {
   CreateNewsRequest,
@@ -21,7 +22,7 @@ import {
 @Component({
   selector: 'app-admin-news',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatIconModule],
   templateUrl: './admin-news.component.html',
   styleUrl: './admin-news.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

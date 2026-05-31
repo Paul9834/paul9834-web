@@ -255,11 +255,17 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
   private updateParallax(): void {
     const wrappers = document.querySelectorAll<HTMLElement>('.parallax-wrapper');
     const isMobile = window.innerWidth <= 768;
+    const isDesktopFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     const viewH = window.innerHeight;
 
     wrappers.forEach((wrapper) => {
       const img = wrapper.querySelector<HTMLElement>('.parallax-image');
       if (!img) return;
+
+      if (isDesktopFinePointer) {
+        img.style.setProperty('--parallax-y', '0px');
+        return;
+      }
 
       const rect = wrapper.getBoundingClientRect();
 
@@ -269,7 +275,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
       }
 
       const progress = (viewH - rect.top) / (viewH + rect.height);
-      const intensity = isMobile ? 4 : 8;
+      const intensity = isMobile ? 4 : 6;
       const offset = (progress - 0.5) * intensity;
 
       img.style.setProperty('--parallax-y', `${offset.toFixed(2)}px`);

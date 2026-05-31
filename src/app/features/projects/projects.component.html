@@ -1,10 +1,20 @@
 <section id="projects" class="projects-section">
   <div class="container">
     <div class="projects-header">
-      <h2 class="section-title">Career <span class="gradient-text">Journey</span></h2>
-      <p class="projects-intro">
-        Explore the most relevant stages of my professional path in a horizontal showcase designed for faster scanning.
-      </p>
+      <div class="projects-header-main">
+        <h2 class="section-title">Career <span class="gradient-text">Journey</span></h2>
+        <p class="projects-intro">
+          Explore the most relevant stages of my professional path in a horizontal showcase designed for faster scanning.
+        </p>
+      </div>
+      <button
+        type="button"
+        class="projects-scroll-cue"
+        aria-label="Scroll horizontally to explore projects"
+        tabindex="-1"
+      >
+        <mat-icon>arrow_right_alt</mat-icon>
+      </button>
     </div>
 
     <div class="projects-rail" aria-label="Projects carousel">
@@ -15,7 +25,6 @@
               <mat-icon>work</mat-icon>
               <span>{{ project.chronology }}</span>
             </div>
-            <span class="stage-index">0{{ i + 1 }}</span>
           </div>
 
           <mat-card class="project-card">
