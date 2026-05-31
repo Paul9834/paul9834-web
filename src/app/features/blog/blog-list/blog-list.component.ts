@@ -11,13 +11,16 @@ import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Meta, Title } from '@angular/platform-browser';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 import { NewsArticle, NewsService } from '../../../core/services/news.service';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-blog-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, MatButtonModule, MatIconModule],
   templateUrl: './blog-list.component.html',
   styleUrl: './blog-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,6 +31,7 @@ export class BlogListComponent implements OnInit {
   private readonly meta = inject(Meta);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly document = inject(DOCUMENT);
+  readonly themeService = inject(ThemeService);
   private readonly canonicalUrl = 'https://paul9834.com/blog';
 
   readonly articles = signal<NewsArticle[]>([]);

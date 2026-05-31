@@ -453,6 +453,9 @@
 .blog-detail-content-card {
   padding-inline: clamp(6px, 0.8vw, 14px);
   padding-block: clamp(28px, 4vw, 48px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 3vw, 32px);
 }
 
 .blog-detail-content {
@@ -461,7 +464,7 @@
   line-height: 1.9;
   max-width: 80%;
   width: 100%;
-  margin-top: 34px;
+  margin-top: 0;
   margin-right: auto;
   margin-bottom: 0;
   margin-left: auto;
