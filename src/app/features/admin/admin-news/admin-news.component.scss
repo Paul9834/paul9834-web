@@ -137,21 +137,47 @@
   justify-content: center;
   gap: 10px;
   min-height: 52px;
-  padding: 0 22px;
+  padding: 0 24px;
   border: 1px solid color-mix(in srgb, var(--accent-main) 10%, var(--divider));
-  border-radius: 18px;
+  border-radius: 20px;
   background: color-mix(in srgb, var(--surface) 94%, var(--bg));
   color: var(--text-primary);
+  font-family: 'Poppins', var(--font-main), sans-serif;
   font-size: 0.96rem;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
+  line-height: 1;
   box-shadow: var(--shadow-md);
   cursor: pointer;
   transition:
     transform var(--transition),
     box-shadow var(--transition),
     background var(--transition),
-    border-color var(--transition);
+    border-color var(--transition),
+    color var(--transition);
+
+  mat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+    line-height: 18px;
+    color: var(--accent-main);
+    flex-shrink: 0;
+  }
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+  }
+
+  &:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--accent-main) 36%, transparent);
+    outline-offset: 3px;
+  }
 }
 
 .admin-cta:hover {
@@ -159,20 +185,6 @@
   background: color-mix(in srgb, var(--accent-main) 8%, var(--surface));
   border-color: color-mix(in srgb, var(--accent-main) 18%, var(--divider));
   box-shadow: var(--shadow-hover);
-}
-
-.admin-cta__icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--accent-main) 14%, transparent);
-  color: var(--accent-main);
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1;
 }
 
 .admin-summary-card {
