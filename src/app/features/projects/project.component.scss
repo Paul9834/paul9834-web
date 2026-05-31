@@ -45,22 +45,7 @@
     scrollbar-color: var(--accent-main) transparent;
 
     &::before {
-      content: '';
-      position: absolute;
-      left: 12px;
-      right: 12px;
-      top: 28px;
-      height: 2px;
-      border-radius: 999px;
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        color-mix(in srgb, var(--divider) 80%, transparent) 6%,
-        color-mix(in srgb, var(--divider) 96%, transparent) 50%,
-        color-mix(in srgb, var(--divider) 80%, transparent) 94%,
-        transparent 100%
-      );
-      pointer-events: none;
+      display: none;
     }
 
     @media (max-width: 1024px) {
@@ -124,6 +109,56 @@
     opacity: 0;
     transform: translate3d(0, 18px, 0);
     will-change: transform, opacity;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 21px;
+      left: 0;
+      width: calc(100% + 28px);
+      height: 2px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--divider) 92%, transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    &:last-child::before {
+      width: 100%;
+    }
+
+    @media (max-width: 1024px) {
+      &::before {
+        top: 21px;
+        width: calc(100% + 22px);
+      }
+
+      &:last-child::before {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      &::before {
+        top: 21px;
+        width: calc(100% + 18px);
+      }
+
+      &:last-child::before {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      &::before {
+        top: 21px;
+        width: calc(100% + 16px);
+      }
+
+      &:last-child::before {
+        width: 100%;
+      }
+    }
   }
 
   .project-slide--skeleton {
@@ -255,20 +290,27 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+    margin-bottom: 10px;
+
+    @media (max-width: 768px) {
+      margin-bottom: 12px;
+    }
   }
 
   .stage-badge {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 14px 10px 34px;
+    padding: 10px 16px 10px 34px;
     border-radius: 999px;
     background: var(--surface-2);
     border: 1px solid color-mix(in srgb, var(--divider) 82%, transparent);
     color: var(--text-primary);
     box-shadow: none;
     min-width: 0;
+    max-width: 100%;
     position: relative;
+    z-index: 1;
 
     mat-icon {
       color: var(--text-muted);

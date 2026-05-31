@@ -161,9 +161,11 @@
 
 .login-card {
   width: 100%;
-  border-radius: var(--radius-xl) !important;
+  max-width: 640px;
+  margin: 0 auto;
+  border-radius: 32px !important;
   box-shadow: var(--shadow-lg) !important;
-  background: color-mix(in srgb, var(--surface) 94%, transparent) !important;
+  background: color-mix(in srgb, var(--surface) 96%, transparent) !important;
   border: 1px solid color-mix(in srgb, var(--accent-main) 8%, var(--divider)) !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -175,39 +177,46 @@
 }
 
 .login-card__inner {
-  padding: 28px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 32px;
   text-align: left;
 }
 
 .login-card__header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
   align-items: center;
-  gap: 12px;
+  column-gap: 20px;
   text-align: left;
+}
+
+.login-card__heading {
+  display: grid;
+  gap: 8px;
 
   h2 {
-    margin: 0 0 4px;
+    margin: 0;
     color: var(--text-primary);
-    font-size: 1.25rem;
+    font-size: 1.55rem;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1.1;
   }
 
   p {
     margin: 0;
     color: var(--text-muted);
-    font-size: 0.9rem;
-    line-height: 1.5;
+    font-size: 1rem;
+    line-height: 1.65;
+    max-width: 28ch;
   }
 }
 
 .login-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 16px;
+  width: 72px;
+  height: 72px;
+  border-radius: 24px;
   background: color-mix(in srgb, var(--accent-main) 10%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent-main) 12%, transparent);
   display: inline-flex;
@@ -218,9 +227,9 @@
   flex-shrink: 0;
 
   mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
     color: inherit;
   }
 }
@@ -228,7 +237,7 @@
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 22px;
 }
 
 .full-width {
