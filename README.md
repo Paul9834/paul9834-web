@@ -19,6 +19,44 @@ El repositorio contiene una sola aplicación Angular llamada `portfolio`, con `
 | Integración API | `HttpClient`, interceptor, environments | Consumo desacoplado de backend y configuración por entorno. [cite:4] |
 | DevOps | GitHub Actions, VPS, Nginx | Build, despliegue automatizado y exposición segura del servicio. [cite:2][cite:4] |
 
+## Sistema de diseño
+
+El proyecto no solo implementa Angular Material, sino que adapta lineamientos de Material 3 sobre una identidad visual propia mediante tokens CSS, tematización de Angular Material y soporte explícito para modo claro y modo oscuro. Esto permite una base de diseño consistente, escalable y alineada con una experiencia moderna de producto digital. [cite:6]
+
+### Lineamientos de Material 3
+
+La hoja global `src/styles.scss` activa el motor de Angular Material, incorpora clases de elevación y fondo de aplicación, y define un tema Material 3 con `mat.theme(...)`, tipografía personalizada y densidad neutra. También expone variables del sistema como `--mat-sys-primary`, `--mat-sys-surface`, `--mat-sys-background` y `--mat-sys-outline-variant`, lo que demuestra una personalización deliberada del sistema visual de Material 3 en lugar de usar el tema por defecto. [cite:6]
+
+Además, se definieron curvas de animación y duraciones como `--m3-easing-standard`, `--m3-easing-emphasized` y `--m3-duration-long`, lo que indica una adopción parcial de principios de motion de Material 3 para transiciones más fluidas y consistentes. Este detalle eleva la calidad percibida del portfolio y refuerza una presentación más premium y profesional. [cite:6]
+
+### Paleta de colores
+
+La paleta principal responde a una estética "clean tech" declarada en los tokens globales del proyecto. En modo claro, se usan tonos oscuros neutrales para texto y contraste (`#111827`, `#374151`, `#6B7280`), fondos limpios (`#FFFFFF`, `#F3F4F6`) y un acento azul tecnológico (`#0062FF`) con una variante más intensa para gradientes y estados destacados (`#004BD6`). [cite:6]
+
+| Rol visual | Token | Valor |
+|---|---|---|
+| Texto principal | `--text-primary` | `#111827` en light, `#F9FAFB` en dark. [cite:6] |
+| Texto secundario | `--text-secondary` | `#374151` en light, `#D1D5DB` en dark. [cite:6] |
+| Fondo base | `--bg` | `#FFFFFF` en light, `#0B0F19` en dark. [cite:6] |
+| Superficie | `--surface` | `#FFFFFF` en light, `#111827` en dark. [cite:6] |
+| Acento principal | `--accent-main` | `#0062FF`. [cite:6] |
+| Acento secundario/glow | `--accent-glow` | `#004BD6`. [cite:6] |
+| Divisor | `--divider` | `#E5E7EB` en light y `rgba(255, 255, 255, 0.15)` en dark. [cite:6] |
+
+La presencia de gradientes como `--grad-primary` y `--grad-blob`, además de sombras tokenizadas (`--shadow-md`, `--shadow-lg`, `--shadow-hover`), sugiere una capa visual enfocada en profundidad sutil, contraste elegante y componentes destacados sin romper sobriedad. En otras palabras, el lenguaje visual busca verse tecnológico, limpio y ejecutivo al mismo tiempo. [cite:6]
+
+### Tipografía
+
+La tipografía principal del proyecto es `Poppins`, cargada localmente mediante múltiples declaraciones `@font-face` para pesos 300, 400, 500, 600, 700 y 800, además de variante itálica. Esto permite controlar jerarquía visual con precisión y evita depender exclusivamente de fuentes remotas. [cite:6]
+
+El token `--font-main` establece `Poppins` como familia principal, con fallback a `Helvetica Neue` y `sans-serif`, y el tema de Angular Material también se configura sobre `Poppins, sans-serif`. Esa consistencia entre sistema global y componentes Material asegura una experiencia tipográfica uniforme en toda la aplicación. [cite:6]
+
+### Modo claro y oscuro
+
+El proyecto implementa una estrategia de dual theme mediante `html` y `html.dark-theme`, redefiniendo tokens clave para color, superficies, divisores y contraste. Esto no es solo un cambio cosmético: conserva semántica visual entre modos y mantiene legibilidad, densidad y jerarquía de interfaz bajo un modelo coherente. [cite:6]
+
+Desde una perspectiva profesional, esta decisión mejora accesibilidad, adapta el portfolio a preferencias de usuario y refuerza la madurez del frontend. También encaja con el uso de `ThemeService`, que ya administra estado visual mediante `signal()`, cerrando bien la integración entre diseño y lógica de presentación. [cite:4][cite:6]
+
 ## Arquitectura del proyecto
 
 La estructura sigue una separación clara por responsabilidades: `core` concentra servicios, guardas, interceptores y resolvers reutilizables; `features` encapsula secciones funcionales como hero, about y projects; y `layout` orquesta composición visual con home, navbar, public-layout y componentes auxiliares como WhatsApp. Esta distribución favorece escalabilidad, bajo acoplamiento y lectura rápida del dominio visual de la aplicación. [cite:4]
