@@ -11,13 +11,13 @@
         type="button"
         class="projects-scroll-cue"
         aria-label="Scroll horizontally to explore projects"
-        tabindex="-1"
+        (click)="scrollProjectsRail()"
       >
         <mat-icon>arrow_right_alt</mat-icon>
       </button>
     </div>
 
-    <div class="projects-rail" aria-label="Projects carousel">
+    <div #projectsRail class="projects-rail" aria-label="Projects carousel">
       @for (project of projects; track project.title; let i = $index) {
         <article class="project-slide animated-on-scroll" [attr.aria-label]="'Project ' + (i + 1)">
           <div class="project-stage">
