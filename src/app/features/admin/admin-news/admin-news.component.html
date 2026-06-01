@@ -280,10 +280,10 @@
                       <mat-icon>format_quote</mat-icon>
                     </button>
                     <span class="m3-editor__divider" aria-hidden="true"></span>
-                    <button type="button" class="m3-editor__tool" (click)="applyEditorCommand('insertUnorderedList')" [class.m3-editor__tool--active]="isSelectionInsideTag('ul')" aria-label="Lista con viñetas">
+                    <button type="button" class="m3-editor__tool" (mousedown)="$event.preventDefault()" (click)="applyEditorCommand('insertUnorderedList')" [class.m3-editor__tool--active]="isSelectionInsideTag('ul')" aria-label="Lista con viñetas">
                       <mat-icon>format_list_bulleted</mat-icon>
                     </button>
-                    <button type="button" class="m3-editor__tool" (click)="applyEditorCommand('insertOrderedList')" [class.m3-editor__tool--active]="isSelectionInsideTag('ol')" aria-label="Lista numerada">
+                    <button type="button" class="m3-editor__tool" (mousedown)="$event.preventDefault()" (click)="applyEditorCommand('insertOrderedList')" [class.m3-editor__tool--active]="isSelectionInsideTag('ol')" aria-label="Lista numerada">
                       <mat-icon>format_list_numbered</mat-icon>
                     </button>
                     <button type="button" class="m3-editor__tool" (click)="setEditorLink()" aria-label="Insertar enlace">
@@ -302,6 +302,7 @@
                     aria-multiline="true"
                     aria-label="Editor de contenido de la noticia"
                     data-placeholder="Escribe el contenido del artículo con estilo editorial Material 3"
+                    (keydown)="onEditorKeydown($event)"
                     (input)="onEditorInput(contentEditor.innerHTML)"
                     (blur)="onEditorBlur()"
                   ></div>

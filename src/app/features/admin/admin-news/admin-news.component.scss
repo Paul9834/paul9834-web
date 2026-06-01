@@ -875,7 +875,7 @@
 
 .m3-editor__surface {
   min-height: 280px;
-  padding: 20px 22px 24px;
+  padding: 20px 22px 24px 34px;
   color: var(--text-primary);
   font-family: 'Poppins', var(--font-main), sans-serif;
   font-size: 0.98rem;
@@ -884,22 +884,32 @@
   background: color-mix(in srgb, var(--surface) 98%, var(--bg));
   white-space: pre-wrap;
 
-  p,
-  h2,
-  h3,
-  blockquote,
-  li,
-  div {
+  ul,
+  ol {
     margin: 0 0 1em;
+    padding-left: 1.9em;
+    list-style-position: outside;
   }
 
-  p:last-child,
-  h2:last-child,
-  h3:last-child,
-  blockquote:last-child,
-  li:last-child,
-  div:last-child {
+  ul {
+    list-style: disc;
+  }
+
+  ol {
+    list-style: decimal;
+  }
+
+  li {
+    margin: 0 0 0.6em;
+    padding-left: 0.45em;
+  }
+
+  li:last-child {
     margin-bottom: 0;
+  }
+
+  li::marker {
+    color: var(--text-primary);
   }
 
   .editor-size-sm {
@@ -969,11 +979,13 @@
   ul,
   ol {
     margin: 0 0 1rem;
-    padding-left: 1.4rem;
+    padding-left: 0;
+    list-style-position: inside;
   }
 
   li {
     margin-bottom: 0.55rem;
+    padding-left: 0;
     color: var(--text-primary);
   }
 

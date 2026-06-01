@@ -78,6 +78,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     'LI',
     'BLOCKQUOTE',
     'SPAN',
+    'DIV',
   ]);
   private readonly allowedSizeClasses = new Set(['editor-size-sm', 'editor-size-md', 'editor-size-lg']);
   private readonly allowedAlignClasses = new Set(['editor-align-left', 'editor-align-center', 'editor-align-justify']);
@@ -149,7 +150,12 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     });
 
     this.isEditorOpen.set(true);
-    this.syncEditorFromForm();
+
+    if (this.isBrowser) {
+      setTimeout(() => {
+        this.setEditorHtml('');
+      });
+    }
   }
 
   openEditEditor(article: NewsArticle): void {
@@ -160,16 +166,23 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     this.currentImageUrl.set(article.imageUrl?.trim() ? article.imageUrl : null);
     this.revokeImagePreviewUrl();
 
+    const sanitizedContent = this.sanitizeEditorHtml(article.content ?? '');
+
     this.newsForm.reset({
       title: article.title,
       slug: article.slug,
       description: article.description,
-      content: article.content,
+      content: sanitizedContent,
       category: article.category,
     });
 
     this.isEditorOpen.set(true);
-    this.syncEditorFromForm();
+
+    if (this.isBrowser) {
+      setTimeout(() => {
+        this.setEditorHtml(sanitizedContent);
+      });
+    }
   }
 
   closeEditor(): void {
@@ -322,13 +335,36 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     this.contentControl.markAsDirty();
   }
 
+  onEditorKeydown(event: KeyboardEvent): void {
+    if (!this.isBrowser || event.key !== 'Enter' || event.shiftKey) {
+      return;
+    }
+
+    event.preventDefault();
+    this.focusEditor();
+    document.execCommand('insertParagraph');
+    this.captureEditorState();
+  }
+
   onEditorBlur(): void {
     this.contentControl.markAsTouched();
-    this.syncEditorFromForm();
+    this.captureEditorState();
   }
 
   applyEditorCommand(command: 'bold' | 'italic' | 'underline' | 'insertUnorderedList' | 'insertOrderedList'): void {
     if (!this.isBrowser) {
+      return;
+    }
+
+    const editor = this.contentEditor?.nativeElement;
+    const selection = window.getSelection();
+
+    if (!editor || !selection || selection.rangeCount === 0) {
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    if (!editor.contains(range.commonAncestorContainer)) {
       return;
     }
 
@@ -347,29 +383,57 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.focusEditor();
-
     const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) {
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
       return;
     }
 
     const range = selection.getRangeAt(0);
+    if (!editor.contains(range.commonAncestorContainer)) {
+      return;
+    }
+
     const fontSize = size === 'sm' ? '0.84rem' : size === 'lg' ? '1.16rem' : '0.98rem';
+    const wrapper = document.createElement('span');
+    wrapper.className = `editor-size-${size}`;
+    wrapper.style.fontSize = fontSize;
 
-    document.execCommand('styleWithCSS', false, 'true');
-    document.execCommand('fontSize', false, '3');
+    if (range.startContainer === range.endContainer && range.startContainer.nodeType === Node.TEXT_NODE) {
+      const textNode = range.startContainer;
+      const text = textNode.textContent ?? '';
+      const start = range.startOffset;
+      const end = range.endOffset;
+      const before = text.slice(0, start);
+      const selected = text.slice(start, end);
+      const after = text.slice(end);
+      const parent = textNode.parentNode;
 
-    const spans = editor.querySelectorAll('font[size="3"], span[style*="font-size"]');
-    spans.forEach((span) => {
-      const s = span as HTMLElement;
-      if (s.tagName === 'FONT') {
-        s.removeAttribute('size');
-        s.style.fontSize = fontSize;
-      } else if (s.tagName === 'SPAN') {
-        s.style.fontSize = fontSize;
+      if (!parent || !selected) {
+        return;
       }
-    });
+
+      if (before) {
+        parent.insertBefore(document.createTextNode(before), textNode);
+      }
+
+      wrapper.textContent = selected;
+      parent.insertBefore(wrapper, textNode);
+
+      if (after) {
+        parent.insertBefore(document.createTextNode(after), textNode);
+      }
+
+      parent.removeChild(textNode);
+    } else {
+      const fragment = range.extractContents();
+      wrapper.appendChild(fragment);
+      range.insertNode(wrapper);
+    }
+
+    selection.removeAllRanges();
+    const newRange = document.createRange();
+    newRange.selectNodeContents(wrapper);
+    selection.addRange(newRange);
 
     this.captureEditorState();
   }
@@ -474,7 +538,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     const anchorNode = selection?.anchorNode;
     const editor = this.contentEditor?.nativeElement;
 
-    if (!anchorNode || !editor) {
+    if (!selection || selection.isCollapsed || !anchorNode || !editor) {
       return false;
     }
 
@@ -513,13 +577,13 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
       : node?.parentElement ?? null;
 
     while (current && current !== editor) {
-      if (['P', 'H2', 'H3', 'BLOCKQUOTE', 'LI'].includes(current.tagName)) {
+      if (['P', 'H2', 'H3', 'BLOCKQUOTE', 'LI', 'DIV'].includes(current.tagName)) {
         return current;
       }
       current = current.parentElement;
     }
 
-    return editor;
+    return null;
   }
 
   private toggleBlockAlignment(alignmentClass: 'editor-align-left' | 'editor-align-center' | 'editor-align-justify'): void {
@@ -532,35 +596,39 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.focusEditor();
-
     const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) {
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
       return;
     }
 
     const range = selection.getRangeAt(0);
-    const isCenter = alignmentClass === 'editor-align-center';
-    const isJustify = alignmentClass === 'editor-align-justify';
-    const textAlign = isCenter ? 'center' : isJustify ? 'justify' : '';
-
-    const allBlocks = Array.from(editor.querySelectorAll('p, h2, h3, blockquote, li, div')) as HTMLElement[];
-    const affectedBlocks = allBlocks.filter((block) => range.intersectsNode(block));
-
-    if (affectedBlocks.length === 0) {
-      const fallbackBlock = this.findClosestBlockElement(selection.anchorNode, editor);
-      if (fallbackBlock) {
-        fallbackBlock.style.textAlign = textAlign;
-        this.updateBlockClass(fallbackBlock, alignmentClass);
-      }
-      this.captureEditorState();
+    if (!editor.contains(range.commonAncestorContainer)) {
       return;
     }
 
-    affectedBlocks.forEach((block) => {
-      block.style.textAlign = textAlign;
-      this.updateBlockClass(block, alignmentClass);
-    });
+    const selectedText = range.toString().trim();
+    if (!selectedText) {
+      return;
+    }
+
+    const wrapper = document.createElement('span');
+    wrapper.className = alignmentClass;
+    wrapper.style.display = 'block';
+    wrapper.style.textAlign = alignmentClass === 'editor-align-center'
+      ? 'center'
+      : alignmentClass === 'editor-align-justify'
+        ? 'justify'
+        : 'left';
+
+    const fragment = range.extractContents();
+    wrapper.appendChild(fragment);
+    range.insertNode(wrapper);
+
+    const caretRange = document.createRange();
+    caretRange.setStartAfter(wrapper);
+    caretRange.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(caretRange);
 
     this.captureEditorState();
   }
@@ -575,17 +643,19 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    queueMicrotask(() => {
-      const editor = this.contentEditor?.nativeElement;
-      if (!editor) {
-        return;
-      }
+    this.setEditorHtml(this.contentControl.value);
+  }
 
-      const nextHtml = this.sanitizeEditorHtml(this.contentControl.value);
-      if (editor.innerHTML !== nextHtml) {
-        editor.innerHTML = nextHtml;
-      }
-    });
+  private setEditorHtml(rawHtml: string | null | undefined): void {
+    const editor = this.contentEditor?.nativeElement;
+    if (!editor) {
+      return;
+    }
+
+    const nextHtml = this.sanitizeEditorHtml(rawHtml ?? '');
+    if (editor.innerHTML !== nextHtml) {
+      editor.innerHTML = nextHtml;
+    }
   }
 
   private focusEditor(): void {
@@ -632,6 +702,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
               fragment.appendChild(element.firstChild);
             }
             element.replaceWith(fragment);
+            sanitizeNode(fragment);
             continue;
           }
 
@@ -680,6 +751,19 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
           });
 
           sanitizeNode(element);
+        } else if (child.nodeType === Node.TEXT_NODE) {
+          const textValue = child.textContent ?? '';
+
+          if (!textValue.trim()) {
+            continue;
+          }
+
+          const parent = child.parentNode;
+          if (parent === doc.body) {
+            const paragraph = doc.createElement('p');
+            paragraph.textContent = textValue.trim();
+            child.replaceWith(paragraph);
+          }
         } else if (child.nodeType === Node.COMMENT_NODE) {
           child.remove();
         }
@@ -688,9 +772,21 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
 
     sanitizeNode(doc.body);
 
+    doc.body.querySelectorAll('p, h2, h3, blockquote, li').forEach((element) => {
+      const html = element.innerHTML
+        .replace(/(?:<br\s*\/?>\s*){3,}/gi, '<br><br>')
+        .trim();
+
+      if (html) {
+        element.innerHTML = html;
+      }
+    });
+
     return doc.body.innerHTML
-      .replace(/<div>/gi, '<p>')
+      .replace(/<div\b([^>]*)>/gi, '<p$1>')
       .replace(/<\/div>/gi, '</p>')
+      .replace(/<p>(?:\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, '<p><br></p>')
+      .replace(/(<p><br><\/p>\s*){3,}/gi, '<p><br></p><p><br></p>')
       .trim();
   }
 
