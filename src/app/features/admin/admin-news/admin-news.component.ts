@@ -689,6 +689,39 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     const parser = new DOMParser();
     const doc = parser.parseFromString(rawHtml, 'text/html');
 
+    const preservePlainTextLineBreaks = (): void => {
+      const blocks = Array.from(doc.body.querySelectorAll('span, p, div, blockquote, li, h2, h3'));
+
+      blocks.forEach((element) => {
+        if (Array.from(element.children).some((child) => child.tagName === 'BR')) {
+          return;
+        }
+
+        const text = element.textContent ?? '';
+        if (!text.includes('\n')) {
+          return;
+        }
+
+        const normalizedText = text.replace(/\r\n?/g, '\n');
+        const fragments = normalizedText.split('\n');
+        const fragment = doc.createDocumentFragment();
+
+        fragments.forEach((part, index) => {
+          if (part.length > 0) {
+            fragment.appendChild(doc.createTextNode(part));
+          }
+
+          if (index < fragments.length - 1) {
+            fragment.appendChild(doc.createElement('br'));
+          }
+        });
+
+        element.replaceChildren(fragment);
+      });
+    };
+
+    preservePlainTextLineBreaks();
+
     const sanitizeNode = (node: Node): void => {
       const children = Array.from(node.childNodes);
 
@@ -761,7 +794,19 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
           const parent = child.parentNode;
           if (parent === doc.body) {
             const paragraph = doc.createElement('p');
-            paragraph.textContent = textValue.trim();
+            const normalizedText = textValue.replace(/\r\n?/g, '\n');
+            const fragments = normalizedText.split('\n');
+
+            fragments.forEach((part, index) => {
+              if (part.trim()) {
+                paragraph.appendChild(doc.createTextNode(part.trim()));
+              }
+
+              if (index < fragments.length - 1) {
+                paragraph.appendChild(doc.createElement('br'));
+              }
+            });
+
             child.replaceWith(paragraph);
           }
         } else if (child.nodeType === Node.COMMENT_NODE) {
@@ -785,6 +830,16 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     return doc.body.innerHTML
       .replace(/<div\b([^>]*)>/gi, '<p$1>')
       .replace(/<\/div>/gi, '</p>')
+      .replace(/<span\b([^>]*)>([\s\S]*?)<\/span>/gi, (_match, attrs, inner) => {
+        if (!inner.includes('<br')) {
+          return `<span${attrs}>${inner}</span>`;
+        }
+
+        return inner
+          .split(/<br\s*\/?>\s*<br\s*\/?>/gi)
+          .map((chunk: string) => `<p${attrs}>${chunk.trim() || '<br>'}</p>`)
+          .join('');
+      })
       .replace(/<p>(?:\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, '<p><br></p>')
       .replace(/(<p><br><\/p>\s*){3,}/gi, '<p><br></p><p><br></p>')
       .trim();
