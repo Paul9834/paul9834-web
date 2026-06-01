@@ -20,8 +20,10 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  opacity: 0.012;
-  transition: opacity 0.2s ease;
+  opacity: 0.01;
+  transform: scale(0.82);
+  transform-origin: center;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 
@@ -32,7 +34,7 @@
 
 .flag-counter-wrap img {
   width: 100%;
-  max-width: 180px;
+  max-width: 132px;
   height: auto;
 }
 
@@ -74,8 +76,12 @@
     gap: 0.75rem;
   }
 
+  .flag-counter-wrap {
+    transform: scale(0.76);
+  }
+
   .flag-counter-wrap img {
-    max-width: 160px;
+    max-width: 118px;
   }
 
   .footer-meta small {

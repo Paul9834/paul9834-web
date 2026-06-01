@@ -6,6 +6,8 @@ import {
   Inject,
   PLATFORM_ID,
   NgZone,
+  ElementRef,
+  ViewChild,
 } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -41,6 +43,8 @@ interface Project {
   styleUrl: './project.component.scss',
 })
 export class ProjectsComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('projectsRail') private projectsRail?: ElementRef<HTMLElement>;
+
   private readonly isBrowser: boolean;
   private observer?: IntersectionObserver;
   private parallaxFrame?: number;
@@ -181,6 +185,21 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     this.projects.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
   }
 
+  scrollProjectsRail(): void {
+    const rail = this.projectsRail?.nativeElement;
+
+    if (!rail) {
+      return;
+    }
+
+    const scrollAmount = Math.max(rail.clientWidth * 0.8, 320);
+
+    rail.scrollBy({
+      left: scrollAmount,
+      behavior: this.reducedMotion ? 'auto' : 'smooth',
+    });
+  }
+
   ngAfterViewInit(): void {
     if (!this.isBrowser) {
       return;
@@ -219,8 +238,8 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
         });
       },
       {
-        threshold: 0.05,
-        rootMargin: '80px 0px -8% 0px',
+        threshold: 0.12,
+        rootMargin: '0px 0px -10% 0px',
       },
     );
 
@@ -279,7 +298,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
       }
 
       const progress = (viewH - rect.top) / (viewH + rect.height);
-      const intensity = isMobile ? 4 : 6;
+      const intensity = isMobile ? 2 : 3;
       const offset = (progress - 0.5) * intensity;
 
       img.style.setProperty('--parallax-y', `${offset.toFixed(2)}px`);
