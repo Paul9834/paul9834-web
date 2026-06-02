@@ -179,7 +179,8 @@
     align-content: start;
     opacity: 0;
     transform: translate3d(0, 18px, 0);
-    will-change: transform, opacity;
+    will-change: opacity, transform;
+    transition: opacity 600ms ease-out, transform 600ms ease-out;
 
     &::before {
       content: '';
