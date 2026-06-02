@@ -52,15 +52,6 @@
                     {{ formatDateWithTime(currentArticle.publishedAt) }}
                   </time>
                 </span>
-
-                <span>Slug: {{ currentArticle.slug }}</span>
-
-                <span class="blog-detail-likes-chip">
-                  <span class="material-icons blog-detail-likes-chip__icon" aria-hidden="true">
-                    favorite
-                  </span>
-                  <span>{{ currentArticle.likesCount }}</span>
-                </span>
               </div>
 
               <div class="blog-detail-like-row">
@@ -122,15 +113,24 @@
   <footer class="site-footer" aria-label="Site footer">
     <div class="footer-content">
       <div class="flag-counter-wrap">
-        <img
-          src="https://s01.flagcounter.com/count2/eJtz/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_10/viewers_0/labels_0/pageviews_0/flags_0/percent_0/"
-          alt="Visitor flag counter"
-          loading="lazy"
-        />
+        <a
+          href="https://info.flagcounter.com/eJtz"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="View visitor counter details"
+        >
+          <img
+            src="https://s01.flagcounter.com/count2/eJtz/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_10/viewers_0/labels_0/pageviews_0/flags_0/percent_0/"
+            alt="Visitor flag counter"
+            loading="lazy"
+          />
+        </a>
       </div>
 
       <div class="footer-meta">
         <small>© 2026 Kevin Paul Montealegre Melo</small>
+        <a href="https://api.paul9834.com/swagger-ui/index.html" class="admin-link" target="_blank" rel="noopener noreferrer" aria-label="API documentation">API</a>
+        <a href="/admin" class="admin-link" aria-label="Admin access">Admin</a>
       </div>
     </div>
   </footer>

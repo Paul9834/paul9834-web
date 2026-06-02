@@ -551,7 +551,7 @@
 
 .site-footer {
   padding: 1.25rem 1.25rem 2rem;
-  margin-top: 2.5rem;
+  margin-top: 0;
 }
 
 .footer-content {
@@ -567,8 +567,9 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  opacity: 0.012;
-  transition: opacity 0.2s ease;
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
 .flag-counter-wrap a,
@@ -577,8 +578,8 @@
 }
 
 .flag-counter-wrap img {
-  width: 100%;
-  max-width: 180px;
+  width: auto;
+  max-width: 100%;
   height: auto;
 }
 
@@ -594,6 +595,47 @@
   font-size: 0.76rem;
   line-height: 1.4;
   color: #111111;
+}
+
+.admin-link {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #111111;
+  transition: color 0.2s ease;
+}
+
+.admin-link:hover,
+.admin-link:focus-visible {
+  color: #555555;
+}
+
+@media (max-width: 767px) {
+  .site-footer {
+    padding: 1rem 1rem 1.75rem;
+    margin-top: 2rem;
+  }
+
+  .footer-content {
+    gap: 0.75rem;
+  }
+
+  .flag-counter-wrap {
+    transform: scale(0.76);
+  }
+
+  .flag-counter-wrap img {
+    max-width: 118px;
+  }
+
+  .footer-meta small {
+    font-size: 0.72rem;
+  }
+
+  .admin-link {
+    font-size: 0.66rem;
+  }
 }
 
 @keyframes m3-fade-in-up {
