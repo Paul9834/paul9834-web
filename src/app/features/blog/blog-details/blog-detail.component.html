@@ -47,10 +47,17 @@
               </p>
 
               <div class="blog-detail-meta-inline">
-                <span>
+                <span class="blog-detail-meta-chip">
                   <time [attr.datetime]="currentArticle.publishedAt ?? ''">
                     {{ formatDateWithTime(currentArticle.publishedAt) }}
                   </time>
+                </span>
+
+                <span class="blog-detail-likes-chip" aria-label="Cantidad de me gusta">
+                  <span class="material-icons blog-detail-likes-chip__icon" aria-hidden="true">
+                    favorite
+                  </span>
+                  <span>{{ currentArticle.likesCount }}</span>
                 </span>
               </div>
 
@@ -60,7 +67,7 @@
                   class="blog-detail-like-button"
                   [disabled]="isLiking() || hasLiked()"
                   [class.blog-detail-like-button--loading]="isLiking()"
-                  [attr.aria-label]="hasLiked() ? 'Ya diste me gusta a este artículo' : 'Dar me gusta al artículo'"
+                  [attr.aria-label]="hasLiked() ? 'Te gustó este artículo' : 'Dar me gusta al artículo'"
                   (click)="likeArticle()"
                 >
                   <span class="material-icons" aria-hidden="true">favorite</span>
@@ -69,7 +76,7 @@
                       isLiking()
                         ? '...'
                         : hasLiked()
-                          ? 'Ya te gustó'
+                          ? 'Te gustó'
                           : 'Me gusta'
                     }}
                   </span>
@@ -129,8 +136,6 @@
 
       <div class="footer-meta">
         <small>© 2026 Kevin Paul Montealegre Melo</small>
-        <a href="https://api.paul9834.com/swagger-ui/index.html" class="admin-link" target="_blank" rel="noopener noreferrer" aria-label="API documentation">API</a>
-        <a href="/admin" class="admin-link" aria-label="Admin access">Admin</a>
       </div>
     </div>
   </footer>
