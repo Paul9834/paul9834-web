@@ -4,56 +4,48 @@
 @use '@angular/material' as mat;
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('/assets/fonts/poppins/Poppins-Light.ttf') format('truetype');
+  font-family: 'Google Sans Flex';
+  src: url('/assets/fonts/googlesansflex/GoogleSansFlex_24pt-Light.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('/assets/fonts/poppins/Poppins-Regular.ttf') format('truetype');
+  font-family: 'Google Sans Flex';
+  src: url('/assets/fonts/googlesansflex/GoogleSansFlex_24pt-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('/assets/fonts/poppins/Poppins-Italic.ttf') format('truetype');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Poppins';
-  src: url('/assets/fonts/poppins/Poppins-Medium.ttf') format('truetype');
+  font-family: 'Google Sans Flex';
+  src: url('/assets/fonts/googlesansflex/GoogleSansFlex_24pt-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('/assets/fonts/poppins/Poppins-SemiBold.ttf') format('truetype');
+  font-family: 'Google Sans Flex';
+  src: url('/assets/fonts/googlesansflex/GoogleSansFlex_24pt-SemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('/assets/fonts/poppins/Poppins-Bold.ttf') format('truetype');
+  font-family: 'Google Sans Flex';
+  src: url('/assets/fonts/googlesansflex/GoogleSansFlex_24pt-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('/assets/fonts/poppins/Poppins-ExtraBold.ttf') format('truetype');
+  font-family: 'Google Sans Flex';
+  src: url('/assets/fonts/googlesansflex/GoogleSansFlex_24pt-ExtraBold.ttf') format('truetype');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
@@ -70,7 +62,7 @@
   --m3-easing-emphasized: cubic-bezier(0.3, 0, 0.05, 1);
   --m3-duration-long: 700ms;
 
-  --font-main: 'Poppins', 'Helvetica Neue', sans-serif;
+  --font-main: 'Google Sans Flex', 'Helvetica Neue', sans-serif;
 
   // ⚡ PALETA CLEAN TECH
   --brand-dark:      #111827;
@@ -108,7 +100,7 @@
 // ============================================================
 html {
   color-scheme: light;
-  @include mat.theme(( color: (primary: mat.$blue-palette, tertiary: mat.$red-palette), typography: 'Poppins, sans-serif', density: 0 ));
+  @include mat.theme(( color: (primary: mat.$blue-palette, tertiary: mat.$red-palette), typography: 'Google Sans Flex, sans-serif', density: 0 ));
 
   --mat-sys-primary: var(--accent-main);
   --mat-sys-on-primary: var(--text-inverse);
@@ -121,7 +113,7 @@ html {
 
 html.dark-theme {
   color-scheme: dark;
-  @include mat.theme(( color: (primary: mat.$blue-palette, tertiary: mat.$red-palette, theme-type: dark), typography: 'Poppins, sans-serif', density: 0 ));
+  @include mat.theme(( color: (primary: mat.$blue-palette, tertiary: mat.$red-palette, theme-type: dark), typography: 'Google Sans Flex, sans-serif', density: 0 ));
 
   --brand-dark:      #F9FAFB;
   --brand-gray:      #9CA3AF;
