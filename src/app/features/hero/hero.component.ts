@@ -75,7 +75,16 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    this.scheduleParallaxUpdate();
+    // Solo actualizar parallax cuando el hero está visible en el viewport
+    if (!this.heroElement) {
+      this.scheduleParallaxUpdate();
+      return;
+    }
+    const rect = this.heroElement.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight && rect.bottom > 0;
+    if (inView) {
+      this.scheduleParallaxUpdate();
+    }
   }
 
   @HostListener('window:resize')
