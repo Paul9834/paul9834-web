@@ -65,7 +65,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     category: ['', [Validators.required, Validators.maxLength(80)]],
   });
 
-  private readonly urlRegex = /(https?:\/\/[^\s]+)/g;
+  private readonly urlRegex = /(https?:\/\/\S+)/g;
   private readonly allowedTags = new Set([
     'P',
     'BR',
@@ -997,7 +997,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
-      .replace(/\"/g, '&quot;')
+      .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
 
     return escaped

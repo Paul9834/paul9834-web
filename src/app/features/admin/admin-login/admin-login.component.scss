@@ -271,10 +271,6 @@
 
 .submit-button {
   min-height: 52px;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px;
   width: 100%;
   border-radius: var(--radius-md) !important;
   font-family: var(--font-main) !important;
@@ -290,34 +286,27 @@
     box-shadow: var(--shadow-hover) !important;
   }
 
-  mat-icon,
-  mat-spinner,
-  span {
-    position: relative;
-    z-index: 1;
+  &:disabled {
+    cursor: default;
   }
+}
 
-  mat-icon {
-    margin: 0 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 20px !important;
-    height: 20px !important;
-    font-size: 20px !important;
-    line-height: 20px !important;
-    flex-shrink: 0;
-  }
+.submit-button__content {
+  min-height: 24px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  line-height: 1;
+}
 
-  mat-spinner {
-    flex-shrink: 0;
-  }
+.submit-button__content--loading {
+  font-weight: 600;
+}
 
-  span {
-    display: inline-flex;
-    align-items: center;
-    line-height: 1;
-  }
+.submit-button mat-spinner {
+  flex-shrink: 0;
 }
 
 .back-link {

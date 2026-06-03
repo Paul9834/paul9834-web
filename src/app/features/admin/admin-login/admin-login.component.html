@@ -85,12 +85,14 @@
             [disabled]="isSubmitting()"
           >
             @if (isSubmitting()) {
-              <mat-spinner diameter="20"></mat-spinner>
-              <span>Validando credenciales...</span>
+              <span class="submit-button__content submit-button__content--loading">
+                <mat-spinner diameter="18"></mat-spinner>
+                <span>Validando credenciales...</span>
+              </span>
             } @else {
-              <ng-container>
+              <span class="submit-button__content">
                 <span>Acceder</span>
-              </ng-container>
+              </span>
             }
           </button>
 
