@@ -3,7 +3,6 @@ import {
   Component,
   OnInit,
   PLATFORM_ID,
-  computed,
   inject,
   signal,
 } from '@angular/core';
@@ -175,10 +174,6 @@ export class BlogListComponent implements OnInit {
     }
 
     return trimmed;
-  }
-
-  private hasExplicitTime(value: string): boolean {
-    return /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}/.test(value.trim());
   }
 
   private setPageSeo(): void {

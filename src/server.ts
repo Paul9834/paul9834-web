@@ -72,7 +72,9 @@ app.get('/sitemap.xml', async (_req, res) => {
     });
 
     if (!apiResponse.ok) {
-      throw new Error(`Failed to fetch articles: ${apiResponse.status}`);
+      console.error(`Failed to fetch articles: ${apiResponse.status}`);
+      res.status(500).type('text/plain').send('Failed to generate sitemap.xml');
+      return;
     }
 
     const data = (await apiResponse.json()) as NewsApiResponse;
@@ -110,7 +112,7 @@ app.get('/sitemap.xml', async (_req, res) => {
     );
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
 ${uniqueUrls
   .map(
     (url) => `  <url>

@@ -13,8 +13,10 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 
+import { AuthService } from '../../../core/services/auth.service';
 import {
   CreateNewsRequest,
   NewsArticle,
@@ -25,15 +27,17 @@ import {
 @Component({
   selector: 'app-admin-news',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatIconModule],
+  imports: [CommonModule, ReactiveFormsModule, MatIconModule, RouterModule],
   templateUrl: './admin-news.component.html',
   styleUrl: './admin-news.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminNewsComponent implements OnInit, OnDestroy {
   private readonly newsService = inject(NewsService);
+  private readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
   private readonly sanitizer = inject(DomSanitizer);
+  private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
@@ -89,6 +93,15 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.revokeImagePreviewUrl();
+  }
+
+  logout(): void {
+    if (this.isEditorOpen() || this.isSubmitting()) {
+      return;
+    }
+
+    this.authService.logout();
+    void this.router.navigate(['/admin/login']);
   }
 
   loadArticles(): void {
@@ -340,9 +353,33 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const editor = this.contentEditor?.nativeElement;
+    const selection = window.getSelection();
+
+    if (!editor || !selection || selection.rangeCount === 0) {
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    if (!editor.contains(range.commonAncestorContainer)) {
+      return;
+    }
+
     event.preventDefault();
     this.focusEditor();
-    document.execCommand('insertParagraph');
+
+    const paragraph = document.createElement('p');
+    paragraph.appendChild(document.createElement('br'));
+
+    range.deleteContents();
+    range.insertNode(paragraph);
+
+    const newRange = document.createRange();
+    newRange.setStart(paragraph, 0);
+    newRange.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(newRange);
+
     this.captureEditorState();
   }
 
@@ -369,7 +406,25 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     }
 
     this.focusEditor();
-    document.execCommand(command);
+
+    switch (command) {
+      case 'bold':
+        this.wrapSelectionWithTag('strong');
+        break;
+      case 'italic':
+        this.wrapSelectionWithTag('em');
+        break;
+      case 'underline':
+        this.wrapSelectionWithTag('u');
+        break;
+      case 'insertUnorderedList':
+        this.wrapSelectionInList('ul');
+        break;
+      case 'insertOrderedList':
+        this.wrapSelectionInList('ol');
+        break;
+    }
+
     this.captureEditorState();
   }
 
@@ -471,8 +526,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.focusEditor();
-    document.execCommand('formatBlock', false, tagName);
+    this.wrapSelectionInBlock(tagName);
     this.captureEditorState();
   }
 
@@ -486,8 +540,7 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.focusEditor();
-    document.execCommand('createLink', false, url.trim());
+    this.wrapSelectionWithLink(url.trim());
     this.captureEditorState();
   }
 
@@ -496,10 +549,146 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.focusEditor();
-    document.execCommand('removeFormat');
-    document.execCommand('unlink');
+    this.unwrapSelectionFormatting();
     this.captureEditorState();
+  }
+
+  private wrapSelectionWithTag(tagName: 'strong' | 'em' | 'u'): void {
+    const selection = this.getEditorSelection();
+    if (!selection) {
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    if (selection.isCollapsed) {
+      return;
+    }
+
+    const wrapper = document.createElement(tagName);
+    const fragment = range.extractContents();
+    wrapper.appendChild(fragment);
+    range.insertNode(wrapper);
+
+    const nextRange = document.createRange();
+    nextRange.selectNodeContents(wrapper);
+    selection.removeAllRanges();
+    selection.addRange(nextRange);
+  }
+
+  private wrapSelectionInList(tagName: 'ul' | 'ol'): void {
+    const selection = this.getEditorSelection();
+    if (!selection || selection.isCollapsed) {
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const list = document.createElement(tagName);
+    const item = document.createElement('li');
+    item.appendChild(range.extractContents());
+
+    if (!item.textContent?.trim()) {
+      return;
+    }
+
+    list.appendChild(item);
+    range.insertNode(list);
+
+    const nextRange = document.createRange();
+    nextRange.selectNodeContents(item);
+    selection.removeAllRanges();
+    selection.addRange(nextRange);
+  }
+
+  private wrapSelectionInBlock(tagName: 'h2' | 'h3' | 'blockquote'): void {
+    const selection = this.getEditorSelection();
+    if (!selection) {
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const block = document.createElement(tagName);
+
+    if (selection.isCollapsed) {
+      block.appendChild(document.createElement('br'));
+      range.insertNode(block);
+    } else {
+      block.appendChild(range.extractContents());
+      range.insertNode(block);
+    }
+
+    const nextRange = document.createRange();
+    nextRange.selectNodeContents(block);
+    selection.removeAllRanges();
+    selection.addRange(nextRange);
+  }
+
+  private wrapSelectionWithLink(url: string): void {
+    const selection = this.getEditorSelection();
+    if (!selection || selection.isCollapsed) {
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.appendChild(range.extractContents());
+    range.insertNode(link);
+
+    const nextRange = document.createRange();
+    nextRange.selectNodeContents(link);
+    selection.removeAllRanges();
+    selection.addRange(nextRange);
+  }
+
+  private unwrapSelectionFormatting(): void {
+    const selection = this.getEditorSelection();
+    if (!selection) {
+      return;
+    }
+
+    const editor = this.contentEditor?.nativeElement;
+    if (!editor) {
+      return;
+    }
+
+    const tagsToUnwrap = new Set(['STRONG', 'EM', 'U', 'A']);
+    let current: HTMLElement | null = selection.anchorNode?.nodeType === Node.ELEMENT_NODE
+      ? (selection.anchorNode as HTMLElement)
+      : selection.anchorNode?.parentElement ?? null;
+
+    while (current && current !== editor) {
+      const parent = current.parentNode;
+      if (tagsToUnwrap.has(current.tagName) && parent) {
+        while (current.firstChild) {
+          parent.insertBefore(current.firstChild, current);
+        }
+        parent.removeChild(current);
+      }
+      current = parent instanceof HTMLElement ? parent : null;
+    }
+  }
+
+  private getEditorSelection(): Selection | null {
+    if (!this.isBrowser) {
+      return null;
+    }
+
+    const editor = this.contentEditor?.nativeElement;
+    const selection = window.getSelection();
+
+    if (!editor || !selection || selection.rangeCount === 0) {
+      return null;
+    }
+
+    const range = selection.getRangeAt(0);
+    if (!editor.contains(range.commonAncestorContainer)) {
+      return null;
+    }
+
+    this.focusEditor();
+    return selection;
   }
 
   isSelectionInsideTag(tagName: string): boolean {
@@ -556,36 +745,6 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  private findClosestMatchingClass(node: Node | null, editor: HTMLElement, pattern: RegExp): HTMLElement | null {
-    let current: HTMLElement | null = node?.nodeType === Node.ELEMENT_NODE
-      ? (node as HTMLElement)
-      : node?.parentElement ?? null;
-
-    while (current && current !== editor) {
-      if ([...current.classList].some((className) => pattern.test(className))) {
-        return current;
-      }
-      current = current.parentElement;
-    }
-
-    return null;
-  }
-
-  private findClosestBlockElement(node: Node | null, editor: HTMLElement): HTMLElement | null {
-    let current: HTMLElement | null = node?.nodeType === Node.ELEMENT_NODE
-      ? (node as HTMLElement)
-      : node?.parentElement ?? null;
-
-    while (current && current !== editor) {
-      if (['P', 'H2', 'H3', 'BLOCKQUOTE', 'LI', 'DIV'].includes(current.tagName)) {
-        return current;
-      }
-      current = current.parentElement;
-    }
-
-    return null;
-  }
-
   private toggleBlockAlignment(alignmentClass: 'editor-align-left' | 'editor-align-center' | 'editor-align-justify'): void {
     if (!this.isBrowser) {
       return;
@@ -638,14 +797,6 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     return this.sanitizer.bypassSecurityTrustHtml(sanitized);
   }
 
-  private syncEditorFromForm(): void {
-    if (!this.isBrowser) {
-      return;
-    }
-
-    this.setEditorHtml(this.contentControl.value);
-  }
-
   private setEditorHtml(rawHtml: string | null | undefined): void {
     const editor = this.contentEditor?.nativeElement;
     if (!editor) {
@@ -660,14 +811,6 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
 
   private focusEditor(): void {
     this.contentEditor?.nativeElement.focus();
-  }
-
-  private updateBlockClass(block: HTMLElement, className: 'editor-align-left' | 'editor-align-center' | 'editor-align-justify'): void {
-    block.classList.remove('editor-align-left', 'editor-align-center', 'editor-align-justify');
-
-    if (className !== 'editor-align-left') {
-      block.classList.add(className);
-    }
   }
 
   private captureEditorState(): void {

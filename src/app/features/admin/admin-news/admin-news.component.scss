@@ -2,7 +2,7 @@
   position: relative;
   min-height: 100vh;
   background: var(--bg);
-  font-family: var(--font-main);
+  font-family: var(--font-main), sans-serif;
   padding-bottom: 0;
 }
 
@@ -126,28 +126,28 @@
 
 .admin-news-actions {
   display: flex;
-  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
-  margin-top: 6px;
+  gap: 16px;
+  width: 100%;
+  margin-top: 8px;
 }
 
-.admin-cta {
+.admin-cta,
+.admin-action-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  min-height: 52px;
+  gap: 8px;
+  min-height: 40px;
   padding: 0 24px;
-  border: 1px solid color-mix(in srgb, var(--accent-main) 10%, var(--divider));
-  border-radius: 20px;
-  background: color-mix(in srgb, var(--surface) 94%, var(--bg));
-  color: var(--text-primary);
-  font-family: var(--font-main);
-  font-size: 0.96rem;
+  border-radius: 999px;
+  font-family: var(--font-main), sans-serif;
+  font-size: 0.95rem;
   font-weight: 600;
-  letter-spacing: 0;
+  letter-spacing: 0.01em;
   line-height: 1;
-  box-shadow: var(--shadow-md);
   cursor: pointer;
   transition:
     transform var(--transition),
@@ -164,7 +164,6 @@
     height: 18px;
     font-size: 18px;
     line-height: 18px;
-    color: var(--accent-main);
     flex-shrink: 0;
   }
 
@@ -176,15 +175,53 @@
 
   &:focus-visible {
     outline: 2px solid color-mix(in srgb, var(--accent-main) 36%, transparent);
-    outline-offset: 3px;
+    outline-offset: 4px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.admin-cta {
+  border: none;
+  background: var(--accent-main);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+
+  mat-icon {
+    color: currentColor;
   }
 }
 
 .admin-cta:hover {
-  transform: translateY(-2px);
-  background: color-mix(in srgb, var(--accent-main) 8%, var(--surface));
-  border-color: color-mix(in srgb, var(--accent-main) 18%, var(--divider));
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--accent-main) 92%, black);
   box-shadow: var(--shadow-hover);
+}
+
+.admin-action-button {
+  border: 1px solid color-mix(in srgb, var(--outline, var(--divider)) 72%, transparent);
+  background: color-mix(in srgb, var(--surface) 96%, var(--bg));
+  color: var(--text-primary);
+  box-shadow: none;
+
+  mat-icon {
+    color: var(--text-muted);
+  }
+}
+
+.admin-action-button:hover {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--surface-2) 92%, var(--surface));
+  border-color: color-mix(in srgb, var(--accent-main) 18%, var(--divider));
+}
+
+.admin-action-button--secondary {
+  padding-inline: 20px;
 }
 
 .admin-summary-card {
@@ -354,7 +391,7 @@
   border-radius: 18px;
   background: color-mix(in srgb, var(--surface) 92%, var(--bg));
   color: var(--text-primary);
-  font-family: var(--font-main);
+  font-family: var(--font-main), sans-serif;
   font-size: 0.98rem;
   line-height: 1.8;
   padding: 16px 18px;
@@ -416,7 +453,7 @@
   border-radius: 12px;
   background: rgba(0, 98, 255, 0.1);
   color: var(--accent-main);
-  font-family: var(--font-main);
+  font-family: var(--font-main), sans-serif;
   font-size: 0.88rem;
   font-weight: 600;
   cursor: pointer;
@@ -618,7 +655,7 @@
   border: 1px solid color-mix(in srgb, var(--accent-main) 8%, var(--divider));
   background: color-mix(in srgb, var(--surface) 94%, var(--bg));
   color: var(--text-primary);
-  font-family: var(--font-main);
+  font-family: var(--font-main), sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
   line-height: 1;
@@ -877,7 +914,7 @@
   min-height: 280px;
   padding: 20px 22px 24px 34px;
   color: var(--text-primary);
-  font-family: var(--font-main);
+  font-family: var(--font-main), sans-serif;
   font-size: 0.98rem;
   line-height: 1.9;
   outline: none;
@@ -934,7 +971,7 @@
 }
 
 .editor-content {
-  font-family: var(--font-main);
+  font-family: var(--font-main), sans-serif;
 
   p {
     margin: 0 0 1rem;

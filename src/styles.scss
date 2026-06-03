@@ -144,11 +144,11 @@ html.dark-theme {
 // ============================================================
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html, body {
-  height: 100%; font-family: var(--font-main); font-weight: 300;
+  height: 100%; font-family: var(--font-main), sans-serif; font-weight: 300;
   background-color: var(--bg); color: var(--text-primary);
   transition: background-color var(--transition), color var(--transition);
 }
-h1, h2, h3, h4, h5, h6 { font-family: var(--font-main) !important; line-height: 1.15; }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-main), sans-serif !important; line-height: 1.15; }
 
 // ============================================================
 //  5. Global utility classes
