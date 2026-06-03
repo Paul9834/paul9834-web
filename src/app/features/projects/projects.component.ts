@@ -56,6 +56,24 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
 
   projects: Project[] = [
     {
+      title: '#NoLoCreas',
+      role: 'Android Developer',
+      chronology: 'Aug 2018 - Dec 2018',
+      startDate: new Date('2018-08-01'),
+      description:
+        'Educational Android application focused on helping users improve their web security awareness by reviewing links and teaching safer browsing practices.',
+      techStack: ['Java', 'Firebase', 'Android SDK', 'Material Design', 'Web Security'],
+      image: 'https://i.imgur.com/iy5LCDq.png',
+      achievements: [
+        'Built an educational Android app to help users identify safer browsing practices and improve web security awareness.',
+        'Integrated Firebase services to support backend-connected application features.',
+        'Developed the mobile experience in Java following Material Design principles for a clean and accessible UI.',
+        'Focused the product on link validation and user-oriented security education.',
+      ],
+      link: 'https://apkpure.com/nolocreas/com.luminosity.apps.nolocreas',
+    },
+
+    {
       title: 'GoPoli Institutional App',
       role: 'Android Developer',
       chronology: 'May 2019 - Sep 2020',
@@ -181,7 +199,8 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     private ngZone: NgZone,
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
-    this.reducedMotion = this.isBrowser && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.reducedMotion =
+      this.isBrowser && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.projects.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
   }
 
