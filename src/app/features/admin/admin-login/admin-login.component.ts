@@ -73,7 +73,7 @@ export class AdminLoginComponent implements OnInit {
         this.isSubmitting.set(false);
 
         if (!success) {
-          this.errorMessage.set('La contraseña es incorrecta. Intenta nuevamente.');
+          this.errorMessage.set('La contraseña es incorrecta. Intenta nuevamente.');
           return;
         }
 
@@ -82,20 +82,10 @@ export class AdminLoginComponent implements OnInit {
       error: () => {
         this.isSubmitting.set(false);
         this.errorMessage.set(
-          'No se pudo iniciar sesión. Verifica el backend e inténtalo otra vez.',
+          'No se pudo iniciar sesión. Verifica el backend e inténtalo otra vez.',
         );
       },
     });
-  }
-
-  logout(): void {
-    this.authService.logout();
-    this.errorMessage.set('Sesión cerrada correctamente.');
-    this.loginForm.reset({ password: '' });
-  }
-
-  get isAuthenticated() {
-    return this.authService.isAuthenticated;
   }
 
   get passwordControl() {

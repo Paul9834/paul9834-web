@@ -41,21 +41,6 @@
           </div>
         </div>
 
-        @if (isAuthenticated()) {
-          <div class="login-state">
-            <p>Tu sesión permanece guardada hasta que cierres sesión manualmente.</p>
-
-            <div class="login-actions">
-              <button type="button" mat-flat-button color="primary" routerLink="/admin">
-                Ir al panel
-              </button>
-
-              <button type="button" mat-stroked-button color="warn" (click)="logout()">
-                Cerrar sesión
-              </button>
-            </div>
-          </div>
-        } @else {
         <form [formGroup]="loginForm" (ngSubmit)="submit()" class="login-form">
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Clave de acceso</mat-label>
@@ -107,7 +92,6 @@
                 <span>Acceder</span>
               </ng-container>
             }
-
           </button>
 
           <a routerLink="/" class="back-link">
@@ -115,7 +99,6 @@
             <span>Volver al sitio</span>
           </a>
         </form>
-        }
       </div>
     </mat-card>
   </div>

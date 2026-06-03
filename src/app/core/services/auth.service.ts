@@ -22,11 +22,11 @@ export class AuthService {
     );
   }
 
-  getToken() {
+  getToken(): string | null {
     return this.token();
   }
 
-  logout() {
+  logout(): void {
     this.clearStoredToken();
     this.token.set(null);
   }
