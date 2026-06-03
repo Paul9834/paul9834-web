@@ -249,7 +249,12 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
   @HostListener('window:scroll')
   onScroll(): void {
     if (!this.isBrowser) return;
-    this.scheduleParallaxUpdate();
+    // Reducido: solo programamos actualización si está cerca del viewport
+    const rail = this.projectsRail?.nativeElement;
+    if (!rail) return;
+    const rect = rail.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight && rect.bottom > 0;
+    if (inView) this.scheduleParallaxUpdate();
   }
 
   @HostListener('window:resize')

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -30,7 +30,7 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './admin-login.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminLoginComponent {
+export class AdminLoginComponent implements OnInit {
   hidePassword = signal(true);
   isSubmitting = signal(false);
   errorMessage = signal('');
@@ -45,6 +45,12 @@ export class AdminLoginComponent {
     this.loginForm = this.fb.nonNullable.group({
       password: ['', [Validators.required, Validators.minLength(4)]],
     });
+  }
+
+  ngOnInit(): void {
+    if (this.authService.isAuthenticated()) {
+      void this.router.navigate(['/admin']);
+    }
   }
 
   togglePasswordVisibility(): void {
@@ -71,7 +77,7 @@ export class AdminLoginComponent {
           return;
         }
 
-        this.router.navigate(['/admin']);
+        void this.router.navigate(['/admin']);
       },
       error: () => {
         this.isSubmitting.set(false);

@@ -148,7 +148,6 @@
       gap: 16px;
       padding: 8px 8px 0;
       margin: 0 -8px;
-      padding-bottom: 0;
 
       &::before {
         left: 8px;
@@ -179,7 +178,8 @@
     align-content: start;
     opacity: 0;
     transform: translate3d(0, 18px, 0);
-    will-change: transform, opacity;
+    will-change: opacity, transform;
+    transition: opacity 600ms ease-out, transform 600ms ease-out;
 
     &::before {
       content: '';
@@ -525,7 +525,7 @@
     .project-title {
       font-size: 1.22rem;
       font-weight: 600;
-      font-family: var(--font-main);
+      font-family: var(--font-main), sans-serif;
       line-height: 1.2;
       margin: 0 0 4px 0;
       color: var(--text-primary);

@@ -32,7 +32,7 @@ export class BlogDetailComponent implements OnInit {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly newsService = inject(NewsService);
 
-  private readonly urlRegex = /(https?:\/\/[^\s]+)/g;
+  private readonly urlRegex = /(https?:\/\/\S+)/g;
   private readonly allowedTags = new Set([
     'P',
     'BR',
