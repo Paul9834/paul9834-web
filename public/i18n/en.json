@@ -1,0 +1,101 @@
+{
+  "nav": {
+    "projects": "Projects",
+    "blog": "Blog",
+    "cv": "CV",
+    "about": "About"
+  },
+  "projects": {
+    "section_title": "Career",
+    "section_title_accent": "Journey",
+    "section_intro": "Explore the most relevant stages of my professional path in a horizontal showcase designed for faster scanning.",
+    "scroll_cue_aria": "Scroll horizontally to explore projects",
+    "key_achievements": "Key Achievements:",
+    "tech_stack": "Tech Stack:",
+    "nolocreas": {
+      "role": "Android Developer",
+      "description": "Educational Android application focused on helping users improve their web security awareness by reviewing links and teaching safer browsing practices.",
+      "a1": "Built an educational Android app to help users identify safer browsing practices and improve web security awareness.",
+      "a2": "Integrated Firebase services to support backend-connected application features.",
+      "a3": "Developed the mobile experience in Java following Material Design principles for a clean and accessible UI.",
+      "a4": "Focused the product on link validation and user-oriented security education."
+    },
+    "gopoli": {
+      "role": "Android Developer",
+      "description": "Institutional Android application for Politécnico Grancolombiano featuring campus services, OAuth2/OIDC authentication, hardware sensor integration, and Android background services.",
+      "a1": "Led development and release, designing a clean, Material Design-compliant UI/UX.",
+      "a2": "Integrated Android hardware sensors including step counter functionality for activity tracking features.",
+      "a3": "Implemented Android Services and background processing for persistent application tasks and notifications.",
+      "a4": "Integrated third-party APIs including OAuth2/OIDC authentication, academic systems, and Firebase Cloud Messaging.",
+      "a5": "Performed testing, debugging, and performance optimisation across multiple Android versions and devices."
+    },
+    "androidtv": {
+      "role": "Android Developer",
+      "description": "Independent research and development focused on Android TV media streaming technologies using ExoPlayer and IPTV protocols.",
+      "a1": "Implemented adaptive video streaming using ExoPlayer for Android TV environments.",
+      "a2": "Worked with IPTV M3U8 playlists and live media streaming playback.",
+      "a3": "Explored buffering optimisation, media session handling, and playback performance.",
+      "a4": "Tested streaming compatibility across different Android TV devices and network conditions."
+    },
+    "qinaya": {
+      "role": "Android Developer",
+      "description": "Android application focused on providing low-cost cloud computer access through subscription-based remote desktop services.",
+      "a1": "Developed Android features for cloud-based remote desktop access and subscription management.",
+      "a2": "Worked on secure authentication flows and stable communication between Android clients and remote systems.",
+      "a3": "Optimised application performance and connection stability across different Android devices and network conditions.",
+      "a4": "Collaborated on improving user experience for low-latency remote access sessions."
+    },
+    "daviplata": {
+      "role": "Android Developer",
+      "description": "Development and maintenance of key features for Colombia's most-used financial app, serving over 18 million active users.",
+      "a1": "Ensured the stability, security, and smooth processing of millions of daily transactions on Android and Huawei builds.",
+      "a2": "Drove performance optimisation and incident resolution.",
+      "a3": "Delivered continuous improvements to the UI and integrations with banking services."
+    },
+    "sibel": {
+      "role": "Senior Android Developer",
+      "description": "Specialised biometric solution deployed on Aratek Marshall 8 tablets for industrial environments.",
+      "a1": "Integrated BMAPI SDK for fingerprint capture, MRZ reading, and QR code scanning.",
+      "a2": "Optimised performance, stability, and power management for industrial Android devices.",
+      "a3": "Contributed to PoC testing and UI adaptation across varied screen form factors."
+    },
+    "dinastia": {
+      "role": "Senior Developer",
+      "description": "Native iOS application for pet management with a focus on smooth user journeys and high-performance API integrations.",
+      "a1": "Developed core pet management features adhering to Apple Human Interface Guidelines.",
+      "a2": "Designed and built Kotlin-based backend services to support mobile functionality.",
+      "a3": "Collaborated with product and engineering teams to deliver reliable, scalable, production-ready releases."
+    }
+  },
+  "hero": {
+    "subtitle": "Senior Mobile Engineer (Android · iOS)",
+    "desc": "Building scalable mobile products with strong architecture, high performance, and measurable impact across fintech and enterprise environments.",
+    "cta_projects": "View Projects",
+    "cta_contact": "Contact",
+    "proof_years_value": "6+",
+    "proof_years_label": "Years building mobile apps",
+    "proof_users_value": "18M+",
+    "proof_users_label": "Users impacted",
+    "proof_apps_value": "5+",
+    "proof_apps_label": "Production apps shipped",
+    "availability": "Open to remote & relocation"
+  },
+  "about": {
+    "kicker": "About me",
+    "title": "Building mobile products that need to work at scale — and feel right for real users.",
+    "p1": "I'm Kevin Paul Montealegre Melo, a Mobile Engineer based in Bogotá, focused on Android and iOS products with strong architecture, reliable performance, and measurable business impact.",
+    "p2": "Over the last 6+ years, I've worked on fintech and enterprise solutions used by millions, building features that have to be stable, secure, and ready for real production environments.",
+    "p3": "I enjoy working where product thinking and engineering discipline meet: clean architecture, maintainable codebases, performance optimisation, and teams that care about shipping with quality.",
+    "p4": "I'm especially motivated by products that solve real problems, scale well, and require thoughtful technical decisions behind the scenes.",
+    "p5": "Today, I'm open to remote and international opportunities where I can contribute as a senior mobile engineer, help strengthen mobile architecture, and keep building products with meaningful reach.",
+    "point1": "Based in Bogotá, Colombia",
+    "point2": "Android-first, with iOS and cross-functional product experience",
+    "point3": "Strong background in fintech, enterprise apps, and scalable mobile architecture",
+    "point4": "Open to remote work and relocation",
+    "profile_role": "Senior Mobile Engineer · Android · iOS · Product-minded architecture",
+    "stat_years": "Years",
+    "stat_scale": "Products in production",
+    "stat_global": "Remote and relocation",
+    "availability": "Open to remote work and international opportunities"
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "nav": {
+    "projects": "Proyectos",
+    "blog": "Blog",
+    "cv": "CV",
+    "about": "Sobre mí"
+  },
+  "projects": {
+    "section_title": "Trayectoria",
+    "section_title_accent": "Profesional",
+    "section_intro": "Explora las etapas más relevantes de mi carrera, de la más reciente a la más antigua.",
+
+    "scroll_cue_aria": "Desplaza horizontalmente para explorar proyectos",
+    "key_achievements": "Logros Clave:",
+    "tech_stack": "Stack Tecnológico:",
+
+    "nolocreas": {
+      "role": "Desarrollador Android",
+      "description": "Aplicación Android educativa enfocada en ayudar a los usuarios a mejorar su conciencia de seguridad web revisando enlaces y enseñando prácticas de navegación más seguras.",
+      "a1": "Construí una app Android educativa para ayudar a los usuarios a identificar prácticas de navegación más seguras y mejorar la conciencia de seguridad web.",
+      "a2": "Integré servicios Firebase para funcionalidades de la aplicación conectadas al backend.",
+      "a3": "Desarrollé la experiencia móvil en Java siguiendo los principios de Material Design para una UI limpia y accesible.",
+      "a4": "Enfoqué el producto en validación de enlaces y educación de seguridad orientada al usuario."
+    },
+
+    "gopoli": {
+      "role": "Desarrollador Android",
+      "description": "Aplicación Android institucional para el Politécnico Grancolombiano con servicios del campus, autenticación OAuth2/OIDC, integración de sensores de hardware y servicios en segundo plano de Android.",
+      "a1": "Lideré el desarrollo y lanzamiento, diseñando una UI/UX limpia conforme a Material Design.",
+      "a2": "Integré sensores de hardware Android incluyendo contador de pasos para funcionalidades de seguimiento de actividad.",
+      "a3": "Implementé Android Services y procesamiento en segundo plano para tareas persistentes y notificaciones.",
+      "a4": "Integré APIs de terceros incluyendo autenticación OAuth2/OIDC, sistemas académicos y Firebase Cloud Messaging.",
+      "a5": "Realicé pruebas, depuración y optimización de rendimiento en múltiples versiones y dispositivos Android."
+    },
+
+    "androidtv": {
+      "role": "Desarrollador Android",
+      "description": "Investigación y desarrollo independiente enfocado en tecnologías de streaming de medios para Android TV usando ExoPlayer y protocolos IPTV.",
+      "a1": "Implementé streaming de video adaptativo usando ExoPlayer para entornos Android TV.",
+      "a2": "Trabajé con listas de reproducción IPTV M3U8 y reproducción de medios en vivo.",
+      "a3": "Exploré optimización de buffer, manejo de sesiones de medios y rendimiento de reproducción.",
+      "a4": "Probé la compatibilidad de streaming en diferentes dispositivos Android TV y condiciones de red."
+    },
+
+    "qinaya": {
+      "role": "Desarrollador Android",
+      "description": "Aplicación Android enfocada en proveer acceso económico a computadoras en la nube mediante servicios de escritorio remoto por suscripción.",
+      "a1": "Desarrollé funcionalidades Android para acceso remoto a escritorio en la nube y gestión de suscripciones.",
+      "a2": "Trabajé en flujos de autenticación seguros y comunicación estable entre clientes Android y sistemas remotos.",
+      "a3": "Optimicé el rendimiento de la aplicación y la estabilidad de conexión en distintos dispositivos Android y condiciones de red.",
+      "a4": "Colaboré en la mejora de la experiencia de usuario para sesiones de acceso remoto de baja latencia."
+    },
+
+    "daviplata": {
+      "role": "Desarrollador Android",
+      "description": "Desarrollo y mantenimiento de funcionalidades clave para la app financiera más usada de Colombia, con más de 18 millones de usuarios activos.",
+      "a1": "Garanticé la estabilidad, seguridad y procesamiento fluido de millones de transacciones diarias en builds Android y Huawei.",
+      "a2": "Impulsé la optimización de rendimiento y la resolución de incidentes.",
+      "a3": "Entregué mejoras continuas a la UI e integraciones con servicios bancarios."
+    },
+
+    "sibel": {
+      "role": "Desarrollador Android Senior",
+      "description": "Solución biométrica especializada desplegada en tablets Aratek Marshall 8 para entornos industriales.",
+      "a1": "Integré el SDK BMAPI para captura de huellas dactilares, lectura MRZ y escaneo de códigos QR.",
+      "a2": "Optimicé rendimiento, estabilidad y gestión de energía en dispositivos Android industriales.",
+      "a3": "Contribuí a pruebas de PoC y adaptación de UI en distintos factores de forma de pantalla."
+    },
+
+    "dinastia": {
+      "role": "Desarrollador Senior",
+      "description": "Aplicación iOS nativa para gestión de mascotas con enfoque en recorridos de usuario fluidos e integraciones de API de alto rendimiento.",
+      "a1": "Desarrollé las funcionalidades principales de gestión de mascotas siguiendo las directrices de interfaz humana de Apple.",
+      "a2": "Diseñé y construí servicios backend basados en Kotlin para soporte de la funcionalidad móvil.",
+      "a3": "Colaboré con equipos de producto e ingeniería para entregar releases confiables, escalables y listos para producción."
+    }
+  },
+
+  "hero": {
+    "subtitle": "Ingeniero Mobile Senior · Android & iOS",
+    "desc": "Diseño y desarrollo productos móviles robustos: arquitectura limpia, rendimiento real y funcionalidades que millones de usuarios utilizan todos los días.",
+    "cta_projects": "Ver proyectos",
+    "cta_contact": "Hablemos",
+    "proof_years_value": "6+",
+    "proof_years_label": "años en desarrollo mobile",
+    "proof_users_value": "18M+",
+    "proof_users_label": "usuarios en producción",
+    "proof_apps_value": "5+",
+    "proof_apps_label": "apps en producción",
+    "availability": "Disponible para trabajo remoto o reubicación"
+  },
+
+  "about": {
+    "kicker": "Sobre mí",
+    "title": "Construyo productos móviles que funcionan a escala — y que la gente realmente disfruta usar.",
+    "p1": "Soy Kevin Paul Montealegre, Ingeniero Mobile disponible para trabajo remoto e internacional. Me especializo en Android e iOS con énfasis en arquitectura sólida, rendimiento confiable e impacto directo en el negocio.",
+    "p2": "En los últimos 6 años he trabajado en productos fintech y empresariales que usan millones de personas: funcionalidades críticas que deben ser estables, seguras y estar listas para producción desde el día uno.",
+    "p3": "Me muevo bien en el cruce entre ingeniería y producto: código limpio y mantenible, optimización de rendimiento y equipos que se toman en serio la calidad.",
+    "p4": "Lo que más me motiva son los productos que resuelven problemas reales, escalan bien y requieren decisiones técnicas inteligentes detrás de escena.",
+    "p5": "Hoy estoy abierto a roles remotos e internacionales donde pueda aportar como ingeniero mobile senior, fortalecer la arquitectura del equipo y seguir construyendo productos con impacto real.",
+    "point1": "Bogotá, Colombia · Disponible para reubicación",
+    "point2": "Base Android, experiencia iOS y trabajo transversal con equipos de producto",
+    "point3": "Sólida trayectoria en fintech, apps empresariales y arquitectura mobile escalable",
+    "point4": "Disponible para trabajo remoto o reubicación",
+    "profile_role": "Ingeniero Mobile Senior · Android · iOS · Arquitectura orientada al producto",
+    "stat_years": "Años de experiencia",
+    "stat_scale": "Escala en producción",
+    "stat_global": "Remoto y reubicación",
+    "availability": "Abierto a oportunidades remotas e internacionales"
+  }
+}
