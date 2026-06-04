@@ -110,9 +110,9 @@
     "lead": "A clean PDF preview tailored for recruiters, with quick access to review the English CV.",
     "open": "Open resume",
     "download": "Download PDF",
-    "chip1": "Senior Mobile Engineer",
-    "chip2": "Android & iOS",
-    "chip3": "Fintech & Enterprise",
-    "chip4": "Scalable Architecture"
+    "chip1": "",
+    "chip2": "",
+    "chip3": "",
+    "chip4": ""
   }
 }
