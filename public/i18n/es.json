@@ -106,6 +106,13 @@
     "stat_years": "Años de experiencia",
     "stat_scale": "Escala en producción",
     "stat_global": "Remoto y reubicación",
-    "availability": "Abierto a oportunidades remotas e internacionales"
+    "availability": "Abierto a oportunidades remotas e internacionales",
+    "marquee": {
+      "1": "Flujo nativo de registro para una app bancaria con más de 10M de descargas",
+      "2": "Visualización en tiempo real de límites de transacción para usuarios finales",
+      "3": "Integración con Huawei HMS para que la app funcione sin Google Play Services",
+      "4": "Más de 5,000 dispositivos Android TV desplegados en producción",
+      "5": "Más del 50% de los usuarios alcanzados fuera de ciudades principales"
+    }
   }
 }

@@ -16,7 +16,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
 interface MarqueeItem {
   id: number;
   icon: string;
-  text: string;
+  textKey: string;
   company: string;
 }
 
@@ -29,11 +29,11 @@ interface MarqueeItem {
 })
 export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly marqueeItems: MarqueeItem[] = [
-    { id: 1, icon: '💳', text: 'Native registration flow for a banking app with 10M+ downloads', company: 'DaviPlata' },
-    { id: 2, icon: '📊', text: 'Real-time transaction limit visualisation for end users', company: 'DaviPlata' },
-    { id: 3, icon: '📱', text: 'Huawei HMS integration — app accessible without Google Play Services', company: 'DaviPlata' },
-    { id: 4, icon: '📺', text: '+5,000 Android TV devices deployed to production', company: 'Qinaya' },
-    { id: 5, icon: '🌎', text: '50%+ of users reached outside major cities', company: 'Qinaya' },
+    { id: 1, icon: '💳', textKey: 'about.marquee.1', company: 'DaviPlata' },
+    { id: 2, icon: '📊', textKey: 'about.marquee.2', company: 'DaviPlata' },
+    { id: 3, icon: '📱', textKey: 'about.marquee.3', company: 'DaviPlata' },
+    { id: 4, icon: '📺', textKey: 'about.marquee.4', company: 'Qinaya' },
+    { id: 5, icon: '🌎', textKey: 'about.marquee.5', company: 'Qinaya' },
   ];
 
   private readonly titleService = inject(Title);

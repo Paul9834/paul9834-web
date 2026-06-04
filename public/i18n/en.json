@@ -96,6 +96,13 @@
     "stat_years": "Years",
     "stat_scale": "Products in production",
     "stat_global": "Remote and relocation",
-    "availability": "Open to remote work and international opportunities"
+    "availability": "Open to remote work and international opportunities",
+    "marquee": {
+      "1": "Native registration flow for a banking app with 10M+ downloads",
+      "2": "Real-time transaction limit visualisation for end users",
+      "3": "Huawei HMS integration — app accessible without Google Play Services",
+      "4": "+5,000 Android TV devices deployed to production",
+      "5": "50%+ of users reached outside major cities"
+    }
   }
 }

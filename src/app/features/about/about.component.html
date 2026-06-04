@@ -9,7 +9,7 @@
           @for (item of marqueeItems; track item.id) {
             <span class="marquee-item">
               <span class="marquee-icon">{{ item.icon }}</span>
-              <span class="marquee-text">{{ item.text }}</span>
+              <span class="marquee-text">{{ item.textKey | transloco }}</span>
               <span class="marquee-company">{{ item.company }}</span>
             </span>
             <span class="marquee-sep">·</span>
@@ -17,7 +17,7 @@
           @for (item of marqueeItems; track 'dup-' + item.id) {
             <span class="marquee-item">
               <span class="marquee-icon">{{ item.icon }}</span>
-              <span class="marquee-text">{{ item.text }}</span>
+              <span class="marquee-text">{{ item.textKey | transloco }}</span>
               <span class="marquee-company">{{ item.company }}</span>
             </span>
             <span class="marquee-sep">·</span>
