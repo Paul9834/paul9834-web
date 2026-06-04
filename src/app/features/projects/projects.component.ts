@@ -1,6 +1,5 @@
 import {
   Component,
-  HostListener,
   AfterViewInit,
   OnDestroy,
   OnInit,
@@ -42,15 +41,13 @@ interface Project {
     TranslocoPipe,
   ],
   templateUrl: './projects.component.html',
-  styleUrl: './project.component.scss',
+  styleUrl: './projects.component.scss',
 })
 export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('projectsRail') private projectsRail?: ElementRef<HTMLElement>;
 
   private readonly isBrowser: boolean;
   private observer?: IntersectionObserver;
-  private parallaxFrame?: number;
-  private resizeTimeout?: ReturnType<typeof setTimeout>;
   private readonly reducedMotion: boolean;
 
   readonly skeletonSlides = Array.from({ length: 3 });
@@ -175,15 +172,12 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.ngZone.runOutsideAngular(() => {
       requestAnimationFrame(() => {
         this.setupIntersectionObserver();
-        this.scheduleParallaxUpdate();
       });
     });
   }
 
   ngOnDestroy(): void {
     this.observer?.disconnect();
-    if (this.parallaxFrame) cancelAnimationFrame(this.parallaxFrame);
-    if (this.resizeTimeout) clearTimeout(this.resizeTimeout);
   }
 
   private setupIntersectionObserver(): void {
@@ -202,38 +196,4 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     items.forEach((item) => this.observer?.observe(item));
   }
 
-  @HostListener('window:scroll')
-  onScroll(): void {
-    if (!this.isBrowser) return;
-    this.scheduleParallaxUpdate();
-  }
-
-  @HostListener('window:resize')
-  onResize(): void {
-    if (!this.isBrowser) return;
-    if (this.resizeTimeout) clearTimeout(this.resizeTimeout);
-    this.resizeTimeout = setTimeout(() => this.scheduleParallaxUpdate(), 80);
-  }
-
-  private scheduleParallaxUpdate(): void {
-    if (this.reducedMotion || this.parallaxFrame) return;
-    this.ngZone.runOutsideAngular(() => {
-      this.parallaxFrame = requestAnimationFrame(() => {
-        this.updateParallax();
-        this.parallaxFrame = undefined;
-      });
-    });
-  }
-
-  private updateParallax(): void {
-    const images = document.querySelectorAll<HTMLElement>('.parallax-image');
-    images.forEach((img) => {
-      const rect = img.closest('.project-image-shell')?.getBoundingClientRect();
-      if (!rect) return;
-      const vh = window.innerHeight;
-      if (rect.bottom < 0 || rect.top > vh) return;
-      const progress = 1 - (rect.top + rect.height / 2) / vh;
-      img.style.transform = `translateY(${(progress * 30).toFixed(2)}px) scale(1.12)`;
-    });
-  }
 }
