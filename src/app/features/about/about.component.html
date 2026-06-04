@@ -1,43 +1,51 @@
 <section class="about-section" itemscope itemtype="https://schema.org/Person">
   <div class="about-shell">
     <div class="about-main">
-      <p class="about-kicker">About me</p>
+      <p class="about-kicker">{{ 'about.kicker' | transloco }}</p>
+
+      <!-- ===== MARQUEE TICKER ===== -->
+      <div class="about-marquee-wrapper" aria-hidden="true">
+        <div class="about-marquee-track">
+          @for (item of marqueeItems; track item.id) {
+            <span class="marquee-item">
+              <span class="marquee-icon">{{ item.icon }}</span>
+              <span class="marquee-text">{{ item.textKey | transloco }}</span>
+              <span class="marquee-company">{{ item.company }}</span>
+            </span>
+            <span class="marquee-sep">·</span>
+          }
+          @for (item of marqueeItems; track 'dup-' + item.id) {
+            <span class="marquee-item">
+              <span class="marquee-icon">{{ item.icon }}</span>
+              <span class="marquee-text">{{ item.textKey | transloco }}</span>
+              <span class="marquee-company">{{ item.company }}</span>
+            </span>
+            <span class="marquee-sep">·</span>
+          }
+        </div>
+      </div>
 
       <h1 class="about-title" itemprop="name">
-        Building mobile products that need to work at scale — and feel right for real users.
+        {{ 'about.title' | transloco }}
       </h1>
 
       <div class="about-copy" itemprop="description">
-        <p>
-          I’m Kevin Paul Montealegre Melo, a Mobile Engineer based in Bogotá, focused on Android and iOS products with strong architecture, reliable performance, and measurable business impact.
-        </p>
-
-        <p>
-          Over the last 6+ years, I’ve worked on fintech and enterprise solutions used by millions, building features that have to be stable, secure, and ready for real production environments.
-        </p>
-
-        <p>
-          I enjoy working where product thinking and engineering discipline meet: clean architecture, maintainable codebases, performance optimization, and teams that care about shipping with quality.
-        </p>
-
-        <p>
-          I’m especially motivated by products that solve real problems, scale well, and require thoughtful technical decisions behind the scenes.
-        </p>
-
-        <p>
-          Today, I’m open to remote and international opportunities where I can contribute as a senior mobile engineer, help strengthen mobile architecture, and keep building products with meaningful reach.
-        </p>
+        <p>{{ 'about.p1' | transloco }}</p>
+        <p>{{ 'about.p2' | transloco }}</p>
+        <p>{{ 'about.p3' | transloco }}</p>
+        <p>{{ 'about.p4' | transloco }}</p>
+        <p>{{ 'about.p5' | transloco }}</p>
       </div>
 
       <ul class="about-mini-points" aria-label="About highlights">
-        <li class="mini-point">Based in Bogotá, Colombia</li>
-        <li class="mini-point">Android-first, with iOS and cross-functional product experience</li>
-        <li class="mini-point">Strong background in fintech, enterprise apps, and scalable mobile architecture</li>
-        <li class="mini-point">Open to remote work and relocation</li>
+        <li class="mini-point">{{ 'about.point1' | transloco }}</li>
+        <li class="mini-point">{{ 'about.point2' | transloco }}</li>
+        <li class="mini-point">{{ 'about.point3' | transloco }}</li>
+        <li class="mini-point">{{ 'about.point4' | transloco }}</li>
       </ul>
 
       <meta itemprop="jobTitle" content="Senior Mobile Engineer" />
-      <meta itemprop="addressLocality" content="Bogotá" />
+      <meta itemprop="addressLocality" content="Bogotá" />
       <meta itemprop="addressCountry" content="Colombia" />
       <meta itemprop="url" content="https://paul9834.com/about" />
     </div>
@@ -57,23 +65,23 @@
           <div class="profile-heading">
             <span class="profile-label">Profile</span>
             <h2>Kevin Paul Montealegre Melo</h2>
-            <p>Senior Mobile Engineer · Android · iOS · Product-minded architecture</p>
+            <p>{{ 'about.profile_role' | transloco }}</p>
           </div>
 
           <div class="profile-stats">
             <div class="profile-stat">
               <strong>6+</strong>
-              <span>Years</span>
+              <span>{{ 'about.stat_years' | transloco }}</span>
             </div>
 
             <div class="profile-stat">
               <strong>Scale</strong>
-              <span>Products in production</span>
+              <span>{{ 'about.stat_scale' | transloco }}</span>
             </div>
 
             <div class="profile-stat">
               <strong>Global</strong>
-              <span>Remote and relocation</span>
+              <span>{{ 'about.stat_global' | transloco }}</span>
             </div>
           </div>
 
@@ -91,10 +99,11 @@
           </div>
 
           <div class="availability-pill">
-            Open to remote work and international opportunities
+            {{ 'about.availability' | transloco }}
           </div>
         </div>
       </div>
     </aside>
   </div>
+
 </section>

@@ -2,15 +2,18 @@
   <div class="container">
     <div class="projects-header">
       <div class="projects-header-main">
-        <h2 class="section-title">Career <span class="gradient-text">Journey</span></h2>
+        <h2 class="section-title">
+          {{ 'projects.section_title' | transloco }}
+          <span class="gradient-text">{{ 'projects.section_title_accent' | transloco }}</span>
+        </h2>
         <p class="projects-intro">
-          Explore the most relevant stages of my professional path in a horizontal showcase designed for faster scanning.
+          {{ 'projects.section_intro' | transloco }}
         </p>
       </div>
       <button
         type="button"
         class="projects-scroll-cue"
-        aria-label="Scroll horizontally to explore projects"
+        [attr.aria-label]="'projects.scroll_cue_aria' | transloco"
         (click)="scrollProjectsRail()"
       >
         <mat-icon>arrow_right_alt</mat-icon>
@@ -18,7 +21,7 @@
     </div>
 
     <div #projectsRail class="projects-rail" aria-label="Projects carousel">
-      @for (project of projects; track project.title; let i = $index) {
+      @for (project of projects; track project.key; let i = $index) {
         <article class="project-slide animated-on-scroll" [attr.aria-label]="'Project ' + (i + 1)">
           <div class="project-stage">
             <div class="stage-badge">
@@ -42,24 +45,24 @@
             <div class="project-content">
               <div class="card-header-text">
                 <h3 class="project-title">{{ project.title }}</h3>
-                <p class="role-chronology">{{ project.role }}</p>
+                <p class="role-chronology">{{ 'projects.' + project.key + '.role' | transloco }}</p>
               </div>
 
-              <p class="project-description">{{ project.description }}</p>
+              <p class="project-description">{{ 'projects.' + project.key + '.description' | transloco }}</p>
 
               <mat-divider class="divider-spacer"></mat-divider>
 
-              <h4 class="section-subtitle">Key Achievements:</h4>
+              <h4 class="section-subtitle">{{ 'projects.key_achievements' | transloco }}</h4>
               <ul class="achievements-list">
-                @for (achievement of project.achievements; track achievement) {
+                @for (n of achievementRange(project.achievementCount); track n) {
                   <li>
                     <mat-icon class="achievement-icon">check_small</mat-icon>
-                    <span>{{ achievement }}</span>
+                    <span>{{ 'projects.' + project.key + '.a' + n | transloco }}</span>
                   </li>
                 }
               </ul>
 
-              <h4 class="section-subtitle">Tech Stack:</h4>
+              <h4 class="section-subtitle">{{ 'projects.tech_stack' | transloco }}</h4>
               <div class="stack-grid">
                 @for (tech of project.techStack; track tech) {
                   <span class="skill-chip">{{ tech }}</span>

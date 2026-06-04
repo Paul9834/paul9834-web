@@ -12,11 +12,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, MatCardModule, MatDividerModule],
+  imports: [MatButtonModule, MatIconModule, MatCardModule, MatDividerModule, TranslocoPipe],
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.css'
 })
