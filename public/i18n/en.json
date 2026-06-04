@@ -104,5 +104,15 @@
       "4": "+5,000 Android TV devices deployed to production",
       "5": "50%+ of users reached outside major cities"
     }
+  },
+  "cv": {
+    "eyebrow": "Resume",
+    "lead": "A clean PDF preview tailored for recruiters, with quick access to review the English CV.",
+    "open": "Open resume",
+    "download": "Download PDF",
+    "chip1": "Senior Mobile Engineer",
+    "chip2": "Android & iOS",
+    "chip3": "Fintech & Enterprise",
+    "chip4": "Scalable Architecture"
   }
 }

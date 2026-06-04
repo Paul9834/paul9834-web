@@ -9,11 +9,9 @@
     "section_title": "Trayectoria",
     "section_title_accent": "Profesional",
     "section_intro": "Explora las etapas más relevantes de mi carrera, de la más reciente a la más antigua.",
-
     "scroll_cue_aria": "Desplaza horizontalmente para explorar proyectos",
     "key_achievements": "Logros Clave:",
     "tech_stack": "Stack Tecnológico:",
-
     "nolocreas": {
       "role": "Desarrollador Android",
       "description": "Aplicación Android educativa enfocada en ayudar a los usuarios a mejorar su conciencia de seguridad web revisando enlaces y enseñando prácticas de navegación más seguras.",
@@ -22,7 +20,6 @@
       "a3": "Desarrollé la experiencia móvil en Java siguiendo los principios de Material Design para una UI limpia y accesible.",
       "a4": "Enfoqué el producto en validación de enlaces y educación de seguridad orientada al usuario."
     },
-
     "gopoli": {
       "role": "Desarrollador Android",
       "description": "Aplicación Android institucional para el Politécnico Grancolombiano con servicios del campus, autenticación OAuth2/OIDC, integración de sensores de hardware y servicios en segundo plano de Android.",
@@ -32,7 +29,6 @@
       "a4": "Integré APIs de terceros incluyendo autenticación OAuth2/OIDC, sistemas académicos y Firebase Cloud Messaging.",
       "a5": "Realicé pruebas, depuración y optimización de rendimiento en múltiples versiones y dispositivos Android."
     },
-
     "androidtv": {
       "role": "Desarrollador Android",
       "description": "Investigación y desarrollo independiente enfocado en tecnologías de streaming de medios para Android TV usando ExoPlayer y protocolos IPTV.",
@@ -41,7 +37,6 @@
       "a3": "Exploré optimización de buffer, manejo de sesiones de medios y rendimiento de reproducción.",
       "a4": "Probé la compatibilidad de streaming en diferentes dispositivos Android TV y condiciones de red."
     },
-
     "qinaya": {
       "role": "Desarrollador Android",
       "description": "Aplicación Android enfocada en proveer acceso económico a computadoras en la nube mediante servicios de escritorio remoto por suscripción.",
@@ -50,7 +45,6 @@
       "a3": "Optimicé el rendimiento de la aplicación y la estabilidad de conexión en distintos dispositivos Android y condiciones de red.",
       "a4": "Colaboré en la mejora de la experiencia de usuario para sesiones de acceso remoto de baja latencia."
     },
-
     "daviplata": {
       "role": "Desarrollador Android",
       "description": "Desarrollo y mantenimiento de funcionalidades clave para la app financiera más usada de Colombia, con más de 18 millones de usuarios activos.",
@@ -58,7 +52,6 @@
       "a2": "Impulsé la optimización de rendimiento y la resolución de incidentes.",
       "a3": "Entregué mejoras continuas a la UI e integraciones con servicios bancarios."
     },
-
     "sibel": {
       "role": "Desarrollador Android Senior",
       "description": "Solución biométrica especializada desplegada en tablets Aratek Marshall 8 para entornos industriales.",
@@ -66,7 +59,6 @@
       "a2": "Optimicé rendimiento, estabilidad y gestión de energía en dispositivos Android industriales.",
       "a3": "Contribuí a pruebas de PoC y adaptación de UI en distintos factores de forma de pantalla."
     },
-
     "dinastia": {
       "role": "Desarrollador Senior",
       "description": "Aplicación iOS nativa para gestión de mascotas con enfoque en recorridos de usuario fluidos e integraciones de API de alto rendimiento.",
@@ -75,7 +67,6 @@
       "a3": "Colaboré con equipos de producto e ingeniería para entregar releases confiables, escalables y listos para producción."
     }
   },
-
   "hero": {
     "subtitle": "Ingeniero Mobile Senior · Android & iOS",
     "desc": "Diseño y desarrollo productos móviles robustos: arquitectura limpia, rendimiento real y funcionalidades que millones de usuarios utilizan todos los días.",
@@ -89,7 +80,6 @@
     "proof_apps_label": "apps en producción",
     "availability": "Disponible para trabajo remoto o reubicación"
   },
-
   "about": {
     "kicker": "Sobre mí",
     "title": "Construyo productos móviles que funcionan a escala — y que la gente realmente disfruta usar.",
@@ -114,5 +104,15 @@
       "4": "Más de 5,000 dispositivos Android TV desplegados en producción",
       "5": "Más del 50% de los usuarios alcanzados fuera de ciudades principales"
     }
+  },
+  "cv": {
+    "eyebrow": "Hoja de vida",
+    "lead": "Una vista previa limpia en PDF para reclutadores, con acceso rápido para revisar la hoja de vida en español.",
+    "open": "Abrir hoja de vida",
+    "download": "Descargar PDF",
+    "chip1": "Ingeniero Mobile Senior",
+    "chip2": "Android e iOS",
+    "chip3": "Fintech y Enterprise",
+    "chip4": "Arquitectura Escalable"
   }
 }
