@@ -3,6 +3,7 @@ import {
   HostListener,
   AfterViewInit,
   OnDestroy,
+  OnInit,
   Inject,
   PLATFORM_ID,
   NgZone,
@@ -15,16 +16,16 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslocoDirective, TranslocoPipe } from '@jsverse/transloco';
 
 interface Project {
+  key: string;
   title: string;
-  role: string;
   chronology: string;
   startDate: Date;
-  description: string;
   techStack: string[];
   image: string;
-  achievements: string[];
+  achievementCount: number;
   link?: string;
 }
 
@@ -38,11 +39,13 @@ interface Project {
     MatChipsModule,
     MatIconModule,
     MatButtonModule,
+    TranslocoPipe,
+    TranslocoDirective,
   ],
   templateUrl: './projects.component.html',
   styleUrl: './project.component.scss',
 })
-export class ProjectsComponent implements AfterViewInit, OnDestroy {
+export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('projectsRail') private projectsRail?: ElementRef<HTMLElement>;
 
   private readonly isBrowser: boolean;
@@ -54,32 +57,22 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
   readonly skeletonSlides = Array.from({ length: 3 });
   isLoading = false;
 
-  projects: Project[] = [
+  readonly projects: Project[] = [
     {
+      key: 'nolocreas',
       title: '#NoLoCreas',
-      role: 'Android Developer',
       chronology: 'Aug 2018 - Dec 2018',
       startDate: new Date('2018-08-01'),
-      description:
-        'Educational Android application focused on helping users improve their web security awareness by reviewing links and teaching safer browsing practices.',
       techStack: ['Java', 'Firebase', 'Android SDK', 'Material Design', 'Web Security'],
       image: 'https://i.imgur.com/iy5LCDq.png',
-      achievements: [
-        'Built an educational Android app to help users identify safer browsing practices and improve web security awareness.',
-        'Integrated Firebase services to support backend-connected application features.',
-        'Developed the mobile experience in Java following Material Design principles for a clean and accessible UI.',
-        'Focused the product on link validation and user-oriented security education.',
-      ],
+      achievementCount: 4,
       link: 'https://apkpure.com/nolocreas/com.luminosity.apps.nolocreas',
     },
-
     {
+      key: 'gopoli',
       title: 'GoPoli Institutional App',
-      role: 'Android Developer',
       chronology: 'May 2019 - Sep 2020',
       startDate: new Date('2019-05-01'),
-      description:
-        'Institutional Android application for Politécnico Grancolombiano featuring campus services, OAuth2/OIDC authentication, hardware sensor integration, and Android background services.',
       techStack: [
         'Java',
         'Kotlin',
@@ -92,39 +85,24 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
         'Material Design',
       ],
       image: 'https://i.imgur.com/qUwtGbw.png',
-      achievements: [
-        'Led development and release, designing a clean, Material Design-compliant UI/UX.',
-        'Integrated Android hardware sensors including step counter functionality for activity tracking features.',
-        'Implemented Android Services and background processing for persistent application tasks and notifications.',
-        'Integrated third-party APIs including OAuth2/OIDC authentication, academic systems, and Firebase Cloud Messaging.',
-        'Performed testing, debugging, and performance optimisation across multiple Android versions and devices.',
-      ],
+      achievementCount: 5,
       link: 'https://github.com/paul9834',
     },
     {
+      key: 'androidtv',
       title: 'Android TV & IPTV Streaming Research',
-      role: 'Android Developer',
       chronology: 'Aug 2019 - Oct 2020',
       startDate: new Date('2019-08-01'),
-      description:
-        'Independent research and development focused on Android TV media streaming technologies using ExoPlayer and IPTV protocols.',
       techStack: ['Kotlin', 'Java', 'Android TV', 'ExoPlayer', 'IPTV', 'M3U8', 'Media Streaming'],
-      image: 'https://i.sstatic.net/zegNf.jpg',
-      achievements: [
-        'Implemented adaptive video streaming using ExoPlayer for Android TV environments.',
-        'Worked with IPTV M3U8 playlists and live media streaming playback.',
-        'Explored buffering optimisation, media session handling, and playback performance.',
-        'Tested streaming compatibility across different Android TV devices and network conditions.',
-      ],
+      image: 'https://i.imgur.com/ewrFlN6.jpeg',
+      achievementCount: 4,
       link: 'https://github.com/paul9834',
     },
     {
+      key: 'qinaya',
       title: 'Qinaya Cloud Desktop',
-      role: 'Android Developer',
       chronology: 'Oct 2020 - Jan 2022',
       startDate: new Date('2020-10-01'),
-      description:
-        'Android application focused on providing low-cost cloud computer access through subscription-based remote desktop services.',
       techStack: [
         'Kotlin',
         'Java',
@@ -136,63 +114,40 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
         'Security',
       ],
       image: 'https://i.imgur.com/m6Tyfa2.png',
-      achievements: [
-        'Developed Android features for cloud-based remote desktop access and subscription management.',
-        'Worked on secure authentication flows and stable communication between Android clients and remote systems.',
-        'Optimised application performance and connection stability across different Android devices and network conditions.',
-        'Collaborated on improving user experience for low-latency remote access sessions.',
-      ],
+      achievementCount: 4,
       link: 'https://github.com/paul9834',
     },
     {
+      key: 'daviplata',
       title: 'DaviPlata Financial App (Valid)',
-      role: 'Android Developer',
       chronology: 'Jun 2022 - Aug 2024',
       startDate: new Date('2022-06-01'),
-      description:
-        "Development and maintenance of key features for Colombia's most-used financial app, serving over 18 million active users.",
       techStack: ['Kotlin', 'Java', 'Android SDK', 'Performance Optimization', 'Security'],
       image: 'https://i.imgur.com/4wvSkzx.jpeg',
-      achievements: [
-        'Ensured the stability, security, and smooth processing of millions of daily transactions on Android and Huawei builds.',
-        'Drove performance optimisation and incident resolution.',
-        'Delivered continuous improvements to the UI and integrations with banking services.',
-      ],
+      achievementCount: 3,
       link: 'https://play.google.com/store/apps/details?id=com.davivienda.daviplataapp',
     },
     {
+      key: 'sibel',
       title: 'SIBEL Biometric Solution (Grupo ASD)',
-      role: 'Senior Android Developer',
       chronology: 'May 2025 - Dec 2025',
       startDate: new Date('2025-05-01'),
-      description:
-        'Specialised biometric solution deployed on Aratek Marshall 8 tablets for industrial environments.',
       techStack: ['Android SDK', 'BMAPI SDK', 'Hardware Integration', 'Kotlin', 'Java'],
       image: 'https://i.imgur.com/1UvlqLD.jpeg',
-      achievements: [
-        'Integrated BMAPI SDK for fingerprint capture, MRZ reading, and QR code scanning.',
-        'Optimised performance, stability, and power management for industrial Android devices.',
-        'Contributed to PoC testing and UI adaptation across varied screen form factors.',
-      ],
+      achievementCount: 3,
       link: 'https://github.com/paul9834',
     },
     {
-      title: 'Dinastía Mascotas (VacunasPet) - Pet Management App',
-      role: 'Senior Developer',
+      key: 'dinastia',
+      title: 'Dinast\u00eda Mascotas (VacunasPet)',
       chronology: 'Dec 2025 - Present',
       startDate: new Date('2025-12-01'),
-      description:
-        'Native iOS application for pet management with a focus on smooth user journeys and high-performance API integrations.',
       techStack: ['Swift', 'Kotlin', 'Spring Boot', 'REST APIs', 'iOS SDK'],
       image: 'https://i.imgur.com/LFqB4es.png',
-      achievements: [
-        'Developed core pet management features adhering to Apple Human Interface Guidelines.',
-        'Designed and built Kotlin-based backend services to support mobile functionality.',
-        'Collaborated with product and engineering teams to deliver reliable, scalable, production-ready releases.',
-      ],
+      achievementCount: 3,
       link: 'https://github.com/paul9834',
     },
-  ];
+  ].sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
 
   constructor(
     @Inject(PLATFORM_ID) platformId: object,
@@ -201,29 +156,23 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     this.isBrowser = isPlatformBrowser(platformId);
     this.reducedMotion =
       this.isBrowser && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    this.projects.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
+  }
+
+  ngOnInit(): void {}
+
+  achievementRange(count: number): number[] {
+    return Array.from({ length: count }, (_, i) => i + 1);
   }
 
   scrollProjectsRail(): void {
     const rail = this.projectsRail?.nativeElement;
-
-    if (!rail) {
-      return;
-    }
-
+    if (!rail) return;
     const scrollAmount = Math.max(rail.clientWidth * 0.8, 320);
-
-    rail.scrollBy({
-      left: scrollAmount,
-      behavior: this.reducedMotion ? 'auto' : 'smooth',
-    });
+    rail.scrollBy({ left: scrollAmount, behavior: this.reducedMotion ? 'auto' : 'smooth' });
   }
 
   ngAfterViewInit(): void {
-    if (!this.isBrowser) {
-      return;
-    }
-
+    if (!this.isBrowser) return;
     this.ngZone.runOutsideAngular(() => {
       requestAnimationFrame(() => {
         this.setupIntersectionObserver();
@@ -234,19 +183,12 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.observer?.disconnect();
-
-    if (this.parallaxFrame) {
-      cancelAnimationFrame(this.parallaxFrame);
-    }
-
-    if (this.resizeTimeout) {
-      clearTimeout(this.resizeTimeout);
-    }
+    if (this.parallaxFrame) cancelAnimationFrame(this.parallaxFrame);
+    if (this.resizeTimeout) clearTimeout(this.resizeTimeout);
   }
 
   private setupIntersectionObserver(): void {
     const items = document.querySelectorAll<HTMLElement>('.animated-on-scroll');
-
     this.observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -256,41 +198,26 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
           }
         });
       },
-      {
-        threshold: 0.12,
-        rootMargin: '0px 0px -10% 0px',
-      },
+      { threshold: 0.12, rootMargin: '0px 0px -10% 0px' },
     );
-
     items.forEach((item) => this.observer?.observe(item));
   }
 
   @HostListener('window:scroll')
   onScroll(): void {
     if (!this.isBrowser) return;
-    // Reducido: solo programamos actualización si está cerca del viewport
-    const rail = this.projectsRail?.nativeElement;
-    if (!rail) return;
-    const rect = rail.getBoundingClientRect();
-    const inView = rect.top < window.innerHeight && rect.bottom > 0;
-    if (inView) this.scheduleParallaxUpdate();
+    this.scheduleParallaxUpdate();
   }
 
   @HostListener('window:resize')
   onResize(): void {
     if (!this.isBrowser) return;
-
-    if (this.resizeTimeout) {
-      clearTimeout(this.resizeTimeout);
-    }
-
+    if (this.resizeTimeout) clearTimeout(this.resizeTimeout);
     this.resizeTimeout = setTimeout(() => this.scheduleParallaxUpdate(), 80);
   }
 
   private scheduleParallaxUpdate(): void {
-    if (this.reducedMotion) return;
-    if (this.parallaxFrame) return;
-
+    if (this.reducedMotion || this.parallaxFrame) return;
     this.ngZone.runOutsideAngular(() => {
       this.parallaxFrame = requestAnimationFrame(() => {
         this.updateParallax();
@@ -300,32 +227,14 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
   }
 
   private updateParallax(): void {
-    const wrappers = document.querySelectorAll<HTMLElement>('.parallax-wrapper');
-    const isMobile = window.innerWidth <= 768;
-    const isDesktopFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    const viewH = window.innerHeight;
-
-    wrappers.forEach((wrapper) => {
-      const img = wrapper.querySelector<HTMLElement>('.parallax-image');
-      if (!img) return;
-
-      if (isDesktopFinePointer) {
-        img.style.setProperty('--parallax-y', '0px');
-        return;
-      }
-
-      const rect = wrapper.getBoundingClientRect();
-
-      if (rect.bottom < 0 || rect.top > viewH) {
-        img.style.setProperty('--parallax-y', '0px');
-        return;
-      }
-
-      const progress = (viewH - rect.top) / (viewH + rect.height);
-      const intensity = isMobile ? 2 : 3;
-      const offset = (progress - 0.5) * intensity;
-
-      img.style.setProperty('--parallax-y', `${offset.toFixed(2)}px`);
+    const images = document.querySelectorAll<HTMLElement>('.parallax-image');
+    images.forEach((img) => {
+      const rect = img.closest('.project-image-shell')?.getBoundingClientRect();
+      if (!rect) return;
+      const vh = window.innerHeight;
+      if (rect.bottom < 0 || rect.top > vh) return;
+      const progress = 1 - (rect.top + rect.height / 2) / vh;
+      img.style.transform = `translateY(${(progress * 30).toFixed(2)}px) scale(1.12)`;
     });
   }
 }

@@ -10,15 +10,33 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
+import { TranslocoPipe } from '@jsverse/transloco';
+
+interface MarqueeItem {
+  id: number;
+  icon: string;
+  text: string;
+  company: string;
+}
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [],
+  imports: [TranslocoPipe],
   templateUrl: './about.component.html',
   styleUrl: './about.component.scss',
 })
 export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
+  readonly marqueeItems: MarqueeItem[] = [
+    // Daviplata
+    { id: 1, icon: '💳', text: 'Native registration flow for a banking app with 10M+ downloads', company: 'DaviPlata' },
+    { id: 2, icon: '📊', text: 'Real-time transaction limit visualisation for end users', company: 'DaviPlata' },
+    { id: 3, icon: '📱', text: 'Huawei HMS integration — app accessible without Google Play Services', company: 'DaviPlata' },
+    // Qinaya
+    { id: 4, icon: '📺', text: '+5,000 Android TV devices deployed to production', company: 'Qinaya' },
+    { id: 5, icon: '🌎', text: '50%+ of users reached outside major cities', company: 'Qinaya' },
+    // --- Add more projects here ---
+  ];
   private readonly titleService = inject(Title);
   private readonly meta = inject(Meta);
   private readonly platformId = inject(PLATFORM_ID);

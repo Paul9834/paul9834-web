@@ -6,41 +6,38 @@
         <span class="gradient-text">Montealegre Melo</span>
       </h1>
 
-      <p class="subtitle">Senior Mobile Engineer (Android · iOS)</p>
+      <p class="subtitle">{{ 'hero.subtitle' | transloco }}</p>
 
-      <p class="desc">
-        Building scalable mobile products with strong architecture, high performance,
-        and measurable impact across fintech and enterprise environments.
-      </p>
+      <p class="desc">{{ 'hero.desc' | transloco }}</p>
 
       <div class="hero-buttons">
-        <a href="#projects" class="btn-primary" aria-label="View projects section">
+        <a href="#projects" class="btn-primary" [attr.aria-label]="'hero.cta_projects' | transloco">
           <mat-icon aria-hidden="true">work_outline</mat-icon>
-          <span>View Projects</span>
+          <span>{{ 'hero.cta_projects' | transloco }}</span>
         </a>
 
         <a
           href="mailto:paul9834developer@gmail.com"
           class="btn-secondary"
-          aria-label="Contact Kevin Paul Montealegre Melo by email"
+          [attr.aria-label]="'hero.cta_contact' | transloco"
         >
           <mat-icon aria-hidden="true">alternate_email</mat-icon>
-          <span>Contact</span>
+          <span>{{ 'hero.cta_contact' | transloco }}</span>
         </a>
       </div>
 
       <div class="hero-proof" aria-label="Career proof points">
         <div class="hero-proof__item">
-          <span class="hero-proof__value">6+</span>
-          <span class="hero-proof__label">Years building mobile apps</span>
+          <span class="hero-proof__value">{{ 'hero.proof_years_value' | transloco }}</span>
+          <span class="hero-proof__label">{{ 'hero.proof_years_label' | transloco }}</span>
         </div>
         <div class="hero-proof__item">
-          <span class="hero-proof__value">18M+</span>
-          <span class="hero-proof__label">Users impacted</span>
+          <span class="hero-proof__value">{{ 'hero.proof_users_value' | transloco }}</span>
+          <span class="hero-proof__label">{{ 'hero.proof_users_label' | transloco }}</span>
         </div>
         <div class="hero-proof__item">
-          <span class="hero-proof__value">5+</span>
-          <span class="hero-proof__label">Production apps shipped</span>
+          <span class="hero-proof__value">{{ 'hero.proof_apps_value' | transloco }}</span>
+          <span class="hero-proof__label">{{ 'hero.proof_apps_label' | transloco }}</span>
         </div>
       </div>
     </header>
@@ -76,7 +73,7 @@
           <div class="card-highlight" aria-label="Availability status">
             <div class="availability">
               <span class="status-dot" aria-hidden="true"></span>
-              Open to remote &amp; relocation
+              {{ 'hero.availability' | transloco }}
             </div>
           </div>
 

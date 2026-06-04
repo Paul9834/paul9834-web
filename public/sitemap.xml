@@ -1,20 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+>
+
   <url>
     <loc>https://paul9834.com/</loc>
-    <lastmod>2026-05-29</lastmod>
+    <lastmod>2026-06-04</lastmod>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://paul9834.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://paul9834.com/es" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://paul9834.com/" />
+  </url>
+
+  <url>
+    <loc>https://paul9834.com/es</loc>
+    <lastmod>2026-06-04</lastmod>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://paul9834.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://paul9834.com/es" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://paul9834.com/" />
   </url>
 
   <url>
     <loc>https://paul9834.com/about</loc>
-    <lastmod>2026-05-29</lastmod>
+    <lastmod>2026-06-04</lastmod>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://paul9834.com/about" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://paul9834.com/es/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://paul9834.com/about" />
   </url>
 
   <url>
+    <loc>https://paul9834.com/es/about</loc>
+    <lastmod>2026-06-04</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://paul9834.com/about" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://paul9834.com/es/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://paul9834.com/about" />
+  </url>
+
+  <url>
+    <loc>https://paul9834.com/cv</loc>
+    <lastmod>2026-06-04</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://paul9834.com/cv" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://paul9834.com/es/cv" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://paul9834.com/cv" />
+  </url>
+
+  <url>
+    <loc>https://paul9834.com/es/cv</loc>
+    <lastmod>2026-06-04</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://paul9834.com/cv" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://paul9834.com/es/cv" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://paul9834.com/cv" />
+  </url>
+
+  <!-- Blog -->
+  <url>
     <loc>https://paul9834.com/blog</loc>
-    <lastmod>2026-05-29</lastmod>
+    <lastmod>2026-06-04</lastmod>
     <priority>0.9</priority>
   </url>
 
@@ -35,4 +82,5 @@
     <lastmod>2026-05-29</lastmod>
     <priority>0.8</priority>
   </url>
+
 </urlset>

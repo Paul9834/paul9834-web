@@ -21,6 +21,14 @@
   </div>
 
   <div class="nav-actions">
+    <button
+      class="lang-toggle"
+      (click)="langService.switchTo(langService.activeLang() === 'en' ? 'es' : 'en')"
+      [attr.aria-label]="langService.activeLang() === 'en' ? 'Switch to Spanish' : 'Switch to English'"
+    >
+      {{ langService.activeLang() === 'en' ? 'ES' : 'EN' }}
+    </button>
+
     <button mat-icon-button (click)="themeService.toggleTheme()" aria-label="Toggle dark mode">
       <mat-icon>{{ themeService.isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
     </button>

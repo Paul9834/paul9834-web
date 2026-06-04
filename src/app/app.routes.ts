@@ -11,6 +11,7 @@ import { blogArticleResolver } from './core/resolvers/blog-article.resolver';
 import { CvComponent } from './features/cv/cv/cv.component';
 
 export const routes: Routes = [
+  // ── English (default, no prefix) ──────────────────────────
   {
     path: '',
     component: PublicLayoutComponent,
@@ -20,6 +21,17 @@ export const routes: Routes = [
       { path: 'cv', component: CvComponent },
     ],
   },
+  // ── Spanish (/es prefix) ──────────────────────────────────
+  {
+    path: 'es',
+    component: PublicLayoutComponent,
+    children: [
+      { path: '', component: HomeComponent },
+      { path: 'about', component: AboutComponent },
+      { path: 'cv', component: CvComponent },
+    ],
+  },
+  // ── Blog (shared, no lang prefix) ─────────────────────────
   {
     path: 'blog',
     component: BlogListComponent,
@@ -31,6 +43,7 @@ export const routes: Routes = [
       article: blogArticleResolver,
     },
   },
+  // ── Admin ─────────────────────────────────────────────────
   {
     path: 'admin/login',
     component: AdminLoginComponent,

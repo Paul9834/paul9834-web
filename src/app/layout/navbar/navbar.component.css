@@ -138,3 +138,24 @@
     display: none;
   }
 }
+
+/* Language toggle */
+.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  opacity: 0.65;
+  cursor: pointer;
+  transition: opacity 180ms ease;
+  background: none;
+  color: inherit;
+}
+.lang-toggle:hover { opacity: 1; }
