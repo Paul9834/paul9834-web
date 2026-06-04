@@ -16,7 +16,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { TranslocoDirective, TranslocoPipe } from '@jsverse/transloco';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 interface Project {
   key: string;
@@ -40,7 +40,6 @@ interface Project {
     MatIconModule,
     MatButtonModule,
     TranslocoPipe,
-    TranslocoDirective,
   ],
   templateUrl: './projects.component.html',
   styleUrl: './project.component.scss',
