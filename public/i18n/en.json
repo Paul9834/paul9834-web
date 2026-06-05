@@ -31,7 +31,7 @@
     },
     "androidtv": {
       "role": "Android Developer",
-      "description": "Independent research and development focused on Android TV media streaming technologies using ExoPlayer and IPTV protocols.",
+      "description": "Research and development at Atenea Telecomunicaciones focused on Android TV media streaming technologies using ExoPlayer and IPTV protocols.",
       "a1": "Implemented adaptive video streaming using ExoPlayer for Android TV environments.",
       "a2": "Worked with IPTV M3U8 playlists and live media streaming playback.",
       "a3": "Explored buffering optimisation, media session handling, and playback performance.",
