@@ -38,7 +38,6 @@ export class CvComponent implements OnInit {
     const isSpanish = this.router.url.startsWith('/es');
     const canonicalUrl = isSpanish ? 'https://paul9834.com/es/cv' : 'https://paul9834.com/cv';
 
-
     this.cvPdfPath = isSpanish
       ? 'assets/cv/CV_Kevin_Montealegre_Es_2026.pdf'
       : 'assets/cv/CV_Kevin_Montealegre_En.pdf';
