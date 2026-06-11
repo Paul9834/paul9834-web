@@ -57,6 +57,40 @@ El proyecto implementa una estrategia de dual theme mediante `html` y `html.dark
 
 Desde una perspectiva profesional, esta decisión mejora accesibilidad, adapta el portfolio a preferencias de usuario y refuerza la madurez del frontend. También encaja con el uso de `ThemeService`, que ya administra estado visual mediante `signal()`, cerrando bien la integración entre diseño y lógica de presentación.
 
+
+## Novedades recientes
+
+El portfolio se mantiene en evolución activa con ajustes orientados a reforzar presentación profesional, experiencia de usuario y claridad técnica del repositorio. Los cambios más recientes reflejan una estrategia de iteración continua sobre contenido, diseño visual y mantenimiento de piezas clave del perfil profesional.
+
+### Evolución del módulo de proyectos
+
+La sección de proyectos recibió una nueva capa de estilos centrada en un layout más robusto y responsive. Este ajuste mejora la jerarquía visual del componente, optimiza la distribución de contenido en distintos breakpoints y fortalece la lectura de proyectos como piezas principales del portfolio.
+
+Además, la lógica de parallax fue retirada de `ProjectsComponent` para simplificar el comportamiento visual y reducir complejidad innecesaria en la capa interactiva. Esta decisión favorece una experiencia más estable, mantenible y consistente con un portfolio profesional que prioriza claridad, rendimiento y legibilidad.
+
+### CV e internacionalización
+
+El repositorio también incorpora mantenimiento activo del módulo de CV, con actualizaciones recientes en los archivos PDF de presentación profesional. Entre estos cambios se encuentran la sustitución del CV en inglés, la actualización de la versión en español y la incorporación de una edición 2026 del CV en español, alineando mejor el portfolio con la evolución actual del perfil técnico.
+
+De forma complementaria, se ajustaron textos en `public/i18n/es.json` y `public/i18n/en.json`, incluyendo refinamientos en la descripción relacionada con Android TV. Esto confirma que la aplicación mantiene una estrategia bilingüe real y que el contenido visible al usuario evoluciona junto con la propuesta profesional del sitio.
+
+### Estado actual del proyecto
+
+Este repositorio no funciona como una landing estática, sino como una base viva para experimentar con arquitectura Angular moderna, SSR, branding técnico, presentación profesional y evolución iterativa de la interfaz. La combinación de mejoras visuales, simplificación de interacciones y actualización continua del contenido hace que el portfolio sea tanto una vitrina profesional como un producto mantenido activamente.
+
+## Scripts disponibles
+
+Además del stack y la arquitectura, el proyecto expone scripts útiles para desarrollo, verificación y ejecución de la salida SSR.
+
+| Script | Propósito |
+|---|---|
+| `npm start` | Levanta la aplicación en entorno de desarrollo con Angular CLI. |
+| `npm run build` | Genera la build de la aplicación. |
+| `npm run watch` | Compila en modo desarrollo observando cambios. |
+| `npm run test` | Ejecuta las pruebas del proyecto. |
+| `npm run serve:ssr:portfolio` | Ejecuta la salida SSR generada en `dist/portfolio/server/server.mjs`. |
+| `npm run check` | Ejecuta una verificación rápida de build mediante `ng build`. |
+
 ## Arquitectura del proyecto
 
 La estructura sigue una separación clara por responsabilidades: `core` concentra servicios, guardas, interceptores y resolvers reutilizables; `features` encapsula secciones funcionales como hero, about y projects; y `layout` orquesta composición visual con home, navbar, public-layout y componentes auxiliares como WhatsApp. Esta distribución favorece escalabilidad, bajo acoplamiento y lectura rápida del dominio visual de la aplicación.
